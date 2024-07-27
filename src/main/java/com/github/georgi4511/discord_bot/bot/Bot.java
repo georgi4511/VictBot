@@ -5,22 +5,19 @@ import com.github.georgi4511.discord_bot.commands.random.Ping;
 import com.github.georgi4511.discord_bot.eventListeners.InteractionEventListener;
 import com.github.georgi4511.discord_bot.eventListeners.MessageEventListener;
 import com.github.georgi4511.discord_bot.eventListeners.ReadyListener;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.EnumSet;
-import java.util.Set;
 
 import static com.github.georgi4511.discord_bot.jsonService.JsonService.instantiateJsons;
 
+@Slf4j
 public class Bot {
-    public static Logger logger= LoggerFactory.getLogger(Bot.class);
 
     public static void createBot(String[] args) throws Exception {
 
