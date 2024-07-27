@@ -8,7 +8,7 @@
 ### Checklist for planned things
 
 - [ ] Query image repos for funny **memes**
-- [ ] DB of memes for ease of use
+- [ ] DB of memes for ease of useD
 - [ ] Reminder function
 - [ ] Gacha functionality
 - [ ] Economy system
