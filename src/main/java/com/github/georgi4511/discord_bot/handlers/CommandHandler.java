@@ -1,5 +1,6 @@
-package com.github.georgi4511.discord_bot.commands;
+package com.github.georgi4511.discord_bot.handlers;
 
+import com.github.georgi4511.discord_bot.models.SlashCommand;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.JDA;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class CommandRegistry {
+public class CommandHandler {
     private final List<SlashCommand> commands;
     private final JDA jda;
 

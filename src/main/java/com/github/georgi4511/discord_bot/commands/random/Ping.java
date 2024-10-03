@@ -1,6 +1,6 @@
 package com.github.georgi4511.discord_bot.commands.random;
 
-import com.github.georgi4511.discord_bot.commands.SlashCommand;
+import com.github.georgi4511.discord_bot.models.SlashCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

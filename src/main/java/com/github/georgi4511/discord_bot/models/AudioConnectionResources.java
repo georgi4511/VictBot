@@ -1,4 +1,4 @@
-package com.github.georgi4511.discord_bot.audio;
+package com.github.georgi4511.discord_bot.models;
 
 import lombok.Builder;
 import lombok.Getter;

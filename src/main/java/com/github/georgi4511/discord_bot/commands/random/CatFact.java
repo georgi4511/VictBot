@@ -1,7 +1,7 @@
 package com.github.georgi4511.discord_bot.commands.random;
 
-import com.github.georgi4511.discord_bot.commands.SlashCommand;
-import com.github.georgi4511.discord_bot.mappers.CatFactResponse;
+import com.github.georgi4511.discord_bot.models.SlashCommand;
+import com.github.georgi4511.discord_bot.dtos.CatFactDto;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +36,7 @@ public class CatFact extends SlashCommand {
            {
                HttpResponse<String> response = httpClient.send(HttpRequest.newBuilder().GET().uri(URI.create("https://catfact.ninja/fact")).build(), HttpResponse.BodyHandlers.ofString());
                String body = response.body();
-               CatFactResponse catPictures = new Gson().fromJson(body, CatFactResponse.class);
+               CatFactDto catPictures = new Gson().fromJson(body, CatFactDto.class);
                event.reply(catPictures.getFact()).queue();
            }
         } catch (IOException | InterruptedException e) {
