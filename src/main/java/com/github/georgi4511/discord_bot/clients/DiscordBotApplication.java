@@ -1,9 +1,5 @@
-package com.github.georgi4511.discord_bot;
+package com.github.georgi4511.discord_bot.clients;
 
-import com.github.georgi4511.discord_bot.eventListeners.InteractionEventListener;
-import com.github.georgi4511.discord_bot.eventListeners.MessageEventListener;
-import com.github.georgi4511.discord_bot.eventListeners.ReadyListener;
-import lombok.Locked;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -14,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 
 import javax.security.auth.login.LoginException;
 import java.util.EnumSet;
@@ -31,9 +26,7 @@ public class DiscordBotApplication {
 	private String TOKEN;
 
 	@Bean
-	public JDA jda(
-			MessageEventListener messageEventListener, ReadyListener readyListener
-	) throws LoginException {
+	public JDA jda() throws LoginException {
 
 		EnumSet<GatewayIntent> intents = EnumSet.of(
 				GatewayIntent.GUILD_MESSAGES,
@@ -46,7 +39,6 @@ public class DiscordBotApplication {
 
 		return JDABuilder.create(TOKEN,intents)
 				.setActivity(Activity.listening("Chilling...killing"))
-				.addEventListeners(messageEventListener,readyListener)
 				.setStatus(OnlineStatus.DO_NOT_DISTURB)
 				.enableCache(CacheFlag.VOICE_STATE)
 				.build();

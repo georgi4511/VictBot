@@ -1,4 +1,4 @@
-package com.github.georgi4511.discord_bot.jsonService;
+package com.github.georgi4511.discord_bot.models;
 
 import com.google.gson.Gson;
 import lombok.Getter;
@@ -12,13 +12,13 @@ import java.util.Map;
 @Getter
 @Setter
 @Slf4j
-public class BotImpressionsJSON extends BaseJSON{
+public class BotImpressionsJson extends BaseJson {
     private Integer badBotCount;
     private Integer goodBotCount;
     private static final String NAME = "botImpressions";
     private static final String DEFAULT_CONTENT = new Gson().toJson(Map.of("badBotCount", 0,"goodBotCount",0));
 
-    public BotImpressionsJSON() throws IOException {
+    public BotImpressionsJson() throws IOException {
         super(NAME, DEFAULT_CONTENT);
 
     }

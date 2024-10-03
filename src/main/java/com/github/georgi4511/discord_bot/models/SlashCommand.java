@@ -1,4 +1,4 @@
-package com.github.georgi4511.discord_bot.commands;
+package com.github.georgi4511.discord_bot.models;
 
 import lombok.Getter;
 import lombok.Setter;
