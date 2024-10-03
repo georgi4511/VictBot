@@ -1,7 +1,7 @@
 package com.github.georgi4511.discord_bot.commands.random;
 
-import com.github.georgi4511.discord_bot.commands.SlashCommand;
-import com.github.georgi4511.discord_bot.mappers.CatPictureResponse;
+import com.github.georgi4511.discord_bot.models.SlashCommand;
+import com.github.georgi4511.discord_bot.dtos.CatPictureDto;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,8 +37,8 @@ public class CatPic extends SlashCommand {
            {
                HttpResponse<String> response = httpClient.send(HttpRequest.newBuilder().GET().uri(URI.create("https://api.thecatapi.com/v1/images/search")).build(), HttpResponse.BodyHandlers.ofString());
                String body = response.body();
-               CatPictureResponse[] catPictureResponse = new Gson().fromJson(body, CatPictureResponse[].class);
-               event.reply(catPictureResponse[0].getUrl()).queue();
+               CatPictureDto[] catPictureDto = new Gson().fromJson(body, CatPictureDto[].class);
+               event.reply(catPictureDto[0].getUrl()).queue();
            }
             } catch (IOException | InterruptedException e) {
             event.reply("Sorry command failed to execute").queue();

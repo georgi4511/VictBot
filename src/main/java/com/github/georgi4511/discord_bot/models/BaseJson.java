@@ -1,19 +1,19 @@
-package com.github.georgi4511.discord_bot.jsonService;
+package com.github.georgi4511.discord_bot.models;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class BaseJSON {
+public class BaseJson {
     private final static String JSON_FOLDER ="jsons";
     String name;
     String content;
 
-    BaseJSON(){
+    BaseJson(){
         throw new IllegalCallerException();
     }
-    BaseJSON(String name,String content) throws IOException {
+    BaseJson(String name, String content) throws IOException {
         this.name=name;
         this.content=content;
         createJsonFile(name,content);

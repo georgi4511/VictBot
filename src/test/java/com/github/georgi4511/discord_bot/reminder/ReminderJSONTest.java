@@ -1,13 +1,9 @@
 package com.github.georgi4511.discord_bot.reminder;
 
-import com.github.georgi4511.discord_bot.jsonService.ReminderJSON;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
 
