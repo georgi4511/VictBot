@@ -3,7 +3,6 @@ plugins {
 	id 'org.springframework.boot' version '3.3.4'
 	id 'io.spring.dependency-management' version '1.1.6'
 	id 'org.hibernate.orm' version '6.5.3.Final'
-	id 'org.graalvm.buildtools.native' version '0.10.3'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	id "com.diffplug.spotless" version "7.0.0.BETA2"
 
@@ -65,12 +64,6 @@ dependencyManagement {
 	imports {
 		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
 		mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
-	}
-}
-
-hibernate {
-	enhancement {
-		enableAssociationManagement = true
 	}
 }
 

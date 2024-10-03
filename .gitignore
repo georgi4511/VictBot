@@ -44,3 +44,5 @@ bin/
 jsons
 .idea/*
 /gradle/*
+
+discord_bot.log
