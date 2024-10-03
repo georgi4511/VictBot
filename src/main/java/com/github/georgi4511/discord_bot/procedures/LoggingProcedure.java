@@ -5,16 +5,18 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+mport java.time.Duration;
+import java.time.LocalTime;
+
 @Slf4j
 @Service
 public class LoggingProcedure {
 
- @Scheduled(fixedRateString = "${procedure.rate}")
+   private static final LocalTime startTime = LocalTime.now();
+
+    @Scheduled(fixedRateString = "${procedure.rate}")
     @Async
     public void log() {
-        log.info("Logging procedure is running");
+        log.info("Bot has been alive for {} seconds", Duration.between(startTime,LocalTime.now()).getSeconds());
     }
-
-
-
 }
