@@ -1,6 +1,7 @@
-package com.github.georgi4511.discord_bot.commands.random;
+package com.github.georgi4511.discord_bot.commands;
 
 import com.github.georgi4511.discord_bot.models.SlashCommand;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -19,7 +20,7 @@ public class Ping extends SlashCommand {
     public Ping(){
         this.name = "ping";
         this.description = "sends pong";
-        this.data = Commands.slash(name,description).setGuildOnly(true);
+        this.data = Commands.slash(this.name,this.description);
     }
 
     @Override

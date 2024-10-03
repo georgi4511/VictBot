@@ -20,6 +20,17 @@ public class EventListener extends ListenerAdapter {
     private final JDA jda;
     private final CommandHandler commandHandler;
 
+    @Override
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        String commandName = event.getName();
+        log.info(commandName);
+        var command = commandHandler.getCommandByName(commandName);
+        if(command!=null) {
+            command.callback(event);
+        } else {
+            event.reply("Unknown command").setEphemeral(true).queue();
+        }
+    }
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event)
@@ -34,23 +45,11 @@ public class EventListener extends ListenerAdapter {
     }
 
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        String commandName = event.getName();
-        log.info(event.getName());
-        var command = commandHandler.getCommandByName(commandName);
-        if(command!=null) {
-            command.callback(event);
-        } else {
-            event.reply("Unknown command").setEphemeral(true).queue();
-        }
-    }
-
-    @Override
     public void onReady(@NotNull ReadyEvent event)
     {
         log.info("{} logged in.", event.getJDA().getSelfUser().getName());
-        log.info("Commands set");
         JsonService.instantiateJsons();
+        commandHandler.registerCommands();
     }
 
     @PostConstruct

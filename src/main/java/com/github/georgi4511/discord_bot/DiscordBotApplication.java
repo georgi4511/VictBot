@@ -1,4 +1,4 @@
-package com.github.georgi4511.discord_bot.clients;
+package com.github.georgi4511.discord_bot;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;

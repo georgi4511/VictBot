@@ -1,27 +1,31 @@
 package com.github.georgi4511.discord_bot.handlers;
 
 import com.github.georgi4511.discord_bot.models.SlashCommand;
-import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class CommandHandler {
     private final List<SlashCommand> commands;
     private final JDA jda;
 
-    @PostConstruct
     public void registerCommands() {
-        jda.updateCommands().addCommands(
-                commands.stream()
-                        .map(command -> Commands.slash(command.getData().getName(), command.getData().getDescription()))
-                        .toArray(CommandData[]::new)
-        ).queue();
+
+        List<SlashCommandData> commandArray = commands.stream()
+                .map(SlashCommand::getData)
+                .toList();
+
+        this.jda.updateCommands()
+                .addCommands(commandArray)
+                .queue();
+        log.info("Commands set");
     }
 
     public SlashCommand getCommandByName(String name) {

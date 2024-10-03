@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.4'
 	id 'io.spring.dependency-management' version '1.1.6'
-	id 'org.hibernate.orm' version '6.5.3.Final'
+//	id 'org.hibernate.orm' version '6.5.3.Final'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	id "com.diffplug.spotless" version "7.0.0.BETA2"
 
@@ -38,23 +38,23 @@ dependencies {
 	// https://mvnrepository.com/artifact/net.dv8tion/JDA
 	implementation 'net.dv8tion:JDA:5.1.1'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.flywaydb:flyway-core'
+//	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.springframework.ai:spring-ai-ollama-spring-boot-starter'
-	implementation 'org.springframework.shell:spring-shell-starter'
+//	implementation 'org.springframework.shell:spring-shell-starter'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
-	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'io.micrometer:micrometer-registry-dynatrace'
-	developmentOnly "org.springframework.ai:spring-ai-spring-boot-docker-compose:${springAiVersion}"
+//	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+//	runtimeOnly 'com.h2database:h2'
+//	runtimeOnly 'io.micrometer:micrometer-registry-dynatrace'
+//	developmentOnly "org.springframework.ai:spring-ai-spring-boot-docker-compose:${springAiVersion}"
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	testImplementation 'org.springframework.shell:spring-shell-starter-test'
+//	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+//	testImplementation 'org.springframework.shell:spring-shell-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'com.google.code.gson:gson:2.11.0'
 
@@ -62,7 +62,7 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
+//		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
 		mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
 	}
 }
