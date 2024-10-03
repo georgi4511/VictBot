@@ -1,14 +1,16 @@
 package com.github.georgi4511.discord_bot.procedures;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-mport java.time.Duration;
+import java.time.Duration;
 import java.time.LocalTime;
 
 @Slf4j
+@NoArgsConstructor
 @Service
 public class LoggingProcedure {
 
