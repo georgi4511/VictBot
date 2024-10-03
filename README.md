@@ -3,7 +3,7 @@
 
 ## Description
 
-### This is a Java Discord bot that aims to appeal to my interests in regards to APIs and also silly bots. It is not currently planned to be used in prod, Viable but use at own risk.
+### This is a Java Discord bot that aims to appeal to my interests in regard to APIs and also silly bots. It is not currently planned to be used in prod, Viable but use at own risk.
 
 ### Checklist for planned things
 
