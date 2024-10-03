@@ -1,6 +1,9 @@
 # **VictBot DiscordBot**
 ### **This** is **the** repo for a Java Discord bot made by me using the [JDA](https://github.com/discord-jda/JDA) library 
 
+## Steps to run
+- add environment variable BOT_TOKEN with the value of the token gotten from Discord API Dashboard
+
 ## Description
 
 ### This is a Java Discord bot that aims to appeal to my interests in regards to APIs and also silly bots. It is not currently planned to be used in prod, Viable but use at own risk.
