@@ -42,3 +42,7 @@ bin/
 .DS_Store
 
 jsons
+.idea/*
+/gradle/*
+
+discord_bot.log

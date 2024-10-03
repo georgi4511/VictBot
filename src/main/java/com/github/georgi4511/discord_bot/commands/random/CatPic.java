@@ -1,6 +1,6 @@
 package com.github.georgi4511.discord_bot.commands.random;
 
-import com.github.georgi4511.discord_bot.commands.ClientInteraction;
+import com.github.georgi4511.discord_bot.commands.SlashCommand;
 import com.github.georgi4511.discord_bot.mappers.CatPictureResponse;
 import com.google.gson.Gson;
 import lombok.Getter;
@@ -8,6 +8,8 @@ import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -16,10 +18,16 @@ import java.net.http.HttpResponse;
 
 @Getter
 @Setter
-public class CatPic extends ClientInteraction {
+@Component
+public class CatPic extends SlashCommand {
     public SlashCommandData data;
+    private String name;
+    private String description;
+
     public CatPic(){
-        this.data = Commands.slash("cat","receive random cat").setGuildOnly(true);
+        this.name = "cat";
+        this.description = "receive random cat";
+        this.data = Commands.slash(name,description).setGuildOnly(true);
     }
 
     @Override
