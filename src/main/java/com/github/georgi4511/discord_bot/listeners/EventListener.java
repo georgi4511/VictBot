@@ -1,11 +1,13 @@
 package com.github.georgi4511.discord_bot.listeners;
 import com.github.georgi4511.discord_bot.handlers.CommandHandler;
+import com.github.georgi4511.discord_bot.models.SlashCommandStringSelectMenu;
 import com.github.georgi4511.discord_bot.services.JsonService;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -25,12 +27,24 @@ public class EventListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String commandName = event.getName();
-        log.info(commandName);
         var command = commandHandler.getCommandByName(commandName);
         if(command!=null) {
             command.callback(event);
         } else {
             event.reply("Unknown command").setEphemeral(true).queue();
+        }
+    }
+
+    @Override
+    public void onStringSelectInteraction(@NotNull StringSelectInteractionEvent event){
+        String customId = event.getComponentId();
+
+        SlashCommandStringSelectMenu command = commandHandler.getSlashCommandStringSelectMenuByCustomId(customId);
+        if(command!=null){
+            command.selectMenuCallback(event);
+        }
+        else{
+            event.reply("Issue occurred").setEphemeral(true).queue();
         }
     }
 

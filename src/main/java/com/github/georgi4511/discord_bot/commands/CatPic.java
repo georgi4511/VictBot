@@ -1,5 +1,6 @@
 package com.github.georgi4511.discord_bot.commands;
 
+import com.github.georgi4511.discord_bot.dtos.CatFactDto;
 import com.github.georgi4511.discord_bot.models.SlashCommand;
 import com.github.georgi4511.discord_bot.dtos.CatPictureDto;
 import com.google.gson.Gson;
@@ -10,12 +11,15 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -33,18 +37,10 @@ public class CatPic extends SlashCommand {
 
     @Override
     public void callback(SlashCommandInteractionEvent event) {
-        try {
-           try (HttpClient httpClient = HttpClient.newBuilder().build())
-           {
-               HttpResponse<String> response = httpClient.send(HttpRequest.newBuilder().GET().uri(URI.create("https://api.thecatapi.com/v1/images/search")).build(), HttpResponse.BodyHandlers.ofString());
-               String body = response.body();
-               CatPictureDto[] catPictureDto = new Gson().fromJson(body, CatPictureDto[].class);
-               event.reply(catPictureDto[0].getUrl()).queue();
-           }
-            } catch (IOException | InterruptedException e) {
-            event.reply("Sorry command failed to execute").queue();
-            throw new RuntimeException(e);
-        }
+        RestTemplate restTemplate = new RestTemplate();
+        List<CatPictureDto> catPictureDto = List.of(Objects.requireNonNull(restTemplate
+                .getForObject("https://api.thecatapi.com/v1/images/search", CatPictureDto[].class)));
+               event.reply(catPictureDto.getFirst().getUrl()).queue();
     }
 }
 
