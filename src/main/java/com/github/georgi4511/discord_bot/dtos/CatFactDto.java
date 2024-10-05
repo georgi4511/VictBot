@@ -1,12 +1,10 @@
 package com.github.georgi4511.discord_bot.dtos;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.Setter;
 
     @NonNull
-    @Getter
-    @Setter
+    @Data
 public class CatFactDto {
         String fact;
     }

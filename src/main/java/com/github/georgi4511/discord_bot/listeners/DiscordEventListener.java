@@ -1,11 +1,8 @@
 package com.github.georgi4511.discord_bot.listeners;
-import com.github.georgi4511.discord_bot.handlers.CommandHandler;
-import com.github.georgi4511.discord_bot.models.SlashCommandStringSelectMenu;
+import com.github.georgi4511.discord_bot.models.VictBaseCommand;
 import com.github.georgi4511.discord_bot.services.JsonService;
-import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -14,20 +11,28 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.github.georgi4511.discord_bot.utils.Utils.fixTwitter;
 
 @Slf4j
-@AllArgsConstructor
 @Component
-public class EventListener extends ListenerAdapter {
+public class DiscordEventListener extends ListenerAdapter {
 
-    private final JDA jda;
-    private final CommandHandler commandHandler;
+    private final Map<String, VictBaseCommand> commands;
+
+    DiscordEventListener(List<VictBaseCommand> commandList){
+        this.commands = new HashMap<>();
+        commandList.forEach(command-> commands.put(command.getName(),command)
+        );
+    }
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String commandName = event.getName();
-        var command = commandHandler.getCommandByName(commandName);
+        VictBaseCommand command = commands.get(commandName);
         if(command!=null) {
             command.callback(event);
         } else {
@@ -39,12 +44,13 @@ public class EventListener extends ListenerAdapter {
     public void onStringSelectInteraction(@NotNull StringSelectInteractionEvent event){
         String customId = event.getComponentId();
 
-        SlashCommandStringSelectMenu command = commandHandler.getSlashCommandStringSelectMenuByCustomId(customId);
+        // Assuming custom IDs are in the format "commandName_menuIdentifier"
+        VictBaseCommand command = commands.get(customId.split("_",2)[0]);
         if(command!=null){
-            command.selectMenuCallback(event);
+            command.handleSelectInteraction(event);
         }
         else{
-            event.reply("Issue occurred").setEphemeral(true).queue();
+            event.reply("Unknown select interaction").setEphemeral(true).queue();
         }
     }
 
@@ -63,12 +69,6 @@ public class EventListener extends ListenerAdapter {
     {
         log.info("{} logged in.", event.getJDA().getSelfUser().getEffectiveName());
         JsonService.instantiateJsons();
-        commandHandler.registerCommands();
-    }
-
-    @PostConstruct
-    public void registerListeners() {
-        jda.addEventListener(this);
     }
 
 }

@@ -1,43 +1,43 @@
 package com.github.georgi4511.discord_bot.commands;
 
-import com.github.georgi4511.discord_bot.commands.personal.GetWaifu;
-import com.github.georgi4511.discord_bot.models.SlashCommand;
-import com.github.georgi4511.discord_bot.dtos.CatFactDto;
-import com.google.gson.Gson;
-import lombok.AllArgsConstructor;
+import com.github.georgi4511.discord_bot.models.VictBaseCommand;
+import com.github.georgi4511.discord_bot.services.CatFactService;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 @Getter
 @Setter
 @Component
-public class CatFact extends SlashCommand {
-    private SlashCommandData data;
-    private String name;
-    private String description;
-    public CatFact(){
+@Slf4j
+public class CatFact extends VictBaseCommand {
+    private final SlashCommandData data;
+    private final String name;
+    private final String description;
+    private final CatFactService catFactService;
+
+    @Autowired
+    public CatFact(CatFactService catFactService){
         this.name = "cat_fact";
         this.description = "receive random cat fact 🐈";
         this.data = Commands.slash(this.name,this.description);
+        this.catFactService = catFactService;
     }
 
     @Override
     public void callback(SlashCommandInteractionEvent event) {
-        RestTemplate restTemplate = new RestTemplate();
-        CatFactDto catFactDto = restTemplate
-                .getForObject("https://catfact.ninja/fact", CatFactDto.class);
-        assert catFactDto != null;
-        event.reply(catFactDto.getFact()).queue();
+        event.deferReply().queue();
+        try {
+            String fact = catFactService.getRandomCatFact();
+            event.getHook().sendMessage(fact).queue();
+        } catch (Exception e) {
+            event.getHook().sendMessage("Sorry, I couldn't fetch a cat fact right now.").queue();
+            log.error(e.getMessage());
+        }
     }
 }

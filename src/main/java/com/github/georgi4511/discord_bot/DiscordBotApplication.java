@@ -20,27 +20,4 @@ public class DiscordBotApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DiscordBotApplication.class, args);
 	}
-
-
-	@Value("${discord.token}")
-	private String token;
-
-	@Bean
-	public JDA jda() {
-
-		EnumSet<GatewayIntent> intents = EnumSet.of(
-				GatewayIntent.GUILD_MESSAGES,
-				GatewayIntent.GUILD_VOICE_STATES,
-				GatewayIntent.MESSAGE_CONTENT,
-				GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
-				GatewayIntent.SCHEDULED_EVENTS,
-				GatewayIntent.GUILD_PRESENCES
-		);
-
-		return JDABuilder.create(token,intents)
-				.setActivity(Activity.listening("Chilling...killing"))
-				.setStatus(OnlineStatus.DO_NOT_DISTURB)
-				.enableCache(CacheFlag.VOICE_STATE)
-				.build();
-	}
 }
