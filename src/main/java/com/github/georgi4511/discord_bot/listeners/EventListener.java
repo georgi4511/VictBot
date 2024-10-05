@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
+import static com.github.georgi4511.discord_bot.utils.Utils.fixTwitter;
+
 @Slf4j
 @AllArgsConstructor
 @Component
@@ -35,19 +37,17 @@ public class EventListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event)
     {
+        if(event.getAuthor().isBot()) return;
         String content = event.getMessage().getContentRaw();
-        if(content.startsWith("!")) {
-            log.info("{}:{}", event.getAuthor().getName(), content);
-        }
-        if (event.getMessage().getContentRaw().equalsIgnoreCase("!ping")) {
-            event.getMessage().reply("Pong!").complete();
-        }
+        fixTwitter(event,content);
     }
+
+
 
     @Override
     public void onReady(@NotNull ReadyEvent event)
     {
-        log.info("{} logged in.", event.getJDA().getSelfUser().getName());
+        log.info("{} logged in.", event.getJDA().getSelfUser().getEffectiveName());
         JsonService.instantiateJsons();
         commandHandler.registerCommands();
     }

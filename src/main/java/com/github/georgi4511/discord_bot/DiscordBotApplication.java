@@ -23,10 +23,10 @@ public class DiscordBotApplication {
 
 
 	@Value("${discord.token}")
-	private String TOKEN;
+	private String token;
 
 	@Bean
-	public JDA jda() throws LoginException {
+	public JDA jda() {
 
 		EnumSet<GatewayIntent> intents = EnumSet.of(
 				GatewayIntent.GUILD_MESSAGES,
@@ -37,7 +37,7 @@ public class DiscordBotApplication {
 				GatewayIntent.GUILD_PRESENCES
 		);
 
-		return JDABuilder.create(TOKEN,intents)
+		return JDABuilder.create(token,intents)
 				.setActivity(Activity.listening("Chilling...killing"))
 				.setStatus(OnlineStatus.DO_NOT_DISTURB)
 				.enableCache(CacheFlag.VOICE_STATE)
