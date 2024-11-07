@@ -4,7 +4,8 @@ import com.github.georgi4511.discord_bot.models.BotImpressionsJson;
 import com.github.georgi4511.discord_bot.models.MessageReactionsJson;
 import com.github.georgi4511.discord_bot.models.ReminderJson;
 import com.google.gson.Gson;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,9 +13,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
-@Slf4j
 public class JsonService {
 
+    private static final Logger log = LoggerFactory.getLogger(JsonService.class);
     public static BotImpressionsJson botImpressionsJSON;
     public static MessageReactionsJson[] messageReactionsJSONArray;
     public static ReminderJson[] reminderJSONArray;
@@ -32,7 +33,6 @@ public class JsonService {
         new BotImpressionsJson();
         new MessageReactionsJson();
         new ReminderJson();
-
         String botImpressionsResult = Files.readString(Path.of(JSON_FOLDER, "botImpressions" + ".json"));
         botImpressionsJSON = new Gson().fromJson(botImpressionsResult, BotImpressionsJson.class);
 String reminderResult = Files.readString(Path.of(JSON_FOLDER, "reminder" + ".json"));

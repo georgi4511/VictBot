@@ -1,14 +1,14 @@
 package com.github.georgi4511.discord_bot.listeners;
 import com.github.georgi4511.discord_bot.models.VictBaseCommand;
 import com.github.georgi4511.discord_bot.services.JsonService;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -17,10 +17,10 @@ import java.util.Map;
 
 import static com.github.georgi4511.discord_bot.utils.Utils.fixTwitter;
 
-@Slf4j
 @Component
 public class DiscordEventListener extends ListenerAdapter {
 
+    private static final Logger log = LoggerFactory.getLogger(DiscordEventListener.class);
     private final Map<String, VictBaseCommand> commands;
 
     DiscordEventListener(List<VictBaseCommand> commandList){

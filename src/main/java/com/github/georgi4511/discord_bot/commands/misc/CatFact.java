@@ -1,21 +1,22 @@
-package com.github.georgi4511.discord_bot.commands;
+package com.github.georgi4511.discord_bot.commands.misc;
 
 import com.github.georgi4511.discord_bot.models.VictBaseCommand;
 import com.github.georgi4511.discord_bot.services.CatFactService;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
 @Component
-@Slf4j
 public class CatFact extends VictBaseCommand {
+    private static final Logger log = LoggerFactory.getLogger(CatFact.class);
     private final SlashCommandData data;
     private final String name;
     private final String description;

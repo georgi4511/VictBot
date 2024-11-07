@@ -1,13 +1,14 @@
-package com.github.georgi4511.discord_bot.commands;
+package com.github.georgi4511.discord_bot.commands.chat;
 
 import com.github.georgi4511.discord_bot.models.VictBaseCommand;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +16,9 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@Slf4j
 @Component
 public class AiChat extends VictBaseCommand {
+    private static final Logger log = LoggerFactory.getLogger(AiChat.class);
     private final OllamaChatModel ollamaChatModel;
     private SlashCommandData data;
     private String name;

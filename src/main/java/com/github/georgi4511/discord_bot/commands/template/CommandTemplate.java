@@ -1,17 +1,17 @@
 package com.github.georgi4511.discord_bot.commands.template;
 
 import com.github.georgi4511.discord_bot.models.VictBaseCommand;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
-@Getter
-@Setter
-//@Component
+
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class CommandTemplate extends VictBaseCommand {
-    public SlashCommandData data;
+    private SlashCommandData data;
     private String name;
     private String description;
 
