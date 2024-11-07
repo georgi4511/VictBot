@@ -45,7 +45,7 @@ public class BotConfiguration {
 
         List<SlashCommandData> commandData = commands.stream().map(VictBaseCommand::getData).toList();
         jda.updateCommands().addCommands(commandData).queue();
-        log.info(String.format("%d commands set",commands.size()));
+        log.info("{} commands set",commands.size());
 
         return jda;
     }
