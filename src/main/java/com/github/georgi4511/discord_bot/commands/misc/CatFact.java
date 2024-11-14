@@ -1,6 +1,6 @@
 package com.github.georgi4511.discord_bot.commands.misc;
 
-import com.github.georgi4511.discord_bot.models.VictBaseCommand;
+import com.github.georgi4511.discord_bot.models.BaseCommandImpl;
 import com.github.georgi4511.discord_bot.services.CatFactService;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-public class CatFact extends VictBaseCommand {
+public class CatFact extends BaseCommandImpl {
     private static final Logger log = LoggerFactory.getLogger(CatFact.class);
     private final SlashCommandData data;
     private final String name;
