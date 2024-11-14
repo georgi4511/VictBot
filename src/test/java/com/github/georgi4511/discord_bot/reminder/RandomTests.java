@@ -24,4 +24,9 @@ public class RandomTests {
         var b=LocalTime.now();
         System.out.println(Duration.between(a,b).getSeconds());
     }
+
+    @Test
+    void TestSystemProperties(){
+        System.out.println(System.getProperty("user.dir"));
+    }
 }

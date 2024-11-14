@@ -8,6 +8,7 @@ class DiscordBotApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }
