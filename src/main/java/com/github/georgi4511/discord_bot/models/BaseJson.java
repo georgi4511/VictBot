@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class BaseJson {
-    private final static String JSON_FOLDER ="jsons";
+    private static final String JSON_FOLDER ="jsons";
     String name;
     String content;
 

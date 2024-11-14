@@ -1,5 +1,5 @@
 package com.github.georgi4511.discord_bot.listeners;
-import com.github.georgi4511.discord_bot.models.VictBaseCommand;
+import com.github.georgi4511.discord_bot.models.BaseCommandImpl;
 import com.github.georgi4511.discord_bot.services.JsonService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
@@ -21,9 +21,9 @@ import static com.github.georgi4511.discord_bot.utils.Utils.fixTwitter;
 public class DiscordEventListener extends ListenerAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(DiscordEventListener.class);
-    private final Map<String, VictBaseCommand> commands;
+    private final Map<String, BaseCommandImpl> commands;
 
-    DiscordEventListener(List<VictBaseCommand> commandList){
+    DiscordEventListener(List<BaseCommandImpl> commandList){
         this.commands = new HashMap<>();
         commandList.forEach(command-> commands.put(command.getName(),command)
         );
@@ -32,7 +32,7 @@ public class DiscordEventListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String commandName = event.getName();
-        VictBaseCommand command = commands.get(commandName);
+        BaseCommandImpl command = commands.get(commandName);
         if(command!=null) {
             command.callback(event);
         } else {
@@ -45,7 +45,7 @@ public class DiscordEventListener extends ListenerAdapter {
         String customId = event.getComponentId();
 
         // Assuming custom IDs are in the format "commandName_menuIdentifier"
-        VictBaseCommand command = commands.get(customId.split("_",2)[0]);
+        BaseCommandImpl command = commands.get(customId.split("_",2)[0]);
         if(command!=null){
             command.handleSelectInteraction(event);
         }

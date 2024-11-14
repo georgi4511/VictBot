@@ -1,6 +1,6 @@
 package com.github.georgi4511.discord_bot.commands.chat;
 
-import com.github.georgi4511.discord_bot.models.VictBaseCommand;
+import com.github.georgi4511.discord_bot.models.BaseCommandImpl;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -17,7 +17,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Component
-public class AiChat extends VictBaseCommand {
+public class AiChat extends BaseCommandImpl {
     private static final Logger log = LoggerFactory.getLogger(AiChat.class);
     private final OllamaChatModel ollamaChatModel;
     private SlashCommandData data;

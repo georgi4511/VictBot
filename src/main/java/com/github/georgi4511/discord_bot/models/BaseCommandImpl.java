@@ -1,13 +1,15 @@
 package com.github.georgi4511.discord_bot.models;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
-@Data
-public abstract class VictBaseCommand {
+@Getter
+@Setter
+public abstract class BaseCommandImpl {
     private SlashCommandData data;
     private String name;
     public abstract void callback(SlashCommandInteractionEvent event);

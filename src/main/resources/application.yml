@@ -1,5 +1,6 @@
 discord:
     token: ${BOT_TOKEN}
+    guild: ${BOT_GUILD}
 procedure:
   increment: 1000
   rate: 60000
