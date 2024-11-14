@@ -60,7 +60,7 @@ public class Utils {
 
     public static Video downloadVideo(String videoUrl, String outputDirectory) {
         String testTitle = "test";
-        ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "-o", outputDirectory + "/"+testTitle+".%(ext)s", videoUrl,"-f","251");
+        ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "-o", outputDirectory + "/%(title)s.%(ext)s", videoUrl,"-f","251");
         processBuilder.redirectErrorStream(true); // Combine error and output streams
 
         try {
@@ -74,15 +74,16 @@ public class Utils {
                 System.out.println(line);
                 if (line.contains("[download] Destination:")) {
                     // Extracting title from the line
-                    title = line.split("Destination: ")[1].split("\\.")[0]; // Get title without extension
-                    ext = line.split("Destination:")[1].split("\\.")[1]; // Get extension
+                    String[] dotSplit = line.split("Destination: ")[1].split("\\.");
+                    String[] dirSplit = dotSplit[0].split("\\\\");// Get title without extension
+                    title = dirSplit[dirSplit.length-1];
+//                    title = line.split("Destination: ")[1].split("\\.")[0].split("\\\\")[1]; // Get title without extension
+                    ext = dotSplit[1]; // Get extension
                 }
             }
 
-
             process.waitFor(); // Wait for the process to finish
 
-            title = testTitle;
             // Create a Video object with the downloaded file path
             return new Video(title, outputDirectory + "/" + title + "."+ext); // Assuming mp4 format; adjust as needed
         } catch (IOException | InterruptedException e) {
