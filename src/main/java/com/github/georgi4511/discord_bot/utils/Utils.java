@@ -9,8 +9,8 @@ public class Utils {
     public static final String X_URL = "https://x.com/";
     public static final String FXTWITTER_URL = "https://fxtwitter.com/";
 
-    private Utils() throws Exception{
-        throw new Exception("Cannot initialize helper class");
+    private Utils() throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("Cannot initialize helper class");
     }
 
     public static void fixTwitter(@NotNull MessageReceivedEvent event, @NotNull String content) {
