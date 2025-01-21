@@ -4,7 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.6'
 //	id 'org.hibernate.orm' version '6.5.3.Final'
 	id 'org.asciidoctor.jvm.convert' version '4.0.3'
-	id "com.diffplug.spotless" version "7.0.0.BETA4"
+	id "com.diffplug.spotless" version "7.0.2"
 
 }
 
