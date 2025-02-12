@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.stereotype.Component;
 
@@ -33,16 +34,17 @@ public class AiChat extends BaseCommandImpl {
 
     @Override
     public void callback(SlashCommandInteractionEvent event) {
-        try {
-            event.deferReply().queue();
+        event.deferReply().queue();
 
+        try {
             String prompt = Objects.requireNonNull(event.getOption("prompt")).getAsString();
-            String res = ollamaChatModel.call(prompt);
+            UserMessage message = new UserMessage(prompt);
+            String res = ollamaChatModel.call(message);
             res = res.length() >= 2000 ? res.substring(0, 1997) + "..." : res;
             event.getHook().editOriginal(res).queue();
         } catch (Exception e) {
             log.info(e.getMessage());
-            event.reply("Sorry command failed to execute").queue();
+            event.getHook().editOriginal("Sorry command failed to execute").queue();
         }
     }
 }

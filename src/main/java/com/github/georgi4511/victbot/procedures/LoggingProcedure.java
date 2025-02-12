@@ -7,19 +7,17 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalTime;
+import java.lang.management.ManagementFactory;
 
 @NoArgsConstructor
 @Service
 public class LoggingProcedure {
 
-   private static final LocalTime startTime = LocalTime.now();
     private static final Logger log = LoggerFactory.getLogger(LoggingProcedure.class);
 
     @Scheduled(fixedRateString = "${procedure.rate}")
     @Async
     public void logging() {
-        log.info("Bot has been alive for {} seconds", Duration.between(startTime,LocalTime.now()).getSeconds());
+        log.info("Bot has been alive for {} seconds", ManagementFactory.getRuntimeMXBean().getUptime() / 1000);
     }
 }
