@@ -1,18 +1,18 @@
 discord:
-    token: ${BOT_TOKEN}
-    guild: ${BOT_GUILD}
+  token: ${BOT_TOKEN}
+  guild: ${BOT_GUILD}
 procedure:
   increment: 1000
   rate: 60000
 spring:
-      ai:
-        ollama:
-          base-url: http://localhost:11434
-          chat:
-            options:
-              model: llama3.2
-              temperature: 0.7
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: llama3.2
+          temperature: 0.7
 application:
-  name: discord_bot
+  name: VictBot
 twitter:
   fix: true

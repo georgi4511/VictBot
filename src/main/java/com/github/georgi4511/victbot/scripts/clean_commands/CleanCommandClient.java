@@ -8,9 +8,9 @@ import org.springframework.core.env.MissingRequiredPropertiesException;
 import static com.github.georgi4511.victbot.scripts.clean_commands.CommandUtils.cleanCommands;
 import static java.util.Objects.isNull;
 
-public class Main {
+public class CleanCommandClient {
 
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
+    private static final Logger log = LoggerFactory.getLogger(CleanCommandClient.class);
 
     public static void main(@NotNull String[] args) {
         String botToken = System.getenv("BOT_TOKEN");
@@ -26,7 +26,8 @@ public class Main {
                 cleanCommands(botToken, botGuild);
             }
         } catch (InterruptedException e) {
-            log.error(e.getMessage());
+            log.error("Command deletion interrupted {}", e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 }

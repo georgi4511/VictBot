@@ -7,6 +7,7 @@ import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -29,14 +30,9 @@ public class CatFact extends BaseCommandImpl {
     }
 
     @Override
-    public void callback(SlashCommandInteractionEvent event) {
+    public void callback(@NotNull SlashCommandInteractionEvent event) {
         event.deferReply().queue();
-        try {
-            String fact = catFactService.getRandomCatFact();
-            event.getHook().sendMessage(fact).queue();
-        } catch (Exception e) {
-            event.getHook().sendMessage("Sorry, I couldn't fetch a cat fact right now.").queue();
-            log.error(e.getMessage());
-        }
+        String fact = catFactService.getRandomCatFact();
+        event.getHook().sendMessage(fact).queue();
     }
 }

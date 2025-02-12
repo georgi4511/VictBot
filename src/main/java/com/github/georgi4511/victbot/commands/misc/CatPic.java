@@ -20,7 +20,7 @@ public class CatPic extends BaseCommandImpl {
     private final String name;
     private final String description;
     private final CatPicService catPicService;
-    
+
     public CatPic(CatPicService catPicService) {
         this.name = "cat";
         this.description = "receive random cat";
@@ -31,13 +31,8 @@ public class CatPic extends BaseCommandImpl {
     @Override
     public void callback(SlashCommandInteractionEvent event) {
         event.deferReply().queue();
-        try {
-            String catPicture = catPicService.getRandomCatPicture();
-            event.getHook().sendMessage(catPicture).queue();
-        } catch (Exception e) {
-            event.getHook().sendMessage("Sorry, I couldn't fetch a cat picture right now.").queue();
-            log.error(e.getMessage());
-        }
+        String catPicture = catPicService.getRandomCatPicture();
+        event.getHook().sendMessage(catPicture).queue();
     }
 }
 

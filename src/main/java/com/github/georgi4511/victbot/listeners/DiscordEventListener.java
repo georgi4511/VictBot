@@ -1,7 +1,6 @@
 package com.github.georgi4511.victbot.listeners;
 
 import com.github.georgi4511.victbot.models.BaseCommandImpl;
-import com.github.georgi4511.victbot.services.JsonService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -65,7 +64,6 @@ public class DiscordEventListener extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         log.info("{} logged in.", event.getJDA().getSelfUser().getEffectiveName());
-        JsonService.instantiateJsons();
     }
 
 }
