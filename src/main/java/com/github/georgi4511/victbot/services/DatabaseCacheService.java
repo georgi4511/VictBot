@@ -2,24 +2,34 @@ package com.github.georgi4511.victbot.services;
 
 import com.github.georgi4511.victbot.models.DatabaseRepository;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
 @Service
 @Data
-@RequiredArgsConstructor
 public class DatabaseCacheService {
 
     private DatabaseRepository databaseRepository;
 
-    public Integer getGoodBotBotImpressions() {
-        return databaseRepository.getBotImpressions().getGoodBotCount();
+    public DatabaseCacheService() {
+        databaseRepository = new DatabaseRepository();
     }
 
-    public Integer getBadBotBotImpressions() {
-        return databaseRepository.getBotImpressions().getBadBodCount();
+    public Integer getGoodBotImpressions() {
+        return databaseRepository.getDatabase().getBotImpressions().getGoodBotCount();
+    }
+
+    public void setGoodBotImpressions(Integer input) {
+        databaseRepository.getDatabase().getBotImpressions().setGoodBotCount(input);
+    }
+
+    public Integer getBadBotImpressions() {
+        return databaseRepository.getDatabase().getBotImpressions().getBadBodCount();
+    }
+
+    public void setBadBotImpressions(Integer input) {
+        databaseRepository.getDatabase().getBotImpressions().setBadBodCount(input);
     }
 
     public void saveDatabase() throws IOException {

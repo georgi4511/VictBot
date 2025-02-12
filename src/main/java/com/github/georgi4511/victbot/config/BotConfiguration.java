@@ -2,6 +2,7 @@ package com.github.georgi4511.victbot.config;
 
 import com.github.georgi4511.victbot.listeners.DiscordEventListener;
 import com.github.georgi4511.victbot.models.BaseCommandImpl;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -23,6 +24,7 @@ import java.util.List;
 import static java.util.Objects.isNull;
 
 @Configuration
+@RequiredArgsConstructor
 public class BotConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(BotConfiguration.class);
@@ -34,25 +36,20 @@ public class BotConfiguration {
             GatewayIntent.SCHEDULED_EVENTS,
             GatewayIntent.GUILD_PRESENCES
     );
+
     @Value("${discord.token}")
-    private static String token;
+    private String token;
     @Value("${discord.guild}")
-    private static String guild;
-
-    private static JDA jda;
-
-    private BotConfiguration() {
-        throw new UnsupportedOperationException();
-    }
+    private String guild;
 
     @Bean
-    public static JDA jda(DiscordEventListener discordEventListener, List<BaseCommandImpl> commands) throws InterruptedException {
+    public JDA jda(DiscordEventListener discordEventListener, List<BaseCommandImpl> commands) throws InterruptedException {
 
         if (isNull(token)) {
             throw new MissingRequiredPropertiesException();
         }
 
-        jda = JDABuilder.create(token, intents)
+        JDA jda = JDABuilder.create(token, intents)
                 .setActivity(Activity.listening("Chilling...killing"))
                 .addEventListeners(discordEventListener)
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
@@ -61,24 +58,23 @@ public class BotConfiguration {
 
         jda.awaitReady();
 
-        addCommands(commands);
+        List<SlashCommandData> commandData = commands.stream().map(BaseCommandImpl::getData).toList();
+
+        log.info("Commands: {}", commandData.stream().map(SlashCommandData::getName).toList());
+
+
+        if (isNull(guild) || isNull(jda.getGuildById(guild))) {
+            jda.updateCommands().addCommands(commandData).queue();
+        } else {
+            Guild guildById = jda.getGuildById(guild);
+            assert !isNull(guildById);
+            guildById.updateCommands().addCommands(commandData).queue();
+        }
+
         log.info("{} commands set", commands.size());
 
         return jda;
     }
 
-    private static void addCommands(List<BaseCommandImpl> commands) {
-        List<SlashCommandData> commandData = commands.stream().map(BaseCommandImpl::getData).toList();
 
-        log.info("Commands: {}", commandData);
-
-        if (!isNull(guild)) {
-            Guild guildById = jda.getGuildById(guild);
-            if (!isNull(guildById)) {
-                guildById.updateCommands().addCommands(commandData).queue();
-                return;
-            }
-        }
-        jda.updateCommands().addCommands(commandData).queue();
-    }
 }
