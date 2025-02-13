@@ -1,8 +1,12 @@
+discord:
+  token: ${BOT_TOKEN}
+  guild: ${BOT_GUILD}
+procedure:
+  increment: 1000
+  rate: 60000
 spring:
-  profiles:
-    active: default
   datasource:
-    url: jdbc:h2:file:/assets/database
+    url: jdbc:h2:mem:mydb
     username: sa
     password: password
     driverClassName: org.h2.Driver
@@ -17,15 +21,11 @@ spring:
         options:
           model: llama3.2
           temperature: 0.7
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
   sql:
     init:
-      mode: never
+      mode: always
+  jpa:
+    defer-datasource-initialization: true
 application:
   name: VictBot
 twitter:
@@ -33,9 +33,3 @@ twitter:
 springdoc:
   swagger-ui:
     path: /
-discord:
-  token: ${BOT_TOKEN}
-  guild: ${BOT_GUILD}
-procedure:
-  increment: 1000
-  rate: 60000

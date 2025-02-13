@@ -1,0 +1,25 @@
+discord:
+  token: ${BOT_TOKEN}
+procedure:
+  increment: 1000
+  rate: 60000
+spring:
+  datasource:
+    url: jdbc:h2:file:/assets/database
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASS}
+    driverClassName: org.h2.Driver
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: llama3.2
+          temperature: 0.7
+application:
+  name: VictBot
+twitter:
+  fix: true
+springdoc:
+  swagger-ui:
+    path: /

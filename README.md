@@ -1,7 +1,11 @@
-# **VictBot DiscordBot**
-### **This** is **the** repo for a Java Discord bot made by me using the [JDA](https://github.com/discord-jda/JDA) library 
+# **VictBot the DiscordBot**
+
+### **This** is **the
+
+** Public repository for a Java Discord bot made by me using the [JDA](https://github.com/discord-jda/JDA) library
 
 ## Steps to run
+
 - add environment variable BOT_TOKEN with the value of the token gotten from Discord API Dashboard
 
 ## Description
@@ -11,19 +15,18 @@
 ### Checklist for planned things
 
 - [ ] Query image repos for funny **memes**
-- [ ] DB of memes for ease of use
+- [x] DB of memes for ease of use
 - [ ] Reminder function
 - [ ] Gacha functionality
 - [ ] Economy system
 - [ ] Random art
 - [ ] Games?
-- [ ] Music
-- [ ] LLM Integration?
+- [❌] Music
+- [x] LLM Integration?
 - [ ] Stable Diffusion Integration
-- [ ] amogus support
 - [ ] Open Library Books
-- [ ] Administrative functionality (eg. Ban/Timeout command)
+- [x] Administrative functionality (eg. Ban/Timeout command)
 - [ ] Change Icons
 - [ ] QR code creator
-- [ ] etc. API commands
-- [ ] Separate dev and prod bot!
+- [x] etc. API commands
+- [x] Separate dev and prod bot!
