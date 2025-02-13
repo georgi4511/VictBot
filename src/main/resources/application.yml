@@ -1,12 +1,6 @@
-discord:
-  token: ${BOT_TOKEN}
-  guild: ${BOT_GUILD}
-procedure:
-  increment: 1000
-  rate: 60000
 spring:
   profiles:
-    active: dev
+    active: default
   datasource:
     url: jdbc:h2:file:/assets/database
     username: sa
@@ -23,6 +17,11 @@ spring:
         options:
           model: llama3.2
           temperature: 0.7
+  jpa:
+    defer-datasource-initialization: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
   sql:
     init:
       mode: never
@@ -33,3 +32,9 @@ twitter:
 springdoc:
   swagger-ui:
     path: /
+discord:
+  token: ${BOT_TOKEN}
+  guild: ${BOT_GUILD}
+procedure:
+  increment: 1000
+  rate: 60000

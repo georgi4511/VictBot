@@ -43,7 +43,7 @@ public class BadBot extends BaseCommandImpl {
                 throw new UnsupportedOperationException();
             }
 
-            Impressions impressions = impressionsService.getImpressionsByGuildId(guild.getId()).orElseThrow(UnsupportedOperationException::new);
+            Impressions impressions = impressionsService.getImpressionsByGuildId(guild.getId()).orElse(new Impressions(guild.getId()));
             Integer badBodCount = impressions.getBadBotCount();
             badBodCount++;
             impressions.setBadBotCount(badBodCount);
@@ -52,7 +52,7 @@ public class BadBot extends BaseCommandImpl {
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            event.reply("Command failed to execute").queue();
+            event.reply("Command failed to execute").setEphemeral(true).queue();
         }
     }
 

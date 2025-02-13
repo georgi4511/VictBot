@@ -26,7 +26,7 @@ import static java.util.Objects.isNull;
 
 @Configuration
 @RequiredArgsConstructor
-@Profile("prod")
+@Profile("!dev")
 public class BotConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(BotConfiguration.class);

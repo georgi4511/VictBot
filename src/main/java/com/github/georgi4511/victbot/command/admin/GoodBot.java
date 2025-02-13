@@ -43,16 +43,16 @@ public class GoodBot extends BaseCommandImpl {
                 throw new UnsupportedOperationException();
             }
 
-            Impressions impressions = impressionsService.getImpressionsByGuildId(guild.getId()).orElseThrow(UnsupportedOperationException::new);
+            Impressions impressions = impressionsService.getImpressionsByGuildId(guild.getId()).orElse(new Impressions(guild.getId()));
             Integer badBodCount = impressions.getGoodBotCount();
             badBodCount++;
             impressions.setGoodBotCount(badBodCount);
             impressionsService.saveImpressions(impressions);
-            event.reply(String.format("I have received %d bad bot impressions. Thank you very much.", badBodCount)).queue();
+            event.reply(String.format("I have received %d good bot impressions. Thank you very much.", badBodCount)).queue();
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            event.reply("Command failed to execute").queue();
+            event.reply("Command failed to execute").setEphemeral(true).queue();
         }
     }
 
