@@ -1,8 +1,6 @@
 # **VictBot the DiscordBot**
 
-### **This** is **the
-
-** Public repository for a Java Discord bot made by me using the [JDA](https://github.com/discord-jda/JDA) library
+### **This** is **the Public repository** for a Java Discord bot made by me using the [JDA](https://github.com/discord-jda/JDA) library
 
 ## Steps to run
 
