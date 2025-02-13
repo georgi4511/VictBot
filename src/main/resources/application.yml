@@ -18,6 +18,7 @@ spring:
           model: llama3.2
           temperature: 0.7
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
     generate-ddl: true
     hibernate:
