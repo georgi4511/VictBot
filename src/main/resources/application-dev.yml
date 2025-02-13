@@ -5,10 +5,8 @@ procedure:
   increment: 1000
   rate: 60000
 spring:
-  profiles:
-    active: dev
   datasource:
-    url: jdbc:h2:file:/assets/database
+    url: jdbc:h2:mem:mydb
     username: sa
     password: password
     driverClassName: org.h2.Driver
@@ -25,7 +23,9 @@ spring:
           temperature: 0.7
   sql:
     init:
-      mode: never
+      mode: always
+  jpa:
+    defer-datasource-initialization: true
 application:
   name: VictBot
 twitter:

@@ -1,7 +1,7 @@
 package com.github.georgi4511.victbot.config;
 
-import com.github.georgi4511.victbot.listeners.DiscordEventListener;
-import com.github.georgi4511.victbot.models.BaseCommandImpl;
+import com.github.georgi4511.victbot.entity.BaseCommandImpl;
+import com.github.georgi4511.victbot.listener.DiscordEventListener;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.MissingRequiredPropertiesException;
 
 import java.util.EnumSet;
@@ -25,6 +26,7 @@ import static java.util.Objects.isNull;
 
 @Configuration
 @RequiredArgsConstructor
+@Profile("prod")
 public class BotConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(BotConfiguration.class);

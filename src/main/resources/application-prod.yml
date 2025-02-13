@@ -1,21 +1,14 @@
 discord:
   token: ${BOT_TOKEN}
-  guild: ${BOT_GUILD}
 procedure:
   increment: 1000
   rate: 60000
 spring:
-  profiles:
-    active: dev
   datasource:
     url: jdbc:h2:file:/assets/database
-    username: sa
-    password: password
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASS}
     driverClassName: org.h2.Driver
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
   ai:
     ollama:
       base-url: http://localhost:11434
@@ -23,9 +16,6 @@ spring:
         options:
           model: llama3.2
           temperature: 0.7
-  sql:
-    init:
-      mode: never
 application:
   name: VictBot
 twitter:
