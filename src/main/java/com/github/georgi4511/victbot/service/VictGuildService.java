@@ -21,12 +21,21 @@ public class VictGuildService {
         return victGuildRepository.findAll();
     }
 
+    @Transactional
     public VictGuild findVictGuildByDiscordIdOrCreate(@NonNull String discordId) {
         return victGuildRepository.findByDiscordId(discordId).orElseGet(() -> victGuildRepository.saveAndFlush(new VictGuild(discordId)));
     }
 
-    public VictGuild saveVictGuild(VictGuild victGuild) {
-        return victGuildRepository.save(victGuild);
+    public void saveVictGuild(VictGuild victGuild) {
+        victGuildRepository.save(victGuild);
+    }
+
+
+    @Transactional
+    public void addImpressionsToGuild(VictGuild victGuild) {
+        Impressions impressions = new Impressions(victGuild);
+        victGuild.setImpressions(impressions);
+        victGuildRepository.save(victGuild);
     }
 
     @Transactional
@@ -35,36 +44,25 @@ public class VictGuildService {
         if (isNull(impressions)) {
             impressions = new Impressions();
         }
-        int i = impressions.getBadBotCount() + 1;
+        int result = impressions.getBadBotCount() + 1;
 
-        impressions.setBadBotCount(i);
+        impressions.setBadBotCount(result);
         victGuild.setImpressions(impressions);
         victGuildRepository.save(victGuild);
-        return i;
+        return result;
     }
 
-//    @Transactional
-//    public Integer incrementGoodBot(@NonNull String discordId) {
-//        VictGuild victGuild = findVictGuildByDiscordIdOrCreate(discordId);
-//        Impressions impressions = victGuild.getImpressions();
-//        Integer goodBotCount = impressions.getGoodBotCount();
-//        goodBotCount++;
-//        impressions.setGoodBotCount(goodBotCount);
-//        victGuild.setImpressions(impressions);
-//        victGuildRepository.save(victGuild);
-//        return goodBotCount;
-//    }
-//
-//    @Transactional
-//    public Integer incrementBadBot(@NonNull String discordId) {
-//        VictGuild victGuild = findVictGuildByDiscordIdOrCreate(discordId);
-//        Impressions impressions = victGuild.getImpressions();
-//        Integer badBotCount = impressions.getBadBotCount();
-//        badBotCount++;
-//        impressions.setBadBotCount(badBotCount);
-//        victGuild.setImpressions(impressions);
-//        victGuildRepository.save(victGuild);
-//        return badBotCount;
-//    }
+    @Transactional
+    public Integer incrementGoodBotCount(VictGuild victGuild) {
+        Impressions impressions = victGuild.getImpressions();
+        if (isNull(impressions)) {
+            impressions = new Impressions();
+        }
+        int result = impressions.getGoodBotCount() + 1;
 
+        impressions.setGoodBotCount(result);
+        victGuild.setImpressions(impressions);
+        victGuildRepository.save(victGuild);
+        return result;
+    }
 }

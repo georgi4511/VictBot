@@ -35,7 +35,7 @@ public class GetGoodBot extends BaseCommandImpl {
     public GetGoodBot(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
         this.name = "get-goodbot";
         this.description = "Get amount of bot is good sent";
-        this.data = Commands.slash(this.name, this.description).addOption(OptionType.BOOLEAN, "global", "guild only or global?");
+        this.data = Commands.slash(this.name, this.description).addOption(OptionType.BOOLEAN, "global", "guild only or global?", true);
         this.impressionsService = impressionsService;
         this.victGuildService = victGuildService;
 
@@ -46,10 +46,8 @@ public class GetGoodBot extends BaseCommandImpl {
         try {
             boolean doGlobal = event.getOptionsByName("global").getFirst().getAsBoolean();
 
-            Integer sum;
-            if (doGlobal) {
-                sum = impressionsService.getAllImpressions().stream().map(Impressions::getGoodBotCount).reduce(0, Integer::sum);
-            } else {
+            Integer sum = 0;
+            if (!doGlobal) {
                 Guild guild = event.getGuild();
                 if (isNull(guild)) {
                     throw new UnsupportedOperationException("Global but not in guild");
@@ -57,11 +55,14 @@ public class GetGoodBot extends BaseCommandImpl {
                 VictGuild victGuild = victGuildService.findVictGuildByDiscordIdOrCreate(guild.getId());
                 Impressions impressions = victGuild.getImpressions();
                 if (isNull(impressions)) {
-                    impressions = new Impressions(victGuild);
-                    impressionsService.saveImpressions(impressions);
+                    victGuildService.addImpressionsToGuild(victGuild);
+                } else {
+                    sum = impressions.getGoodBotCount();
                 }
-                sum = impressions.getGoodBotCount();
+            } else {
+                sum = impressionsService.getAllImpressions().stream().map(Impressions::getGoodBotCount).reduce(0, Integer::sum);
             }
+
             event.reply(String.format("I have received globally %d good bot impressions. Thank you globally.", sum)).queue();
         } catch (Exception e) {
             log.error(e.getMessage());

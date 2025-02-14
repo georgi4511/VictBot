@@ -1,7 +1,6 @@
 package com.github.georgi4511.victbot.command.admin;
 
 import com.github.georgi4511.victbot.entity.BaseCommandImpl;
-import com.github.georgi4511.victbot.entity.Impressions;
 import com.github.georgi4511.victbot.entity.VictGuild;
 import com.github.georgi4511.victbot.service.ImpressionsService;
 import com.github.georgi4511.victbot.service.VictGuildService;
@@ -50,18 +49,9 @@ public class GoodBot extends BaseCommandImpl {
 
             VictGuild victGuild = victGuildService.findVictGuildByDiscordIdOrCreate(guild.getId());
 
-            Impressions impressions = victGuild.getImpressions();
+            Integer goodBotCount = victGuildService.incrementGoodBotCount(victGuild);
 
-            if (isNull(impressions)) {
-                impressions = new Impressions(victGuild);
-            }
-
-            Integer goodBodCount = impressions.getGoodBotCount();
-            goodBodCount++;
-            event.reply(String.format("I have received %d good bot impressions. Thank you very much.", goodBodCount)).queue();
-
-            impressions.setGoodBotCount(goodBodCount);
-            impressionsService.saveImpressions(impressions);
+            event.reply(String.format("I have received %d good bot impressions. Thank you very much.", goodBotCount)).queue();
 
         } catch (Exception e) {
             log.error(e.getMessage());

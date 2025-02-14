@@ -23,8 +23,8 @@ import static java.util.Objects.isNull;
 @Getter
 @Setter
 @Component
-public class GetBadBot extends BaseCommandImpl {
-    private static final Logger log = LoggerFactory.getLogger(GetBadBot.class);
+public class GetGlobalGoodBot extends BaseCommandImpl {
+    private static final Logger log = LoggerFactory.getLogger(GetGlobalGoodBot.class);
     @NonNull
     private final ImpressionsService impressionsService;
     private final VictGuildService victGuildService;
@@ -32,9 +32,9 @@ public class GetBadBot extends BaseCommandImpl {
     private String name;
     private String description;
 
-    public GetBadBot(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
-        this.name = "get-badbot";
-        this.description = "Get amount of bot is bad sent";
+    public GetGlobalGoodBot(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
+        this.name = "get-goodbot";
+        this.description = "Get amount of bot is good sent";
         this.data = Commands.slash(this.name, this.description).addOption(OptionType.BOOLEAN, "global", "guild only or global?", true);
         this.impressionsService = impressionsService;
         this.victGuildService = victGuildService;
@@ -57,13 +57,13 @@ public class GetBadBot extends BaseCommandImpl {
                 if (isNull(impressions)) {
                     victGuildService.addImpressionsToGuild(victGuild);
                 } else {
-                    sum = impressions.getBadBotCount();
+                    sum = impressions.getGoodBotCount();
                 }
             } else {
-                sum = impressionsService.getAllImpressions().stream().map(Impressions::getBadBotCount).reduce(0, Integer::sum);
+                sum = impressionsService.getAllImpressions().stream().map(Impressions::getGoodBotCount).reduce(0, Integer::sum);
             }
 
-            event.reply(String.format("I have received globally %d bad bot impressions. Frick you globally.", sum)).queue();
+            event.reply(String.format("I have received globally %d good bot impressions. Thank you globally.", sum)).queue();
         } catch (Exception e) {
             log.error(e.getMessage());
             event.getHook().sendMessage("Command failed to execute").setEphemeral(true).queue();

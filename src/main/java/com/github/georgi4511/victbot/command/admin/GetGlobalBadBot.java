@@ -23,8 +23,8 @@ import static java.util.Objects.isNull;
 @Getter
 @Setter
 @Component
-public class GetBadBot extends BaseCommandImpl {
-    private static final Logger log = LoggerFactory.getLogger(GetBadBot.class);
+public class GetGlobalBadBot extends BaseCommandImpl {
+    private static final Logger log = LoggerFactory.getLogger(GetGlobalBadBot.class);
     @NonNull
     private final ImpressionsService impressionsService;
     private final VictGuildService victGuildService;
@@ -32,7 +32,7 @@ public class GetBadBot extends BaseCommandImpl {
     private String name;
     private String description;
 
-    public GetBadBot(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
+    public GetGlobalBadBot(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
         this.name = "get-badbot";
         this.description = "Get amount of bot is bad sent";
         this.data = Commands.slash(this.name, this.description).addOption(OptionType.BOOLEAN, "global", "guild only or global?", true);
