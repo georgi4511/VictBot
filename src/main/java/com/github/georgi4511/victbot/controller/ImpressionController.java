@@ -1,6 +1,8 @@
 package com.github.georgi4511.victbot.controller;
 
 import com.github.georgi4511.victbot.entity.Impressions;
+import com.github.georgi4511.victbot.entity.VictGuild;
+import com.github.georgi4511.victbot.entity.dto.ImpressionsDto;
 import com.github.georgi4511.victbot.service.ImpressionsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,25 +18,25 @@ public class ImpressionController {
     private final ImpressionsService impressionsService;
 
     @GetMapping
-    public List<Impressions> getAllImpressions() {
-        return impressionsService.getAllImpressions();
+    public List<ImpressionsDto> getAllImpressions() {
+        return impressionsService.getAllImpressions().stream().map(ImpressionsDto::new).toList();
     }
 
 
     @PostMapping
-    public Impressions createImpressions(@RequestBody Impressions impressions) {
-        return impressionsService.saveImpressions(impressions);
+    public ImpressionsDto createImpressions(@RequestBody Impressions impressions) {
+        return ImpressionsDto.from(impressionsService.saveImpressions(impressions));
     }
 
 
-    @GetMapping("/guild/{guildId}")
-    public Optional<Impressions> getImpressions(@PathVariable String guildId) {
-        return impressionsService.getImpressionsByGuildId(guildId);
+    @GetMapping("/guild/{victGuild}")
+    public Optional<ImpressionsDto> getImpressions(@PathVariable VictGuild victGuild) {
+        return ImpressionsDto.from(impressionsService.getImpressionsByVictGuild(victGuild));
     }
 
     @PostMapping("/create")
-    public Impressions createImpressions(@RequestBody String guildId) {
-        return impressionsService.saveImpressions(guildId);
+    public ImpressionsDto createImpressions(@RequestBody VictGuild victGuild) {
+        return ImpressionsDto.from(impressionsService.saveImpressions(victGuild));
     }
 
 }

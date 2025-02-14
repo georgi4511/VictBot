@@ -1,6 +1,7 @@
 package com.github.georgi4511.victbot.controller;
 
 import com.github.georgi4511.victbot.entity.Bookmark;
+import com.github.georgi4511.victbot.entity.VictGuild;
 import com.github.georgi4511.victbot.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +28,9 @@ public class BookmarkController {
     }
 
 
-    @GetMapping("/guild/{guildId}")
-    public Optional<Bookmark> getBookmarkByGuildId(@PathVariable String guildId) {
-        return bookmarkService.getBookmarkByGuildId(guildId);
+    @GetMapping("/guild/{victGuild}")
+    public Optional<Bookmark> getBookmarkByGuildId(@PathVariable VictGuild victGuild) {
+        return bookmarkService.getBookmarkByVictGuild(victGuild);
     }
 
 }

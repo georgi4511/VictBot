@@ -1,6 +1,7 @@
 package com.github.georgi4511.victbot.service;
 
 import com.github.georgi4511.victbot.entity.Impressions;
+import com.github.georgi4511.victbot.entity.VictGuild;
 import com.github.georgi4511.victbot.repository.ImpressionsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,17 +18,15 @@ public class ImpressionsService {
         return impressionsRepository.findAll();
     }
 
-    public Optional<Impressions> getImpressionsByGuildId(String guildId) {
-        return impressionsRepository.findByGuildId(guildId);
+    public Optional<Impressions> getImpressionsByVictGuild(VictGuild victGuild) {
+        return impressionsRepository.findByVictGuild(victGuild);
     }
 
     public Impressions saveImpressions(Impressions impressions) {
         return impressionsRepository.save(impressions);
     }
 
-    public Impressions saveImpressions(String guildId) {
-
-        Impressions impressions = new Impressions(guildId);
-        return impressionsRepository.save(impressions);
+    public Impressions saveImpressions(VictGuild victGuild) {
+        return impressionsRepository.save(new Impressions(victGuild));
     }
 }

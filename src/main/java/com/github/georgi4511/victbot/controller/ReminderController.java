@@ -1,6 +1,7 @@
 package com.github.georgi4511.victbot.controller;
 
 import com.github.georgi4511.victbot.entity.Reminder;
+import com.github.georgi4511.victbot.entity.VictGuild;
 import com.github.georgi4511.victbot.service.ReminderEntryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +28,9 @@ public class ReminderController {
     }
 
 
-    @GetMapping("/guild/{guildId}")
-    public Optional<Reminder> getReminder(@PathVariable String guildId) {
-        return reminderEntryService.getReminderEntryByGuildId(guildId);
+    @GetMapping("/guild/{victGuild}")
+    public Optional<Reminder> getReminder(@PathVariable VictGuild victGuild) {
+        return reminderEntryService.getReminderEntryByVictGuild(victGuild);
     }
 
 }

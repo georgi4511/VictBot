@@ -1,6 +1,7 @@
 package com.github.georgi4511.victbot.service;
 
 import com.github.georgi4511.victbot.entity.Bookmark;
+import com.github.georgi4511.victbot.entity.VictGuild;
 import com.github.georgi4511.victbot.repository.BookmarkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,8 @@ public class BookmarkService {
         return bookmarkRepository.findAll();
     }
 
-    public Optional<Bookmark> getBookmarkByGuildId(String guildId) {
-        return bookmarkRepository.findByGuildId(guildId);
+    public Optional<Bookmark> getBookmarkByVictGuild(VictGuild victGuild) {
+        return bookmarkRepository.findByVictGuild(victGuild);
     }
 
     public Bookmark saveBookmark(Bookmark bookmark) {

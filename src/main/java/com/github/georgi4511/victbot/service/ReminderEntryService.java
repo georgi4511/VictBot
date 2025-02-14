@@ -1,6 +1,7 @@
 package com.github.georgi4511.victbot.service;
 
 import com.github.georgi4511.victbot.entity.Reminder;
+import com.github.georgi4511.victbot.entity.VictGuild;
 import com.github.georgi4511.victbot.repository.ReminderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,8 @@ public class ReminderEntryService {
         return reminderRepository.findAll();
     }
 
-    public Optional<Reminder> getReminderEntryByGuildId(String guildId) {
-        return reminderRepository.findByGuildId(guildId);
+    public Optional<Reminder> getReminderEntryByVictGuild(VictGuild victGuild) {
+        return reminderRepository.findByVictGuild(victGuild);
     }
 
     public Reminder saveReminderEntry(Reminder reminder) {

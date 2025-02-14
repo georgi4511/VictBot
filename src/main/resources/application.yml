@@ -2,7 +2,7 @@ spring:
   profiles:
     active: default
   datasource:
-    url: jdbc:h2:file:/assets/database
+    url: jdbc:h2:file:./assets/database
     username: sa
     password: password
     driverClassName: org.h2.Driver

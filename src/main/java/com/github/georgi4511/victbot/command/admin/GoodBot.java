@@ -2,7 +2,9 @@ package com.github.georgi4511.victbot.command.admin;
 
 import com.github.georgi4511.victbot.entity.BaseCommandImpl;
 import com.github.georgi4511.victbot.entity.Impressions;
+import com.github.georgi4511.victbot.entity.VictGuild;
 import com.github.georgi4511.victbot.service.ImpressionsService;
+import com.github.georgi4511.victbot.service.VictGuildService;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -21,41 +23,49 @@ import static java.util.Objects.isNull;
 @Setter
 @Component
 public class GoodBot extends BaseCommandImpl {
-    private static final Logger log = LoggerFactory.getLogger(BadBot.class);
+    private static final Logger log = LoggerFactory.getLogger(GoodBot.class);
     @NonNull
     private final ImpressionsService impressionsService;
+    private final VictGuildService victGuildService;
     private SlashCommandData data;
     private String name;
     private String description;
 
-    public GoodBot(@NotNull ImpressionsService impressionsService) {
+    public GoodBot(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
         this.name = "goodbot";
         this.description = "When bot is good";
         this.data = Commands.slash(this.name, this.description);
         this.impressionsService = impressionsService;
+        this.victGuildService = victGuildService;
     }
 
     @Override
     public void callback(SlashCommandInteractionEvent event) {
+
         try {
             Guild guild = event.getGuild();
             if (isNull(guild)) {
                 throw new UnsupportedOperationException();
             }
 
-            Impressions impressions = impressionsService.getImpressionsByGuildId(guild.getId()).orElse(new Impressions(guild.getId()));
-            Integer badBodCount = impressions.getGoodBotCount();
-            badBodCount++;
-            impressions.setGoodBotCount(badBodCount);
+            VictGuild victGuild = victGuildService.findVictGuildByDiscordIdOrCreate(guild.getId());
+
+            Impressions impressions = victGuild.getImpressions();
+
+            if (isNull(impressions)) {
+                impressions = new Impressions(victGuild);
+            }
+
+            Integer goodBodCount = impressions.getGoodBotCount();
+            goodBodCount++;
+            event.reply(String.format("I have received %d good bot impressions. Thank you very much.", goodBodCount)).queue();
+
+            impressions.setGoodBotCount(goodBodCount);
             impressionsService.saveImpressions(impressions);
-            event.reply(String.format("I have received %d good bot impressions. Thank you very much.", badBodCount)).queue();
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            event.reply("Command failed to execute").setEphemeral(true).queue();
+            event.getHook().sendMessage("Command failed to execute").setEphemeral(true).queue();
         }
     }
-
 }
-
-

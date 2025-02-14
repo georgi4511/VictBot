@@ -25,7 +25,11 @@ spring:
     init:
       mode: always
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
 application:
   name: VictBot
 twitter:
