@@ -10,7 +10,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.jetbrains.annotations.NotNull;
@@ -34,8 +33,8 @@ public class GetGoodBot extends BaseCommandImpl {
 
     public GetGoodBot(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
         this.name = "get-goodbot";
-        this.description = "Get amount of bot is good sent";
-        this.data = Commands.slash(this.name, this.description).addOption(OptionType.BOOLEAN, "global", "guild only or global?", true);
+        this.description = "Get amount of bot is good sent in server";
+        this.data = Commands.slash(this.name, this.description);
         this.impressionsService = impressionsService;
         this.victGuildService = victGuildService;
 
@@ -44,26 +43,20 @@ public class GetGoodBot extends BaseCommandImpl {
     @Override
     public void callback(SlashCommandInteractionEvent event) {
         try {
-            boolean doGlobal = event.getOptionsByName("global").getFirst().getAsBoolean();
-
             Integer sum = 0;
-            if (!doGlobal) {
-                Guild guild = event.getGuild();
-                if (isNull(guild)) {
-                    throw new UnsupportedOperationException("Global but not in guild");
-                }
-                VictGuild victGuild = victGuildService.findVictGuildByDiscordIdOrCreate(guild.getId());
-                Impressions impressions = victGuild.getImpressions();
-                if (isNull(impressions)) {
-                    victGuildService.addImpressionsToGuild(victGuild);
-                } else {
-                    sum = impressions.getGoodBotCount();
-                }
+            Guild guild = event.getGuild();
+            if (isNull(guild)) {
+                throw new UnsupportedOperationException("Global but not in guild");
+            }
+            VictGuild victGuild = victGuildService.findVictGuildByDiscordIdOrCreate(guild.getId());
+            Impressions impressions = victGuild.getImpressions();
+            if (isNull(impressions)) {
+                victGuildService.addImpressionsToGuild(victGuild);
             } else {
-                sum = impressionsService.getAllImpressions().stream().map(Impressions::getGoodBotCount).reduce(0, Integer::sum);
+                sum = impressions.getGoodBotCount();
             }
 
-            event.reply(String.format("I have received globally %d good bot impressions. Thank you globally.", sum)).queue();
+            event.reply(String.format("I have received %d good bot impressions. Thank you.", sum)).queue();
         } catch (Exception e) {
             log.error(e.getMessage());
             event.getHook().sendMessage("Command failed to execute").setEphemeral(true).queue();
