@@ -1,6 +1,10 @@
 package com.github.georgi4511.victbot.listener;
 
-import com.github.georgi4511.victbot.entity.BaseCommandImpl;
+import com.github.georgi4511.victbot.entity.VictCommand;
+import com.github.georgi4511.victbot.entity.VictGuild;
+import com.github.georgi4511.victbot.entity.VictUser;
+import com.github.georgi4511.victbot.service.VictGuildService;
+import com.github.georgi4511.victbot.service.VictUserService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -16,23 +20,35 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.georgi4511.victbot.util.Utils.fixTwitter;
+import static java.util.Objects.isNull;
 
 @Component
 public class DiscordEventListener extends ListenerAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(DiscordEventListener.class);
-    private final Map<String, BaseCommandImpl> commands;
+    private final Map<String, VictCommand> commands;
+    private final VictGuildService victGuildService;
+    private final VictUserService victUserService;
 
-    DiscordEventListener(List<BaseCommandImpl> commandList) {
+    DiscordEventListener(List<VictCommand> commandList, VictUserService victUserService, VictGuildService victGuildService) {
         this.commands = new HashMap<>();
-        commandList.forEach(command -> commands.put(command.getName(), command)
-        );
+        commandList.forEach(command -> commands.put(command.getName(), command));
+
+        this.victUserService = victUserService;
+        this.victGuildService = victGuildService;
     }
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String commandName = event.getName();
-        BaseCommandImpl command = commands.get(commandName);
+        VictCommand command = commands.get(commandName);
+
+        if (!victUserService.existsVictUserByDiscordId(event.getUser().getId()))
+            victUserService.saveVictUser(new VictUser(event.getUser().getId()));
+        if (!isNull(event.getGuild()) && victGuildService.existsVictGuildByDiscordId(event.getGuild().getId())) {
+            victGuildService.saveVictGuild(new VictGuild(event.getGuild().getId()));
+        }
+
         if (command != null) {
             command.callback(event);
         } else {
@@ -45,7 +61,7 @@ public class DiscordEventListener extends ListenerAdapter {
         String customId = event.getComponentId();
 
         // Assuming custom IDs are in the format "commandName_menuIdentifier"
-        BaseCommandImpl command = commands.get(customId.split("_", 2)[0]);
+        VictCommand command = commands.get(customId.split("_", 2)[0]);
         if (command != null) {
             command.handleSelectInteraction(event);
         } else {

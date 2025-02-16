@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.chat;
 
-import com.github.georgi4511.victbot.entity.BaseCommandImpl;
+import com.github.georgi4511.victbot.entity.VictCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -18,7 +18,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Component
-public class AiChat extends BaseCommandImpl {
+public class AiChat extends VictCommand {
     private static final Logger log = LoggerFactory.getLogger(AiChat.class);
     private final OllamaChatModel ollamaChatModel;
     private SlashCommandData data;
@@ -27,7 +27,7 @@ public class AiChat extends BaseCommandImpl {
 
     public AiChat(OllamaChatModel ollamaChatModel) {
         this.ollamaChatModel = ollamaChatModel;
-        this.name = "ai_chat_java";
+        this.name = "ai-chat";
         this.description = "talk to ollama through java";
         this.data = Commands.slash(this.name, this.description).addOption(OptionType.STRING, "prompt", "the prompt sent to the bot", true);
     }

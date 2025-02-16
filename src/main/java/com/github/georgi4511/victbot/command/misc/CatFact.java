@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.misc;
 
-import com.github.georgi4511.victbot.entity.BaseCommandImpl;
+import com.github.georgi4511.victbot.entity.VictCommand;
 import com.github.georgi4511.victbot.service.CatFactService;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-public class CatFact extends BaseCommandImpl {
+public class CatFact extends VictCommand {
     private static final Logger log = LoggerFactory.getLogger(CatFact.class);
     private final SlashCommandData data;
     private final String name;
@@ -23,7 +23,7 @@ public class CatFact extends BaseCommandImpl {
     private final CatFactService catFactService;
 
     public CatFact(CatFactService catFactService) {
-        this.name = "cat_fact";
+        this.name = "cat-fact";
         this.description = "receive random cat fact 🐈";
         this.data = Commands.slash(this.name, this.description);
         this.catFactService = catFactService;

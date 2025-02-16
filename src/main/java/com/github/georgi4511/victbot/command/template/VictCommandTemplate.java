@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.template;
 
-import com.github.georgi4511.victbot.entity.BaseCommandImpl;
+import com.github.georgi4511.victbot.entity.VictCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -10,12 +10,12 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 @Getter
 @Setter
-public class CommandImplTemplate extends BaseCommandImpl {
+public class VictCommandTemplate extends VictCommand {
     private SlashCommandData data;
     private String name;
     private String description;
 
-    public CommandImplTemplate() {
+    public VictCommandTemplate() {
         this.name = "<CHANGE ME>";
         this.description = "<CHANGE ME>";
         this.data = Commands.slash(this.name, this.description);

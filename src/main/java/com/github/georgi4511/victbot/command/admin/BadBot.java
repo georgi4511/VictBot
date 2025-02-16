@@ -1,8 +1,8 @@
 package com.github.georgi4511.victbot.command.admin;
 
-import com.github.georgi4511.victbot.entity.BaseCommandImpl;
-import com.github.georgi4511.victbot.entity.VictGuild;
-import com.github.georgi4511.victbot.service.VictGuildService;
+import com.github.georgi4511.victbot.entity.Impressions;
+import com.github.georgi4511.victbot.entity.VictCommand;
+import com.github.georgi4511.victbot.service.ImpressionsService;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.Guild;
@@ -18,18 +18,18 @@ import static java.util.Objects.isNull;
 @Getter
 @Setter
 @Component
-public class BadBot extends BaseCommandImpl {
+public class BadBot extends VictCommand {
     private static final Logger log = LoggerFactory.getLogger(BadBot.class);
-    private final VictGuildService victGuildService;
+    private final ImpressionsService impressionsService;
     private SlashCommandData data;
     private String name;
     private String description;
 
-    public BadBot(VictGuildService victGuildService) {
-        this.name = "badbot";
+    public BadBot(ImpressionsService impressionsService) {
+        this.name = "bad-bot";
         this.description = "When bot is bad";
         this.data = Commands.slash(this.name, this.description);
-        this.victGuildService = victGuildService;
+        this.impressionsService = impressionsService;
     }
 
     @Override
@@ -41,15 +41,15 @@ public class BadBot extends BaseCommandImpl {
                 throw new UnsupportedOperationException();
             }
 
-            VictGuild victGuild = victGuildService.findVictGuildByDiscordIdOrCreate(guild.getId());
+            Impressions impressions = impressionsService.incrementImpressionsByDiscordId(guild.getId(), false);
 
-            Integer badBotCount = victGuildService.incrementBadBotCount(victGuild);
-
-            event.reply(String.format("I have received %d bad bot impressions. Frick you.", badBotCount)).queue();
+            event.reply(String.format("I have received %d bad bot impressions. Frick you.", impressions.getBadBotCount())).queue();
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            event.getHook().sendMessage("Command failed to execute").setEphemeral(true).queue();
+            if (!event.isAcknowledged()) {
+                event.reply("Command failed to execute").setEphemeral(true).queue();
+            }
         }
     }
 }

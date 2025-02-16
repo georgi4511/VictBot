@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/impressions")
@@ -19,24 +18,27 @@ public class ImpressionController {
 
     @GetMapping
     public List<ImpressionsDto> getAllImpressions() {
-        return impressionsService.getAllImpressions().stream().map(ImpressionsDto::new).toList();
+        return impressionsService.getAllImpressions().stream().map((ImpressionsDto::fromImpressions)).toList();
     }
 
 
     @PostMapping
     public ImpressionsDto createImpressions(@RequestBody Impressions impressions) {
-        return ImpressionsDto.from(impressionsService.saveImpressions(impressions));
+        return ImpressionsDto.fromImpressions(impressionsService.saveImpressions(impressions));
     }
 
 
     @GetMapping("/guild/{victGuild}")
-    public Optional<ImpressionsDto> getImpressions(@PathVariable VictGuild victGuild) {
-        return ImpressionsDto.from(impressionsService.getImpressionsByVictGuild(victGuild));
+    public ImpressionsDto getImpressions(@PathVariable VictGuild victGuild) {
+        return impressionsService
+                .getImpressionsByVictGuild(victGuild)
+                .map(ImpressionsDto::fromImpressions)
+                .orElse(new ImpressionsDto(null, 0, 0, null));
     }
 
     @PostMapping("/create")
     public ImpressionsDto createImpressions(@RequestBody VictGuild victGuild) {
-        return ImpressionsDto.from(impressionsService.saveImpressions(victGuild));
+        return ImpressionsDto.fromImpressions(impressionsService.saveImpressions(victGuild));
     }
 
 }

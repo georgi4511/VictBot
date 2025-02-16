@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.admin;
 
-import com.github.georgi4511.victbot.entity.BaseCommandImpl;
+import com.github.georgi4511.victbot.entity.VictCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.Member;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Getter
 @Setter
 @Component
-public class Shoot extends BaseCommandImpl {
+public class Shoot extends VictCommand {
     public static final String USER = "user";
     public static final String TIME = "time";
     private static final Logger log = LoggerFactory.getLogger(Shoot.class);

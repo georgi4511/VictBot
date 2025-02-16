@@ -1,7 +1,7 @@
 package com.github.georgi4511.victbot.command.admin;
 
-import com.github.georgi4511.victbot.entity.BaseCommandImpl;
-import com.github.georgi4511.victbot.entity.VictGuild;
+import com.github.georgi4511.victbot.entity.Impressions;
+import com.github.georgi4511.victbot.entity.VictCommand;
 import com.github.georgi4511.victbot.service.ImpressionsService;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import lombok.Getter;
@@ -21,7 +21,7 @@ import static java.util.Objects.isNull;
 @Getter
 @Setter
 @Component
-public class GoodBot extends BaseCommandImpl {
+public class GoodBot extends VictCommand {
     private static final Logger log = LoggerFactory.getLogger(GoodBot.class);
     @NonNull
     private final ImpressionsService impressionsService;
@@ -31,7 +31,7 @@ public class GoodBot extends BaseCommandImpl {
     private String description;
 
     public GoodBot(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
-        this.name = "goodbot";
+        this.name = "good-bot";
         this.description = "When bot is good";
         this.data = Commands.slash(this.name, this.description);
         this.impressionsService = impressionsService;
@@ -40,22 +40,21 @@ public class GoodBot extends BaseCommandImpl {
 
     @Override
     public void callback(SlashCommandInteractionEvent event) {
-
         try {
             Guild guild = event.getGuild();
             if (isNull(guild)) {
                 throw new UnsupportedOperationException();
             }
 
-            VictGuild victGuild = victGuildService.findVictGuildByDiscordIdOrCreate(guild.getId());
+            Impressions impressions = impressionsService.incrementImpressionsByDiscordId(guild.getId(), true);
 
-            Integer goodBotCount = victGuildService.incrementGoodBotCount(victGuild);
-
-            event.reply(String.format("I have received %d good bot impressions. Thank you very much.", goodBotCount)).queue();
+            event.reply(String.format("I have received %d good bot impressions. Thank you very much.", impressions.getGoodBotCount())).queue();
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            event.getHook().sendMessage("Command failed to execute").setEphemeral(true).queue();
+            if (!event.isAcknowledged()) {
+                event.getHook().editOriginal("Command failed to execute").queue();
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.config;
 
-import com.github.georgi4511.victbot.entity.BaseCommandImpl;
+import com.github.georgi4511.victbot.entity.VictCommand;
 import com.github.georgi4511.victbot.listener.DiscordEventListener;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
@@ -45,7 +45,7 @@ public class BotConfiguration {
     private String guild;
 
     @Bean
-    public JDA jda(DiscordEventListener discordEventListener, List<BaseCommandImpl> commands) throws InterruptedException {
+    public JDA jda(DiscordEventListener discordEventListener, List<VictCommand> commands) throws InterruptedException {
 
         if (isNull(token)) {
             throw new MissingRequiredPropertiesException();
@@ -60,7 +60,7 @@ public class BotConfiguration {
 
         jda.awaitReady();
 
-        List<SlashCommandData> commandData = commands.stream().map(BaseCommandImpl::getData).toList();
+        List<SlashCommandData> commandData = commands.stream().map(VictCommand::getData).toList();
 
         log.info("Commands: {}", commandData.stream().map(SlashCommandData::getName).toList());
 

@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.misc;
 
-import com.github.georgi4511.victbot.entity.BaseCommandImpl;
+import com.github.georgi4511.victbot.entity.VictCommand;
 import com.github.georgi4511.victbot.service.CatPicService;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-public class CatPic extends BaseCommandImpl {
+public class CatPic extends VictCommand {
     private static final Logger log = LoggerFactory.getLogger(CatPic.class);
     private final SlashCommandData data;
     private final String name;

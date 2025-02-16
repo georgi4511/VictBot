@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 @Data
-public abstract class BaseCommandImpl {
+public abstract class VictCommand {
     private SlashCommandData data;
     private String name;
     private Integer cooldown;

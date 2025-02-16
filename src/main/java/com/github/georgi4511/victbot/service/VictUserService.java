@@ -21,7 +21,16 @@ public class VictUserService {
         return victUserRepository.findByDiscordId(discordId).orElseGet(() -> victUserRepository.save(new VictUser(discordId)));
     }
 
-    public VictUser saveVictUser(VictUser victUser) {
-        return victUserRepository.save(victUser);
+    public boolean victUserExists(VictUser victUser) {
+        return victUserRepository.existsById(victUser.getId());
+    }
+
+    public boolean existsVictUserByDiscordId(String discordId) {
+        return victUserRepository.existsVictUserByDiscordId(discordId);
+    }
+
+
+    public void saveVictUser(VictUser victUser) {
+        victUserRepository.save(victUser);
     }
 }
