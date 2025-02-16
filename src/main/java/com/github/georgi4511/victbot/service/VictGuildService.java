@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,39 +33,11 @@ public class VictGuildService {
         return victGuildRepository.save(victGuild);
     }
 
-//
-//    @Transactional
-//    public void addImpressionsToGuild(VictGuild victGuild) {
-//        Impressions impressions = new Impressions(victGuild);
-//        victGuild.setImpressions(impressions);
-//        victGuildRepository.save(victGuild);
-//    }
-//
-//    @Transactional
-//    public Integer incrementBadBotCount(VictGuild victGuild) {
-//        Impressions impressions = victGuild.getImpressions();
-//        if (isNull(impressions)) {
-//            impressions = new Impressions();
-//        }
-//        int result = impressions.getBadBotCount() + 1;
-//
-//        impressions.setBadBotCount(result);
-//        victGuild.setImpressions(impressions);
-//        victGuildRepository.save(victGuild);
-//        return result;
-//    }
-//
-//    @Transactional
-//    public Integer incrementGoodBotCount(VictGuild victGuild) {
-//        Impressions impressions = victGuild.getImpressions();
-//        if (isNull(impressions)) {
-//            impressions = new Impressions();
-//        }
-//        int result = impressions.getGoodBotCount() + 1;
-//
-//        impressions.setGoodBotCount(result);
-//        victGuild.setImpressions(impressions);
-//        victGuildRepository.save(victGuild);
-//        return result;
-//    }
+    public Optional<VictGuild> getByVictGuildId(Long id) {
+        return victGuildRepository.findById(id);
+    }
+
+    public Optional<VictGuild> getByVictGuildDiscordId(String discordId) {
+        return victGuildRepository.findByDiscordId(discordId);
+    }
 }

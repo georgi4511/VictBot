@@ -18,14 +18,14 @@ import static java.util.Objects.isNull;
 @Getter
 @Setter
 @Component
-public class BadBot extends VictCommand {
-    private static final Logger log = LoggerFactory.getLogger(BadBot.class);
+public class BadBotCommand extends VictCommand {
+    private static final Logger log = LoggerFactory.getLogger(BadBotCommand.class);
     private final ImpressionsService impressionsService;
     private SlashCommandData data;
     private String name;
     private String description;
 
-    public BadBot(ImpressionsService impressionsService) {
+    public BadBotCommand(ImpressionsService impressionsService) {
         this.name = "bad-bot";
         this.description = "When bot is bad";
         this.data = Commands.slash(this.name, this.description);

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,15 @@ public class VictUserService {
     }
 
 
-    public void saveVictUser(VictUser victUser) {
-        victUserRepository.save(victUser);
+    public VictUser saveVictUser(VictUser victUser) {
+        return victUserRepository.save(victUser);
+    }
+
+    public Optional<VictUser> getByVictUserId(Long id) {
+        return victUserRepository.findById(id);
+    }
+
+    public Optional<VictUser> getByVictUserDiscordId(String discordId) {
+        return victUserRepository.findByDiscordId(discordId);
     }
 }

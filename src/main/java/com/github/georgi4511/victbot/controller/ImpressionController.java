@@ -23,7 +23,7 @@ public class ImpressionController {
 
 
     @PostMapping
-    public ImpressionsDto createImpressions(@RequestBody Impressions impressions) {
+    public ImpressionsDto saveImpressions(@RequestBody Impressions impressions) {
         return ImpressionsDto.fromImpressions(impressionsService.saveImpressions(impressions));
     }
 
@@ -37,7 +37,7 @@ public class ImpressionController {
     }
 
     @PostMapping("/create")
-    public ImpressionsDto createImpressions(@RequestBody VictGuild victGuild) {
+    public ImpressionsDto saveImpressions(@RequestBody VictGuild victGuild) {
         return ImpressionsDto.fromImpressions(impressionsService.saveImpressions(victGuild));
     }
 

@@ -25,8 +25,8 @@ import static java.util.Objects.isNull;
 @Getter
 @Setter
 @Component
-public class GetBotImpressions extends VictCommand {
-    private static final Logger log = LoggerFactory.getLogger(GetBotImpressions.class);
+public class GetBotImpressionsCommand extends VictCommand {
+    private static final Logger log = LoggerFactory.getLogger(GetBotImpressionsCommand.class);
     @NonNull
     private final ImpressionsService impressionsService;
     private final VictGuildService victGuildService;
@@ -34,7 +34,7 @@ public class GetBotImpressions extends VictCommand {
     private String name;
     private String description;
 
-    public GetBotImpressions(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
+    public GetBotImpressionsCommand(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
         this.name = "get-bot-impressions";
         this.description = "Get amount of bot is good/bad sent in server/globally";
         this.data = Commands.slash(this.name, this.description).addOption(OptionType.BOOLEAN, "global", "do the search globally or only for this server");

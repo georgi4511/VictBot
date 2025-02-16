@@ -23,7 +23,7 @@ public class BookmarkController {
 
 
     @PostMapping
-    public Bookmark createBookmark(@RequestBody Bookmark bookmark) {
+    public Bookmark saveBookmark(@RequestBody Bookmark bookmark) {
         return bookmarkService.saveBookmark(bookmark);
     }
 

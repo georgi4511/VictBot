@@ -19,15 +19,15 @@ import java.util.concurrent.TimeUnit;
 @Getter
 @Setter
 @Component
-public class Shoot extends VictCommand {
+public class ShootCommand extends VictCommand {
     public static final String USER = "user";
     public static final String TIME = "time";
-    private static final Logger log = LoggerFactory.getLogger(Shoot.class);
+    private static final Logger log = LoggerFactory.getLogger(ShootCommand.class);
     private SlashCommandData data;
     private String name;
     private String description;
 
-    public Shoot() {
+    public ShootCommand() {
         this.name = "shoot";
         this.description = "Times out a user";
         this.data = Commands.slash(this.name, this.description).addOption(OptionType.USER, USER, "The user to shoot", true).addOption(OptionType.INTEGER, TIME, "Time out time in seconds", true);

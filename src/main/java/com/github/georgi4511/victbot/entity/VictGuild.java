@@ -18,6 +18,7 @@ public class VictGuild {
     @Id
     Long id;
 
+    @Column(unique = true)
     @NonNull
     String discordId;
 

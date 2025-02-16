@@ -1,4 +1,4 @@
-package com.github.georgi4511.victbot.command.template;
+package com.github.georgi4511.victbot.command._template;
 
 import com.github.georgi4511.victbot.entity.VictCommand;
 import lombok.Getter;

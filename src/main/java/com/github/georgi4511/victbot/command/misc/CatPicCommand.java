@@ -1,13 +1,12 @@
 package com.github.georgi4511.victbot.command.misc;
 
 import com.github.georgi4511.victbot.entity.VictCommand;
-import com.github.georgi4511.victbot.service.CatFactService;
+import com.github.georgi4511.victbot.service.CatPicService;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,24 +14,27 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-public class CatFact extends VictCommand {
-    private static final Logger log = LoggerFactory.getLogger(CatFact.class);
+public class CatPicCommand extends VictCommand {
+    private static final Logger log = LoggerFactory.getLogger(CatPicCommand.class);
     private final SlashCommandData data;
     private final String name;
     private final String description;
-    private final CatFactService catFactService;
+    private final CatPicService catPicService;
 
-    public CatFact(CatFactService catFactService) {
-        this.name = "cat-fact";
-        this.description = "receive random cat fact 🐈";
+    public CatPicCommand(CatPicService catPicService) {
+        this.name = "cat";
+        this.description = "receive random cat";
         this.data = Commands.slash(this.name, this.description);
-        this.catFactService = catFactService;
+        this.catPicService = catPicService;
     }
 
     @Override
-    public void callback(@NotNull SlashCommandInteractionEvent event) {
+    public void callback(SlashCommandInteractionEvent event) {
         event.deferReply().queue();
-        String fact = catFactService.getRandomCatFact();
-        event.getHook().sendMessage(fact).queue();
+        String catPicture = catPicService.getRandomCatPicture();
+        event.getHook().sendMessage(catPicture).queue();
     }
 }
+
+
+

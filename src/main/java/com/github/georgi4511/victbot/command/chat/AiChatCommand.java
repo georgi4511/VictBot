@@ -18,14 +18,14 @@ import java.util.Objects;
 @Getter
 @Setter
 @Component
-public class AiChat extends VictCommand {
-    private static final Logger log = LoggerFactory.getLogger(AiChat.class);
+public class AiChatCommand extends VictCommand {
+    private static final Logger log = LoggerFactory.getLogger(AiChatCommand.class);
     private final OllamaChatModel ollamaChatModel;
     private SlashCommandData data;
     private String name;
     private String description;
 
-    public AiChat(OllamaChatModel ollamaChatModel) {
+    public AiChatCommand(OllamaChatModel ollamaChatModel) {
         this.ollamaChatModel = ollamaChatModel;
         this.name = "ai-chat";
         this.description = "talk to ollama through java";

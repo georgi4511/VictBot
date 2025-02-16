@@ -45,7 +45,7 @@ public class DiscordEventListener extends ListenerAdapter {
 
         if (!victUserService.existsVictUserByDiscordId(event.getUser().getId()))
             victUserService.saveVictUser(new VictUser(event.getUser().getId()));
-        if (!isNull(event.getGuild()) && victGuildService.existsVictGuildByDiscordId(event.getGuild().getId())) {
+        if (!isNull(event.getGuild()) && !victGuildService.existsVictGuildByDiscordId(event.getGuild().getId())) {
             victGuildService.saveVictGuild(new VictGuild(event.getGuild().getId()));
         }
 

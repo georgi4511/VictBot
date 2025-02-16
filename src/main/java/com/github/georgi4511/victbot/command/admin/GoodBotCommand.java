@@ -21,8 +21,8 @@ import static java.util.Objects.isNull;
 @Getter
 @Setter
 @Component
-public class GoodBot extends VictCommand {
-    private static final Logger log = LoggerFactory.getLogger(GoodBot.class);
+public class GoodBotCommand extends VictCommand {
+    private static final Logger log = LoggerFactory.getLogger(GoodBotCommand.class);
     @NonNull
     private final ImpressionsService impressionsService;
     private final VictGuildService victGuildService;
@@ -30,7 +30,7 @@ public class GoodBot extends VictCommand {
     private String name;
     private String description;
 
-    public GoodBot(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
+    public GoodBotCommand(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
         this.name = "good-bot";
         this.description = "When bot is good";
         this.data = Commands.slash(this.name, this.description);
