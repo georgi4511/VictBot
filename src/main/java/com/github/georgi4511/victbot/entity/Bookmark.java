@@ -11,21 +11,21 @@ import lombok.*;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Bookmark {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @NonNull private Instant createdTime;
+  @NonNull private Instant createdTime;
 
-    @NonNull private String message;
+  @NonNull private String message;
 
-    @NonNull private String response;
+  @NonNull private String response;
 
-    @ManyToOne
-    @JoinColumn(name = "vict_user_id", nullable = false)
-    private VictUser victUser;
+  @ManyToOne
+  @JoinColumn(name = "vict_user_id", nullable = false)
+  private VictUser victUser;
 
-    @ManyToOne
-    @JoinColumn(name = "vict_guild_id", nullable = false)
-    private VictGuild victGuild;
+  @ManyToOne
+  @JoinColumn(name = "vict_guild_id", nullable = false)
+  private VictGuild victGuild;
 }

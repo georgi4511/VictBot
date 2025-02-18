@@ -21,44 +21,45 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 public class GoodBotCommand extends VictCommand {
-    private static final Logger log = LoggerFactory.getLogger(GoodBotCommand.class);
-    @NonNull private final ImpressionsService impressionsService;
-    private final VictGuildService victGuildService;
-    private SlashCommandData data;
-    private String name;
-    private String description;
+  private static final Logger log = LoggerFactory.getLogger(GoodBotCommand.class);
+  @NonNull private final ImpressionsService impressionsService;
+  private final VictGuildService victGuildService;
+  private SlashCommandData data;
+  private String name;
+  private String description;
 
-    public GoodBotCommand(
-            @NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
-        this.name = "good-bot";
-        this.description = "When bot is good";
-        this.data = Commands.slash(this.name, this.description);
-        this.impressionsService = impressionsService;
-        this.victGuildService = victGuildService;
+  public GoodBotCommand(
+      @NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
+    this.name = "good-bot";
+    this.description = "When bot is good";
+    this.data = Commands.slash(this.name, this.description);
+    this.impressionsService = impressionsService;
+    this.victGuildService = victGuildService;
+  }
+
+  @Override
+  public void callback(SlashCommandInteractionEvent event) {
+    try {
+      Guild guild = event.getGuild();
+      if (guild == null) {
+        throw new UnsupportedOperationException();
+      }
+
+      Impressions impressions =
+          impressionsService.incrementImpressionsByDiscordId(guild.getId(), true);
+
+      event
+          .reply(
+              String.format(
+                  "I have received %d good bot impressions. Thank you very much.",
+                  impressions.getGoodBotCount()))
+          .queue();
+
+    } catch (Exception e) {
+      log.error(e.getMessage());
+      if (!event.isAcknowledged()) {
+        event.getHook().editOriginal("Command failed to execute").queue();
+      }
     }
-
-    @Override
-    public void callback(SlashCommandInteractionEvent event) {
-        try {
-            Guild guild = event.getGuild();
-            if (guild == null) {
-                throw new UnsupportedOperationException();
-            }
-
-            Impressions impressions =
-                    impressionsService.incrementImpressionsByDiscordId(guild.getId(), true);
-
-            event.reply(
-                            String.format(
-                                    "I have received %d good bot impressions. Thank you very much.",
-                                    impressions.getGoodBotCount()))
-                    .queue();
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            if (!event.isAcknowledged()) {
-                event.getHook().editOriginal("Command failed to execute").queue();
-            }
-        }
-    }
+  }
 }

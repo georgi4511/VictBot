@@ -9,7 +9,7 @@ import org.springframework.data.repository.ListCrudRepository;
 
 public interface BookmarkRepository extends ListCrudRepository<Bookmark, Long> {
 
-    Optional<Bookmark> findByVictUser(VictUser victUser);
+  Optional<Bookmark> findByVictUser(VictUser victUser);
 
-    Optional<Bookmark> findByVictGuild(VictGuild victGuild);
+  Optional<Bookmark> findByVictGuild(VictGuild victGuild);
 }

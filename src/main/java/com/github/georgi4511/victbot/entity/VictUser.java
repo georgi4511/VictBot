@@ -13,17 +13,17 @@ import lombok.*;
 @Table(name = "vict_user")
 public class VictUser {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    Long id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  Long id;
 
-    @Column(unique = true)
-    @NonNull
-    String discordId;
+  @Column(unique = true)
+  @NonNull
+  String discordId;
 
-    @OneToMany(mappedBy = "victUser", cascade = CascadeType.ALL)
-    Set<Reminder> reminders;
+  @OneToMany(mappedBy = "victUser", cascade = CascadeType.ALL)
+  Set<Reminder> reminders;
 
-    @OneToMany(mappedBy = "victUser", cascade = CascadeType.ALL)
-    Set<Bookmark> bookmarks;
+  @OneToMany(mappedBy = "victUser", cascade = CascadeType.ALL)
+  Set<Bookmark> bookmarks;
 }

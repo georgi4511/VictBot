@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.repository.ListCrudRepository;
 
 public interface VictGuildRepository extends ListCrudRepository<VictGuild, Long> {
-    Optional<VictGuild> findByDiscordId(String discordId);
+  Optional<VictGuild> findByDiscordId(String discordId);
 
-    Boolean existsVictGuildByDiscordId(String discordId);
+  Boolean existsVictGuildByDiscordId(String discordId);
 }

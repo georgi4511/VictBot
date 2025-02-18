@@ -12,17 +12,17 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ReminderEntryService {
-    final ReminderRepository reminderRepository;
+  final ReminderRepository reminderRepository;
 
-    public List<Reminder> getAllReminderEntry() {
-        return reminderRepository.findAll();
-    }
+  public List<Reminder> getAllReminderEntry() {
+    return reminderRepository.findAll();
+  }
 
-    public Optional<Reminder> getReminderEntryByVictGuild(VictGuild victGuild) {
-        return reminderRepository.findByVictGuild(victGuild);
-    }
+  public Optional<Reminder> getReminderEntryByVictGuild(VictGuild victGuild) {
+    return reminderRepository.findByVictGuild(victGuild);
+  }
 
-    public Reminder saveReminderEntry(Reminder reminder) {
-        return reminderRepository.save(reminder);
-    }
+  public Reminder saveReminderEntry(Reminder reminder) {
+    return reminderRepository.save(reminder);
+  }
 }

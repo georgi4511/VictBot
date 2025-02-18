@@ -17,23 +17,23 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 public class CatFactCommand extends VictCommand {
-    private static final Logger log = LoggerFactory.getLogger(CatFactCommand.class);
-    private final SlashCommandData data;
-    private final String name;
-    private final String description;
-    private final CatFactService catFactService;
+  private static final Logger log = LoggerFactory.getLogger(CatFactCommand.class);
+  private final SlashCommandData data;
+  private final String name;
+  private final String description;
+  private final CatFactService catFactService;
 
-    public CatFactCommand(CatFactService catFactService) {
-        this.name = "cat-fact";
-        this.description = "receive random cat fact 🐈";
-        this.data = Commands.slash(this.name, this.description);
-        this.catFactService = catFactService;
-    }
+  public CatFactCommand(CatFactService catFactService) {
+    this.name = "cat-fact";
+    this.description = "receive random cat fact 🐈";
+    this.data = Commands.slash(this.name, this.description);
+    this.catFactService = catFactService;
+  }
 
-    @Override
-    public void callback(@NotNull SlashCommandInteractionEvent event) {
-        event.deferReply().queue();
-        String fact = catFactService.getRandomCatFact();
-        event.getHook().sendMessage(fact).queue();
-    }
+  @Override
+  public void callback(@NotNull SlashCommandInteractionEvent event) {
+    event.deferReply().queue();
+    String fact = catFactService.getRandomCatFact();
+    event.getHook().sendMessage(fact).queue();
+  }
 }

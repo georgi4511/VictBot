@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.springframework.data.repository.ListCrudRepository;
 
 public interface ReminderRepository extends ListCrudRepository<Reminder, Long> {
-    Optional<Reminder> findByVictGuild(VictGuild victGuildId);
+  Optional<Reminder> findByVictGuild(VictGuild victGuildId);
 
-    Optional<Reminder> findByVictUser(VictUser victUser);
+  Optional<Reminder> findByVictUser(VictUser victUser);
 }

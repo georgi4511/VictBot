@@ -13,21 +13,21 @@ import lombok.*;
 @Table(name = "vict_guild")
 public class VictGuild {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    Long id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  Long id;
 
-    @Column(unique = true)
-    @NonNull
-    String discordId;
+  @Column(unique = true)
+  @NonNull
+  String discordId;
 
-    @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
-    Set<Reminder> reminders;
+  @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
+  Set<Reminder> reminders;
 
-    @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
-    Set<Bookmark> bookmarks;
+  @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
+  Set<Bookmark> bookmarks;
 
-    @OneToOne(mappedBy = "victGuild", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    Impressions impressions;
+  @OneToOne(mappedBy = "victGuild", cascade = CascadeType.ALL)
+  @PrimaryKeyJoinColumn
+  Impressions impressions;
 }

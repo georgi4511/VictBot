@@ -11,17 +11,17 @@ import lombok.*;
 @AllArgsConstructor
 public class Impressions {
 
-    @Id
-    @Column(name = "vict_guild_id")
-    private Long id;
+  @Id
+  @Column(name = "vict_guild_id")
+  private Long id;
 
-    private Integer badBotCount = 0;
+  private Integer badBotCount = 0;
 
-    private Integer goodBotCount = 0;
+  private Integer goodBotCount = 0;
 
-    @NonNull
-    @MapsId
-    @OneToOne
-    @JoinColumn(name = "vict_guild_id")
-    private VictGuild victGuild;
+  @NonNull
+  @MapsId
+  @OneToOne
+  @JoinColumn(name = "vict_guild_id")
+  private VictGuild victGuild;
 }

@@ -7,5 +7,5 @@ import java.util.Optional;
 import org.springframework.data.repository.ListCrudRepository;
 
 public interface ImpressionsRepository extends ListCrudRepository<Impressions, Long> {
-    Optional<Impressions> findByVictGuild(VictGuild victGuild);
+  Optional<Impressions> findByVictGuild(VictGuild victGuild);
 }

@@ -27,54 +27,54 @@ import org.springframework.core.env.MissingRequiredPropertiesException;
 @Profile("!dev")
 public class BotConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(BotConfiguration.class);
-    private static final EnumSet<GatewayIntent> intents =
-            EnumSet.of(
-                    GatewayIntent.GUILD_MESSAGES,
-                    GatewayIntent.GUILD_VOICE_STATES,
-                    GatewayIntent.MESSAGE_CONTENT,
-                    GatewayIntent.GUILD_EXPRESSIONS,
-                    GatewayIntent.SCHEDULED_EVENTS,
-                    GatewayIntent.GUILD_PRESENCES);
+  private static final Logger log = LoggerFactory.getLogger(BotConfiguration.class);
+  private static final EnumSet<GatewayIntent> intents =
+      EnumSet.of(
+          GatewayIntent.GUILD_MESSAGES,
+          GatewayIntent.GUILD_VOICE_STATES,
+          GatewayIntent.MESSAGE_CONTENT,
+          GatewayIntent.GUILD_EXPRESSIONS,
+          GatewayIntent.SCHEDULED_EVENTS,
+          GatewayIntent.GUILD_PRESENCES);
 
-    @Value("${discord.token}")
-    private String token;
+  @Value("${discord.token}")
+  private String token;
 
-    @Value("${discord.guild}")
-    private String guild;
+  @Value("${discord.guild}")
+  private String guild;
 
-    @Bean
-    public JDA jda(DiscordEventListener discordEventListener, List<VictCommand> commands)
-            throws InterruptedException {
+  @Bean
+  public JDA jda(DiscordEventListener discordEventListener, List<VictCommand> commands)
+      throws InterruptedException {
 
-        if (token == null) {
-            throw new MissingRequiredPropertiesException();
-        }
-
-        JDA jda =
-                JDABuilder.create(token, intents)
-                        .setActivity(Activity.listening("Chilling...killing"))
-                        .addEventListeners(discordEventListener)
-                        .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                        .enableCache(CacheFlag.VOICE_STATE)
-                        .build();
-
-        jda.awaitReady();
-
-        List<SlashCommandData> commandData = commands.stream().map(VictCommand::getData).toList();
-
-        log.info("Commands: {}", commandData.stream().map(SlashCommandData::getName).toList());
-
-        if (guild == null || jda.getGuildById(guild) == null) {
-            jda.updateCommands().addCommands(commandData).queue();
-        } else {
-            Guild guildById = jda.getGuildById(guild);
-            assert guildById != null;
-            guildById.updateCommands().addCommands(commandData).queue();
-        }
-
-        log.info("{} commands set", commands.size());
-
-        return jda;
+    if (token == null) {
+      throw new MissingRequiredPropertiesException();
     }
+
+    JDA jda =
+        JDABuilder.create(token, intents)
+            .setActivity(Activity.listening("Chilling...killing"))
+            .addEventListeners(discordEventListener)
+            .setStatus(OnlineStatus.DO_NOT_DISTURB)
+            .enableCache(CacheFlag.VOICE_STATE)
+            .build();
+
+    jda.awaitReady();
+
+    List<SlashCommandData> commandData = commands.stream().map(VictCommand::getData).toList();
+
+    log.info("Commands: {}", commandData.stream().map(SlashCommandData::getName).toList());
+
+    if (guild == null || jda.getGuildById(guild) == null) {
+      jda.updateCommands().addCommands(commandData).queue();
+    } else {
+      Guild guildById = jda.getGuildById(guild);
+      assert guildById != null;
+      guildById.updateCommands().addCommands(commandData).queue();
+    }
+
+    log.info("{} commands set", commands.size());
+
+    return jda;
+  }
 }

@@ -12,17 +12,17 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BookmarkService {
-    final BookmarkRepository bookmarkRepository;
+  final BookmarkRepository bookmarkRepository;
 
-    public List<Bookmark> getAllBookmarks() {
-        return bookmarkRepository.findAll();
-    }
+  public List<Bookmark> getAllBookmarks() {
+    return bookmarkRepository.findAll();
+  }
 
-    public Optional<Bookmark> getBookmarkByVictGuild(VictGuild victGuild) {
-        return bookmarkRepository.findByVictGuild(victGuild);
-    }
+  public Optional<Bookmark> getBookmarkByVictGuild(VictGuild victGuild) {
+    return bookmarkRepository.findByVictGuild(victGuild);
+  }
 
-    public Bookmark saveBookmark(Bookmark bookmark) {
-        return bookmarkRepository.save(bookmark);
-    }
+  public Bookmark saveBookmark(Bookmark bookmark) {
+    return bookmarkRepository.save(bookmark);
+  }
 }

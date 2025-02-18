@@ -20,49 +20,50 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 public class ShootCommand extends VictCommand {
-    public static final String USER = "user";
-    public static final String TIME = "time";
-    private static final Logger log = LoggerFactory.getLogger(ShootCommand.class);
-    private SlashCommandData data;
-    private String name;
-    private String description;
+  public static final String USER = "user";
+  public static final String TIME = "time";
+  private static final Logger log = LoggerFactory.getLogger(ShootCommand.class);
+  private SlashCommandData data;
+  private String name;
+  private String description;
 
-    public ShootCommand() {
-        this.name = "shoot";
-        this.description = "Times out a user";
-        this.data =
-                Commands.slash(this.name, this.description)
-                        .addOption(OptionType.USER, USER, "The user to shoot", true)
-                        .addOption(OptionType.INTEGER, TIME, "Time out time in seconds", true);
+  public ShootCommand() {
+    this.name = "shoot";
+    this.description = "Times out a user";
+    this.data =
+        Commands.slash(this.name, this.description)
+            .addOption(OptionType.USER, USER, "The user to shoot", true)
+            .addOption(OptionType.INTEGER, TIME, "Time out time in seconds", true);
+  }
+
+  @Override
+  public void callback(SlashCommandInteractionEvent event) {
+    try {
+      User user = Objects.requireNonNull(event.getOption(USER)).getAsUser();
+
+      if (user.isBot()) {
+        event.reply("I cannot time out a bot.").queue();
+        return;
+      }
+      int time = Objects.requireNonNull(event.getOption(TIME)).getAsInt();
+
+      Member guildMember =
+          Objects.requireNonNull(event.getGuild())
+              .findMembers(e -> e.equals(user))
+              .get()
+              .getFirst();
+
+      guildMember.timeoutFor(time, TimeUnit.SECONDS).queue();
+      event
+          .reply(
+              String.format(
+                  "%s you just got shot for %s seconds have fun being timed out",
+                  guildMember.getNickname(), time))
+          .queue();
+
+    } catch (Exception e) {
+      log.error(e.getMessage());
+      event.reply("Command failed to execute").queue();
     }
-
-    @Override
-    public void callback(SlashCommandInteractionEvent event) {
-        try {
-            User user = Objects.requireNonNull(event.getOption(USER)).getAsUser();
-
-            if (user.isBot()) {
-                event.reply("I cannot time out a bot.").queue();
-                return;
-            }
-            int time = Objects.requireNonNull(event.getOption(TIME)).getAsInt();
-
-            Member guildMember =
-                    Objects.requireNonNull(event.getGuild())
-                            .findMembers(e -> e.equals(user))
-                            .get()
-                            .getFirst();
-
-            guildMember.timeoutFor(time, TimeUnit.SECONDS).queue();
-            event.reply(
-                            String.format(
-                                    "%s you just got shot for %s seconds have fun being timed out",
-                                    guildMember.getNickname(), time))
-                    .queue();
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            event.reply("Command failed to execute").queue();
-        }
-    }
+  }
 }

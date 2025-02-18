@@ -18,29 +18,29 @@ import reactor.core.publisher.Flux;
 @RequestMapping("ai")
 public class ChatController {
 
-    //    private final OllamaChatModel chatModel;
-    private final SpringAI springAiService;
+  //    private final OllamaChatModel chatModel;
+  private final SpringAI springAiService;
 
-    @GetMapping("/")
-    public Map<String, String> generate() {
-        return Map.of("Hello", "World");
-    }
+  @GetMapping("/")
+  public Map<String, String> generate() {
+    return Map.of("Hello", "World");
+  }
 
-    @GetMapping("/generate")
-    public Map<String, String> generate(
-            @RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
-        return Map.of("generation", springAiService.call(message));
-    }
+  @GetMapping("/generate")
+  public Map<String, String> generate(
+      @RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
+    return Map.of("generation", springAiService.call(message));
+  }
 
-    @GetMapping("/generateStream")
-    public Flux<ChatResponse> generateStream(
-            @RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
-        Prompt prompt = new Prompt(new UserMessage(message));
-        return springAiService.stream(prompt);
-    }
+  @GetMapping("/generateStream")
+  public Flux<ChatResponse> generateStream(
+      @RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
+    Prompt prompt = new Prompt(new UserMessage(message));
+    return springAiService.stream(prompt);
+  }
 
-    @GetMapping("/amogus")
-    public Flux<String> generateAmogus() {
-        return springAiService.getAmongus();
-    }
+  @GetMapping("/amogus")
+  public Flux<String> generateAmogus() {
+    return springAiService.getAmongus();
+  }
 }

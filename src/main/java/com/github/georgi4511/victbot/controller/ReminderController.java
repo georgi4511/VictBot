@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ReminderController {
 
-    private final ReminderEntryService reminderEntryService;
+  private final ReminderEntryService reminderEntryService;
 
-    @GetMapping
-    public List<Reminder> getAllReminders() {
-        return reminderEntryService.getAllReminderEntry();
-    }
+  @GetMapping
+  public List<Reminder> getAllReminders() {
+    return reminderEntryService.getAllReminderEntry();
+  }
 
-    @PostMapping
-    public Reminder saveReminder(@RequestBody Reminder reminder) {
-        return reminderEntryService.saveReminderEntry(reminder);
-    }
+  @PostMapping
+  public Reminder saveReminder(@RequestBody Reminder reminder) {
+    return reminderEntryService.saveReminderEntry(reminder);
+  }
 
-    @GetMapping("/guild/{victGuild}")
-    public Optional<Reminder> getReminder(@PathVariable VictGuild victGuild) {
-        return reminderEntryService.getReminderEntryByVictGuild(victGuild);
-    }
+  @GetMapping("/guild/{victGuild}")
+  public Optional<Reminder> getReminder(@PathVariable VictGuild victGuild) {
+    return reminderEntryService.getReminderEntryByVictGuild(victGuild);
+  }
 }

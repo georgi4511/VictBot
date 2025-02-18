@@ -1,4 +1,9 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.github.georgi4511.victbot.service.dto.CatFactDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,68 +13,63 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 class CatFactServiceTest {
 
-    @Mock
-    RestTemplate restTemplate = mock(RestTemplate.class);
+  public static final String URL = "https://catfact.ninja/fact";
+  @Mock RestTemplate restTemplate = mock(RestTemplate.class);
 
-    private CatFactService unitTestService;
+  private CatFactService unitTestService;
 
-    @BeforeEach
-    public void setup() {
-        unitTestService = new CatFactService(restTemplate);
-    }
+  @BeforeEach
+  public void setup() {
+    unitTestService = new CatFactService(restTemplate);
+  }
 
-    @Test
-    void getRandomCatFact_ok() {
+  @Test
+  void getRandomCatFact_ok() {
 
-        //when
-        String exampleFact = "example_fact";
-        CatFactDto result = new CatFactDto(exampleFact);
+    // given
+    String exampleFact = "example_fact";
+    CatFactDto result = new CatFactDto(exampleFact);
 
-        //then
-        ResponseEntity<CatFactDto> catFactDtoResponseEntity = new ResponseEntity<>(result, HttpStatus.OK);
-        when(restTemplate.getForEntity("https://catfact.ninja/fact", CatFactDto.class)).thenReturn(catFactDtoResponseEntity);
+    // when
+    ResponseEntity<CatFactDto> catFactDtoResponseEntity =
+        new ResponseEntity<>(result, HttpStatus.OK);
+    when(restTemplate.getForEntity(URL, CatFactDto.class)).thenReturn(catFactDtoResponseEntity);
 
-        String randomCatFact = unitTestService.getRandomCatFact();
+    String randomCatFact = unitTestService.getRandomCatFact();
 
-        //expect
-        assertEquals(exampleFact, randomCatFact);
-    }
+    // then
+    assertEquals(exampleFact, randomCatFact);
+  }
 
-    @Test
-    void getRandomCatFact_failed() {
+  @Test
+  void getRandomCatFact_failed() {
 
-        //when
-        String exampleFact = "example_fact";
-        CatFactDto result = new CatFactDto(exampleFact);
+    // when
+    String exampleFact = "example_fact";
+    CatFactDto result = new CatFactDto(exampleFact);
 
-        //then
-        ResponseEntity<CatFactDto> catFactDtoResponseEntity = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-        when(restTemplate.getForEntity(anyString(), any())).thenReturn((ResponseEntity) catFactDtoResponseEntity);
+    // then
+    ResponseEntity<CatFactDto> catFactDtoResponseEntity =
+        new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+    when(restTemplate.getForEntity(URL, CatFactDto.class)).thenReturn(catFactDtoResponseEntity);
 
-        String randomCatFact = unitTestService.getRandomCatFact();
+    String randomCatFact = unitTestService.getRandomCatFact();
 
-        //expect
-        assertEquals("Sorry, I couldn't fetch a cat fact right now.", randomCatFact);
-    }
+    // expect
+    assertEquals("Sorry, I couldn't fetch a cat fact right now.", randomCatFact);
+  }
 
-    @Test
-    void getRandomCatFact_null_failed() {
-        //then
-        ResponseEntity<CatFactDto> catFactDtoResponseEntity = new ResponseEntity<>(null, HttpStatus.OK);
-        when(restTemplate.getForEntity(anyString(), any())).thenReturn((ResponseEntity) catFactDtoResponseEntity);
+  @Test
+  void getRandomCatFact_null_failed() {
+    // then
+    ResponseEntity<CatFactDto> catFactDtoResponseEntity = new ResponseEntity<>(null, HttpStatus.OK);
+    when(restTemplate.getForEntity(URL, CatFactDto.class)).thenReturn(catFactDtoResponseEntity);
 
-        String randomCatFact = unitTestService.getRandomCatFact();
+    String randomCatFact = unitTestService.getRandomCatFact();
 
-        //expect
-        assertEquals("Sorry, I couldn't fetch a cat fact right now.", randomCatFact);
-    }
-
+    // expect
+    assertEquals("Sorry, I couldn't fetch a cat fact right now.", randomCatFact);
+  }
 }

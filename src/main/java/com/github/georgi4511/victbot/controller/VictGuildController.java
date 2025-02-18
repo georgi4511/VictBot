@@ -13,25 +13,25 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class VictGuildController {
 
-    private final VictGuildService victGuildService;
+  private final VictGuildService victGuildService;
 
-    @GetMapping
-    public List<VictGuild> getAllVictGuilds() {
-        return victGuildService.getAllVictGuilds();
-    }
+  @GetMapping
+  public List<VictGuild> getAllVictGuilds() {
+    return victGuildService.getAllVictGuilds();
+  }
 
-    @PostMapping
-    public VictGuild saveVictGuild(@RequestBody VictGuild reminder) {
-        return victGuildService.saveVictGuild(reminder);
-    }
+  @PostMapping
+  public VictGuild saveVictGuild(@RequestBody VictGuild reminder) {
+    return victGuildService.saveVictGuild(reminder);
+  }
 
-    @GetMapping("/{id}")
-    public Optional<VictGuild> getVictGuild(@PathVariable Long id) {
-        return victGuildService.getByVictGuildId(id);
-    }
+  @GetMapping("/{id}")
+  public Optional<VictGuild> getVictGuild(@PathVariable Long id) {
+    return victGuildService.getByVictGuildId(id);
+  }
 
-    @GetMapping("/{discordId}")
-    public Optional<VictGuild> getVictGuild(@PathVariable String discordId) {
-        return victGuildService.getByVictGuildDiscordId(discordId);
-    }
+  @GetMapping("/{discordId}")
+  public Optional<VictGuild> getVictGuild(@PathVariable String discordId) {
+    return victGuildService.getByVictGuildDiscordId(discordId);
+  }
 }

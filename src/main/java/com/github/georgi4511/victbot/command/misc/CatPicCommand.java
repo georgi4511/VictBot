@@ -16,23 +16,23 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 public class CatPicCommand extends VictCommand {
-    private static final Logger log = LoggerFactory.getLogger(CatPicCommand.class);
-    private final SlashCommandData data;
-    private final String name;
-    private final String description;
-    private final CatPicService catPicService;
+  private static final Logger log = LoggerFactory.getLogger(CatPicCommand.class);
+  private final SlashCommandData data;
+  private final String name;
+  private final String description;
+  private final CatPicService catPicService;
 
-    public CatPicCommand(CatPicService catPicService) {
-        this.name = "cat";
-        this.description = "receive random cat";
-        this.data = Commands.slash(this.name, this.description);
-        this.catPicService = catPicService;
-    }
+  public CatPicCommand(CatPicService catPicService) {
+    this.name = "cat";
+    this.description = "receive random cat";
+    this.data = Commands.slash(this.name, this.description);
+    this.catPicService = catPicService;
+  }
 
-    @Override
-    public void callback(SlashCommandInteractionEvent event) {
-        event.deferReply().queue();
-        String catPicture = catPicService.getRandomCatPicture();
-        event.getHook().sendMessage(catPicture).queue();
-    }
+  @Override
+  public void callback(SlashCommandInteractionEvent event) {
+    event.deferReply().queue();
+    String catPicture = catPicService.getRandomCatPicture();
+    event.getHook().sendMessage(catPicture).queue();
+  }
 }
