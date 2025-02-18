@@ -1,3 +1,4 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.command._template;
 
 import com.github.georgi4511.victbot.entity.VictCommand;
@@ -6,7 +7,6 @@ import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-
 
 @Getter
 @Setter
@@ -26,4 +26,3 @@ public class VictCommandTemplate extends VictCommand {
         event.reply("<CHANGE ME>").queue();
     }
 }
-

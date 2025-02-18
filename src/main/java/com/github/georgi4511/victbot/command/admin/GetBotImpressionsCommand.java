@@ -1,9 +1,11 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.command.admin;
 
 import com.github.georgi4511.victbot.entity.Impressions;
 import com.github.georgi4511.victbot.entity.VictCommand;
 import com.github.georgi4511.victbot.service.ImpressionsService;
 import com.github.georgi4511.victbot.service.VictGuildService;
+import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -18,29 +20,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-import static java.util.Objects.isNull;
-
 @Getter
 @Setter
 @Component
 public class GetBotImpressionsCommand extends VictCommand {
     private static final Logger log = LoggerFactory.getLogger(GetBotImpressionsCommand.class);
-    @NonNull
-    private final ImpressionsService impressionsService;
+    @NonNull private final ImpressionsService impressionsService;
     private final VictGuildService victGuildService;
     private SlashCommandData data;
     private String name;
     private String description;
 
-    public GetBotImpressionsCommand(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
+    public GetBotImpressionsCommand(
+            @NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
         this.name = "get-bot-impressions";
         this.description = "Get amount of bot is good/bad sent in server/globally";
-        this.data = Commands.slash(this.name, this.description).addOption(OptionType.BOOLEAN, "global", "do the search globally or only for this server");
+        this.data =
+                Commands.slash(this.name, this.description)
+                        .addOption(
+                                OptionType.BOOLEAN,
+                                "global",
+                                "do the search globally or only for this server");
         this.impressionsService = impressionsService;
         this.victGuildService = victGuildService;
-
     }
 
     @Override
@@ -49,7 +51,7 @@ public class GetBotImpressionsCommand extends VictCommand {
 
             boolean global = true;
             OptionMapping globalOption = event.getOption("global");
-            if (!isNull(globalOption)) {
+            if (null != globalOption) {
                 global = globalOption.getAsBoolean();
             }
 
@@ -67,24 +69,31 @@ public class GetBotImpressionsCommand extends VictCommand {
 
     private void returnGuildImpressions(SlashCommandInteractionEvent event) {
         Guild guild = event.getGuild();
-        if (isNull(guild)) {
+        if (guild == null) {
             throw new UnsupportedOperationException("Global but not in guild");
         }
-        Impressions impressions = impressionsService.getImpressionsOrCreateByDiscordId(guild.getId());
+        Impressions impressions =
+                impressionsService.getImpressionsOrCreateByDiscordId(guild.getId());
 
-        event.reply(String.format("I have received %d good bots and %d bad bots in this server", impressions.getGoodBotCount(), impressions.getBadBotCount())).queue();
+        event.reply(
+                        String.format(
+                                "I have received %d good bots and %d bad bots in this server",
+                                impressions.getGoodBotCount(), impressions.getBadBotCount()))
+                .queue();
     }
 
     private void returnGlobalImpressions(SlashCommandInteractionEvent event) {
         List<Impressions> allImpressions = impressionsService.getAllImpressions();
 
-        Integer badBotSum = allImpressions.stream().map(Impressions::getBadBotCount).reduce(0, Integer::sum);
-        Integer goodBotSum = allImpressions.stream().map(Impressions::getGoodBotCount).reduce(0, Integer::sum);
+        Integer badBotSum =
+                allImpressions.stream().map(Impressions::getBadBotCount).reduce(0, Integer::sum);
+        Integer goodBotSum =
+                allImpressions.stream().map(Impressions::getGoodBotCount).reduce(0, Integer::sum);
 
-        event.reply(String.format("I have received %d good bots and %d bad bots globally", goodBotSum, badBotSum)).queue();
+        event.reply(
+                        String.format(
+                                "I have received %d good bots and %d bad bots globally",
+                                goodBotSum, badBotSum))
+                .queue();
     }
-
-
 }
-
-

@@ -1,3 +1,4 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.command.admin;
 
 import com.github.georgi4511.victbot.entity.Impressions;
@@ -12,8 +13,6 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import static java.util.Objects.isNull;
 
 @Getter
 @Setter
@@ -37,13 +36,18 @@ public class BadBotCommand extends VictCommand {
 
         try {
             Guild guild = event.getGuild();
-            if (isNull(guild)) {
+            if (guild == null) {
                 throw new UnsupportedOperationException();
             }
 
-            Impressions impressions = impressionsService.incrementImpressionsByDiscordId(guild.getId(), false);
+            Impressions impressions =
+                    impressionsService.incrementImpressionsByDiscordId(guild.getId(), false);
 
-            event.reply(String.format("I have received %d bad bot impressions. Frick you.", impressions.getBadBotCount())).queue();
+            event.reply(
+                            String.format(
+                                    "I have received %d bad bot impressions. Frick you.",
+                                    impressions.getBadBotCount()))
+                    .queue();
 
         } catch (Exception e) {
             log.error(e.getMessage());

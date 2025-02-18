@@ -1,3 +1,4 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.service;
 
 import lombok.AllArgsConstructor;
@@ -6,8 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import static java.util.Objects.isNull;
 
 @Service
 @AllArgsConstructor
@@ -18,8 +17,9 @@ public class CatPicService {
 
     public String getRandomCatPicture() {
         try {
-            CatPictureDto[] catPicturesDto = restTemplate.getForObject(CAT_PIC_API_URL, CatPictureDto[].class);
-            if (!isNull(catPicturesDto) && catPicturesDto.length > 0) {
+            CatPictureDto[] catPicturesDto =
+                    restTemplate.getForObject(CAT_PIC_API_URL, CatPictureDto[].class);
+            if (catPicturesDto != null && catPicturesDto.length > 0) {
                 return catPicturesDto[0].url();
             }
         } catch (RestClientException e) {
@@ -28,6 +28,5 @@ public class CatPicService {
         return "Sorry, I couldn't fetch a cat picture right now.";
     }
 
-    record CatPictureDto(String id, String url, Integer width, Integer height) {
-    }
+    record CatPictureDto(String id, String url, Integer width, Integer height) {}
 }

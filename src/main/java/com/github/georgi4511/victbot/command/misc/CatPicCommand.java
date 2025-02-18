@@ -1,3 +1,4 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.command.misc;
 
 import com.github.georgi4511.victbot.entity.VictCommand;
@@ -35,6 +36,3 @@ public class CatPicCommand extends VictCommand {
         event.getHook().sendMessage(catPicture).queue();
     }
 }
-
-
-

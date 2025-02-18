@@ -1,14 +1,14 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.service;
 
 import com.github.georgi4511.victbot.entity.VictGuild;
 import com.github.georgi4511.victbot.repository.VictGuildRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +21,10 @@ public class VictGuildService {
 
     @Transactional
     public VictGuild findVictGuildByDiscordIdOrCreate(@NonNull String discordId) {
-        return victGuildRepository.findByDiscordId(discordId).orElseGet(() -> victGuildRepository.save(new VictGuild(discordId)));
+        return victGuildRepository
+                .findByDiscordId(discordId)
+                .orElseGet(() -> victGuildRepository.save(new VictGuild(discordId)));
     }
-
 
     public boolean existsVictGuildByDiscordId(@NonNull String discordId) {
         return victGuildRepository.existsVictGuildByDiscordId(discordId);

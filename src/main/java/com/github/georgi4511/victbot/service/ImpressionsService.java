@@ -1,14 +1,14 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.service;
 
 import com.github.georgi4511.victbot.entity.Impressions;
 import com.github.georgi4511.victbot.entity.VictGuild;
 import com.github.georgi4511.victbot.repository.ImpressionsRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +32,6 @@ public class ImpressionsService {
         return impressionsRepository.save(new Impressions(victGuild));
     }
 
-
     @Transactional
     public Impressions incrementImpressionsByDiscordId(String discordId, boolean isGoodBot) {
         Impressions impressions = getImpressionsOrCreateByDiscordId(discordId);
@@ -48,10 +47,12 @@ public class ImpressionsService {
     @Transactional
     public Impressions getImpressionsOrCreateByDiscordId(String discordId) {
         VictGuild victGuild = victGuildService.findVictGuildByDiscordIdOrCreate(discordId);
-        return impressionsRepository.findByVictGuild(victGuild).orElseGet(() -> {
-            victGuild.setImpressions(new Impressions(victGuild));
-            return victGuildService.saveVictGuild(victGuild).getImpressions();
-
-        });
+        return impressionsRepository
+                .findByVictGuild(victGuild)
+                .orElseGet(
+                        () -> {
+                            victGuild.setImpressions(new Impressions(victGuild));
+                            return victGuildService.saveVictGuild(victGuild).getImpressions();
+                        });
     }
 }

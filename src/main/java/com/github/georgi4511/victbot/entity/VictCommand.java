@@ -1,3 +1,4 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.entity;
 
 import lombok.Data;
@@ -17,7 +18,6 @@ public abstract class VictCommand {
     public abstract void callback(SlashCommandInteractionEvent event);
 
     public void handleSelectInteraction(StringSelectInteractionEvent event) {
-        //noop
+        // noop
     }
-
 }

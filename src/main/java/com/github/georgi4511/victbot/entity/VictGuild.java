@@ -1,10 +1,9 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.Set;
-
+import lombok.*;
 
 @Data
 @Entity

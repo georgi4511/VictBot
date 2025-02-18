@@ -1,12 +1,12 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.scripts.clean_command;
+
+import static com.github.georgi4511.victbot.scripts.clean_command.CommandUtils.cleanCommands;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.MissingRequiredPropertiesException;
-
-import static com.github.georgi4511.victbot.scripts.clean_command.CommandUtils.cleanCommands;
-import static java.util.Objects.isNull;
 
 public class CleanCommandClient {
 
@@ -16,11 +16,11 @@ public class CleanCommandClient {
         String botToken = System.getenv("BOT_TOKEN");
         String botGuild = System.getenv("BOT_GUILD");
 
-        if (isNull(botToken)) {
+        if (botToken == null) {
             throw new MissingRequiredPropertiesException();
         }
         try {
-            if (isNull(botGuild)) {
+            if (botGuild == null) {
                 cleanCommands(botToken);
             } else {
                 cleanCommands(botToken, botGuild);
@@ -31,4 +31,3 @@ public class CleanCommandClient {
         }
     }
 }
-

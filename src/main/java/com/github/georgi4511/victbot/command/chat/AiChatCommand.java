@@ -1,6 +1,8 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.command.chat;
 
 import com.github.georgi4511.victbot.entity.VictCommand;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -12,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -29,7 +29,9 @@ public class AiChatCommand extends VictCommand {
         this.ollamaChatModel = ollamaChatModel;
         this.name = "ai-chat";
         this.description = "talk to ollama through java";
-        this.data = Commands.slash(this.name, this.description).addOption(OptionType.STRING, "prompt", "the prompt sent to the bot", true);
+        this.data =
+                Commands.slash(this.name, this.description)
+                        .addOption(OptionType.STRING, "prompt", "the prompt sent to the bot", true);
     }
 
     @Override

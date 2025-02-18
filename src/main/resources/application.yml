@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: default
+    active: dev
   datasource:
     url: jdbc:h2:file:./assets/database
     username: sa
@@ -18,7 +18,6 @@ spring:
           model: llama3.2
           temperature: 0.7
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
     generate-ddl: true
     hibernate:

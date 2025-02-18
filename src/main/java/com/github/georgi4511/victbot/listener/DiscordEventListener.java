@@ -1,10 +1,16 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.listener;
+
+import static com.github.georgi4511.victbot.util.Utils.fixTwitter;
 
 import com.github.georgi4511.victbot.entity.VictCommand;
 import com.github.georgi4511.victbot.entity.VictGuild;
 import com.github.georgi4511.victbot.entity.VictUser;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -15,13 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.github.georgi4511.victbot.util.Utils.fixTwitter;
-import static java.util.Objects.isNull;
-
 @Component
 public class DiscordEventListener extends ListenerAdapter {
 
@@ -30,7 +29,10 @@ public class DiscordEventListener extends ListenerAdapter {
     private final VictGuildService victGuildService;
     private final VictUserService victUserService;
 
-    DiscordEventListener(List<VictCommand> commandList, VictUserService victUserService, VictGuildService victGuildService) {
+    DiscordEventListener(
+            List<VictCommand> commandList,
+            VictUserService victUserService,
+            VictGuildService victGuildService) {
         this.commands = new HashMap<>();
         commandList.forEach(command -> commands.put(command.getName(), command));
 
@@ -45,7 +47,8 @@ public class DiscordEventListener extends ListenerAdapter {
 
         if (!victUserService.existsVictUserByDiscordId(event.getUser().getId()))
             victUserService.saveVictUser(new VictUser(event.getUser().getId()));
-        if (!isNull(event.getGuild()) && !victGuildService.existsVictGuildByDiscordId(event.getGuild().getId())) {
+        if (event.getGuild() != null
+                && !victGuildService.existsVictGuildByDiscordId(event.getGuild().getId())) {
             victGuildService.saveVictGuild(new VictGuild(event.getGuild().getId()));
         }
 
@@ -76,10 +79,8 @@ public class DiscordEventListener extends ListenerAdapter {
         fixTwitter(event, content);
     }
 
-
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         log.info("{} logged in.", event.getJDA().getSelfUser().getEffectiveName());
     }
-
 }

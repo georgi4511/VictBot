@@ -1,3 +1,4 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.command.admin;
 
 import com.github.georgi4511.victbot.entity.Impressions;
@@ -16,21 +17,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import static java.util.Objects.isNull;
-
 @Getter
 @Setter
 @Component
 public class GoodBotCommand extends VictCommand {
     private static final Logger log = LoggerFactory.getLogger(GoodBotCommand.class);
-    @NonNull
-    private final ImpressionsService impressionsService;
+    @NonNull private final ImpressionsService impressionsService;
     private final VictGuildService victGuildService;
     private SlashCommandData data;
     private String name;
     private String description;
 
-    public GoodBotCommand(@NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
+    public GoodBotCommand(
+            @NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
         this.name = "good-bot";
         this.description = "When bot is good";
         this.data = Commands.slash(this.name, this.description);
@@ -42,13 +41,18 @@ public class GoodBotCommand extends VictCommand {
     public void callback(SlashCommandInteractionEvent event) {
         try {
             Guild guild = event.getGuild();
-            if (isNull(guild)) {
+            if (guild == null) {
                 throw new UnsupportedOperationException();
             }
 
-            Impressions impressions = impressionsService.incrementImpressionsByDiscordId(guild.getId(), true);
+            Impressions impressions =
+                    impressionsService.incrementImpressionsByDiscordId(guild.getId(), true);
 
-            event.reply(String.format("I have received %d good bot impressions. Thank you very much.", impressions.getGoodBotCount())).queue();
+            event.reply(
+                            String.format(
+                                    "I have received %d good bot impressions. Thank you very much.",
+                                    impressions.getGoodBotCount()))
+                    .queue();
 
         } catch (Exception e) {
             log.error(e.getMessage());

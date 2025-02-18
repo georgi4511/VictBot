@@ -1,12 +1,12 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.controller;
 
 import com.github.georgi4511.victbot.entity.VictUser;
 import com.github.georgi4511.victbot.service.VictUserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -20,12 +20,10 @@ public class VictUserController {
         return victUserService.getAllVictUsers();
     }
 
-
     @PostMapping
     public VictUser saveVictUser(@RequestBody VictUser reminder) {
         return victUserService.saveVictUser(reminder);
     }
-
 
     @GetMapping("/{id}")
     public Optional<VictUser> getVictUser(@PathVariable Long id) {
@@ -36,5 +34,4 @@ public class VictUserController {
     public Optional<VictUser> getVictUser(@PathVariable String discordId) {
         return victUserService.getByVictUserDiscordId(discordId);
     }
-
 }

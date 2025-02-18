@@ -1,13 +1,13 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.service;
 
 import com.github.georgi4511.victbot.entity.VictUser;
 import com.github.georgi4511.victbot.repository.VictUserRepository;
+import java.util.List;
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +19,9 @@ public class VictUserService {
     }
 
     public VictUser getVictUserByDiscordIdOrCreate(@NonNull String discordId) {
-        return victUserRepository.findByDiscordId(discordId).orElseGet(() -> victUserRepository.save(new VictUser(discordId)));
+        return victUserRepository
+                .findByDiscordId(discordId)
+                .orElseGet(() -> victUserRepository.save(new VictUser(discordId)));
     }
 
     public boolean victUserExists(VictUser victUser) {
@@ -29,7 +31,6 @@ public class VictUserService {
     public boolean existsVictUserByDiscordId(String discordId) {
         return victUserRepository.existsVictUserByDiscordId(discordId);
     }
-
 
     public VictUser saveVictUser(VictUser victUser) {
         return victUserRepository.save(victUser);
