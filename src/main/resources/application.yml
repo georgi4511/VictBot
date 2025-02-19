@@ -1,8 +1,8 @@
 spring:
   profiles:
-    active: default
+    active: local
   datasource:
-    url: jdbc:h2:file:/assets/database
+    url: jdbc:h2:file:./assets/database
     username: sa
     password: password
     driverClassName: org.h2.Driver
@@ -18,18 +18,18 @@ spring:
           model: llama3.2
           temperature: 0.7
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
     generate-ddl: true
     hibernate:
       ddl-auto: update
+    open-in-view: false
   sql:
     init:
       mode: never
 application:
   name: VictBot
 twitter:
-  fix: true
+  fix: false
 springdoc:
   swagger-ui:
     path: /
@@ -37,5 +37,4 @@ discord:
   token: ${BOT_TOKEN}
   guild: ${BOT_GUILD}
 procedure:
-  increment: 1000
-  rate: 60000
+  cron: "0 0 * * * ?"

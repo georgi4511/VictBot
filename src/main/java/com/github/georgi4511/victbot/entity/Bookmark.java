@@ -1,12 +1,9 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
-
+import jakarta.persistence.*;
 import java.time.Instant;
+import lombok.*;
 
 @Data
 @Entity
@@ -14,22 +11,21 @@ import java.time.Instant;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Bookmark {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @NonNull
-    private String userId;
+  @NonNull private Instant createdTime;
 
-    @NonNull
-    private Instant createdTime;
+  @NonNull private String message;
 
-    @NonNull
-    private String message;
+  @NonNull private String response;
 
-    @NonNull
-    private String response;
+  @ManyToOne
+  @JoinColumn(name = "vict_user_id", nullable = false)
+  private VictUser victUser;
 
-    private String guildId;
-
+  @ManyToOne
+  @JoinColumn(name = "vict_guild_id", nullable = false)
+  private VictGuild victGuild;
 }

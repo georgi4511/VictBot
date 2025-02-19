@@ -1,6 +1,7 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.command.admin;
 
-import com.github.georgi4511.victbot.entity.BaseCommandImpl;
+import com.github.georgi4511.victbot.entity.VictCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.Member;
@@ -19,18 +20,21 @@ import java.util.concurrent.TimeUnit;
 @Getter
 @Setter
 @Component
-public class Shoot extends BaseCommandImpl {
+public class ShootCommand extends VictCommand {
     public static final String USER = "user";
     public static final String TIME = "time";
-    private static final Logger log = LoggerFactory.getLogger(Shoot.class);
+    private static final Logger log = LoggerFactory.getLogger(ShootCommand.class);
     private SlashCommandData data;
     private String name;
     private String description;
 
-    public Shoot() {
+    public ShootCommand() {
         this.name = "shoot";
         this.description = "Times out a user";
-        this.data = Commands.slash(this.name, this.description).addOption(OptionType.USER, USER, "The user to shoot", true).addOption(OptionType.INTEGER, TIME, "Time out time in seconds", true);
+        this.data =
+                Commands.slash(this.name, this.description)
+                        .addOption(OptionType.USER, USER, "The user to shoot", true)
+                        .addOption(OptionType.INTEGER, TIME, "Time out time in seconds", true);
     }
 
     @Override
@@ -44,10 +48,19 @@ public class Shoot extends BaseCommandImpl {
             }
             int time = Objects.requireNonNull(event.getOption(TIME)).getAsInt();
 
-            Member guildMember = Objects.requireNonNull(event.getGuild()).findMembers(e -> e.equals(user)).get().getFirst();
+            Member guildMember =
+                    Objects.requireNonNull(event.getGuild())
+                            .findMembers(e -> e.equals(user))
+                            .get()
+                            .getFirst();
 
             guildMember.timeoutFor(time, TimeUnit.SECONDS).queue();
-            event.reply(String.format("%s you just got shot for %s seconds have fun being timed out", guildMember.getNickname(), time)).queue();
+            event
+                    .reply(
+                            String.format(
+                                    "%s you just got shot for %s seconds have fun being timed out",
+                                    guildMember.getNickname(), time))
+                    .queue();
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -55,6 +68,16 @@ public class Shoot extends BaseCommandImpl {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        ShootCommand that = (ShootCommand) o;
+        return Objects.equals(data, that.data) && Objects.equals(name, that.name) && Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), data, name, description);
+    }
 }
-
-

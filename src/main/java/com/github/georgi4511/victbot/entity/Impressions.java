@@ -1,9 +1,7 @@
+/* (C)2025 */
 package com.github.georgi4511.victbot.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Data
@@ -13,16 +11,17 @@ import lombok.*;
 @AllArgsConstructor
 public class Impressions {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @Column(name = "vict_guild_id")
+  private Long id;
 
-    @NonNull
-    private Integer badBotCount = 0;
+  private Integer badBotCount = 0;
 
-    @NonNull
-    private Integer goodBotCount = 0;
+  private Integer goodBotCount = 0;
 
-    @NonNull
-    private String guildId;
+  @NonNull
+  @MapsId
+  @OneToOne
+  @JoinColumn(name = "vict_guild_id")
+  private VictGuild victGuild;
 }

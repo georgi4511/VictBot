@@ -1,9 +1,3 @@
-discord:
-  token: ${BOT_TOKEN}
-  guild: ${BOT_GUILD}
-procedure:
-  increment: 1000
-  rate: 60000
 spring:
   datasource:
     url: jdbc:h2:mem:mydb
@@ -26,6 +20,10 @@ spring:
       mode: always
   jpa:
     defer-datasource-initialization: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
 application:
   name: VictBot
 twitter:
