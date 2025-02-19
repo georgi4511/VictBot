@@ -7,17 +7,17 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.lang.management.ManagementFactory;
-
 @NoArgsConstructor
 @Service
 public class LoggingProcedure {
 
     private static final Logger log = LoggerFactory.getLogger(LoggingProcedure.class);
+    private long timeAlive = 0L;
 
-    @Scheduled(fixedRateString = "${procedure.rate}")
+    @Scheduled(cron = "${procedure.cron}")
     @Async
     public void logging() {
-        log.info("Bot has been alive for {} seconds", ManagementFactory.getRuntimeMXBean().getUptime() / 1000);
+        timeAlive++;
+        log.info("Bot has been alive for {} hours", timeAlive);
     }
 }

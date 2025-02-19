@@ -9,15 +9,15 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 @Data
 public abstract class VictCommand {
-  private SlashCommandData data;
-  private String name;
-  private Integer cooldown;
-  private Permission[] permissions;
-  private Boolean devCommand;
+    private SlashCommandData data;
+    private String name;
+    private Long cooldown = 5L;
+    private Permission[] permissions;
+    private Boolean devCommand;
 
-  public abstract void callback(SlashCommandInteractionEvent event);
+    public abstract void callback(SlashCommandInteractionEvent event);
 
-  public void handleSelectInteraction(StringSelectInteractionEvent event) {
-    // noop
-  }
+    public void handleSelectInteraction(StringSelectInteractionEvent event) {
+        event.reply("NOT IMPLEMENTED").setEphemeral(true).queue();
+    }
 }
