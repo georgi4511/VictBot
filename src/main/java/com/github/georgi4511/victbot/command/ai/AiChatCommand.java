@@ -1,4 +1,4 @@
-package com.github.georgi4511.victbot.command.chat;
+package com.github.georgi4511.victbot.command.ai;
 
 import com.github.georgi4511.victbot.model.VictCommand;
 import lombok.Getter;
