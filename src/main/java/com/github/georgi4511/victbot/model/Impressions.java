@@ -1,5 +1,4 @@
-/* (C)2025 */
-package com.github.georgi4511.victbot.entity;
+package com.github.georgi4511.victbot.model;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,17 +1,17 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.service;
 
-import com.github.georgi4511.victbot.entity.VictGuild;
+import com.github.georgi4511.victbot.model.VictGuild;
 import com.github.georgi4511.victbot.repository.VictGuildRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class VictGuildService {
   final VictGuildRepository victGuildRepository;
 
@@ -19,7 +19,6 @@ public class VictGuildService {
     return victGuildRepository.findAll();
   }
 
-  @Transactional
   public VictGuild findVictGuildByDiscordIdOrCreate(@NonNull String discordId) {
     return victGuildRepository
         .findByDiscordId(discordId)

@@ -1,8 +1,7 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.config;
 
-import com.github.georgi4511.victbot.entity.VictCommand;
 import com.github.georgi4511.victbot.listener.DiscordEventListener;
+import com.github.georgi4511.victbot.model.VictCommand;
 import java.util.EnumSet;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

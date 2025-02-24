@@ -1,6 +1,6 @@
-/* (C)2025 */
-package com.github.georgi4511.victbot.entity;
+package com.github.georgi4511.victbot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
@@ -21,9 +21,11 @@ public class VictUser {
   @NonNull
   String discordId;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "victUser", cascade = CascadeType.ALL)
   Set<Reminder> reminders;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "victUser", cascade = CascadeType.ALL)
   Set<Bookmark> bookmarks;
 }

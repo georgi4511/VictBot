@@ -1,7 +1,6 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.controller;
 
-import com.github.georgi4511.victbot.entity.VictUser;
+import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.service.VictUserService;
 import java.util.List;
 import java.util.Optional;

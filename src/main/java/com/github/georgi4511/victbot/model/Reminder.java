@@ -1,5 +1,4 @@
-/* (C)2025 */
-package com.github.georgi4511.victbot.entity;
+package com.github.georgi4511.victbot.model;
 
 import jakarta.persistence.*;
 import java.time.Instant;
@@ -10,7 +9,9 @@ import lombok.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Bookmark {
+public class Reminder {
+
+  @NonNull
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -19,7 +20,7 @@ public class Bookmark {
 
   @NonNull private String message;
 
-  @NonNull private String response;
+  @NonNull private Instant targetTime;
 
   @ManyToOne
   @JoinColumn(name = "vict_user_id", nullable = false)
@@ -28,4 +29,8 @@ public class Bookmark {
   @ManyToOne
   @JoinColumn(name = "vict_guild_id", nullable = false)
   private VictGuild victGuild;
+
+  @NonNull private String channelSentFrom;
+
+  @NonNull private Boolean personal = false;
 }

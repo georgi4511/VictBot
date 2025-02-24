@@ -1,6 +1,6 @@
-/* (C)2025 */
-package com.github.georgi4511.victbot.entity;
+package com.github.georgi4511.victbot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
@@ -21,12 +21,15 @@ public class VictGuild {
   @NonNull
   String discordId;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
   Set<Reminder> reminders;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
   Set<Bookmark> bookmarks;
 
+  @JsonIgnore
   @OneToOne(mappedBy = "victGuild", cascade = CascadeType.ALL)
   @PrimaryKeyJoinColumn
   Impressions impressions;

@@ -1,9 +1,8 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.repository;
 
-import com.github.georgi4511.victbot.entity.Reminder;
-import com.github.georgi4511.victbot.entity.VictGuild;
-import com.github.georgi4511.victbot.entity.VictUser;
+import com.github.georgi4511.victbot.model.Reminder;
+import com.github.georgi4511.victbot.model.VictGuild;
+import com.github.georgi4511.victbot.model.VictUser;
 import java.util.Optional;
 import org.springframework.data.repository.ListCrudRepository;
 

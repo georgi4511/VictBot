@@ -38,3 +38,6 @@ discord:
   guild: ${BOT_GUILD}
 procedure:
   cron: "0 0 * * * ?"
+vict:
+  stable-diffusion:
+    url: ${STABLE_DIFFUSION_URL}

@@ -1,8 +1,7 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.controller;
 
-import com.github.georgi4511.victbot.entity.Bookmark;
-import com.github.georgi4511.victbot.entity.VictGuild;
+import com.github.georgi4511.victbot.model.Bookmark;
+import com.github.georgi4511.victbot.model.VictGuild;
 import com.github.georgi4511.victbot.service.BookmarkService;
 import java.util.List;
 import java.util.Optional;

@@ -1,7 +1,6 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.command._template;
 
-import com.github.georgi4511.victbot.entity.VictCommand;
+import com.github.georgi4511.victbot.model.VictCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

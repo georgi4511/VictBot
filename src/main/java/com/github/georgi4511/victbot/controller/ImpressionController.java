@@ -1,11 +1,11 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.controller;
 
-import com.github.georgi4511.victbot.entity.Impressions;
-import com.github.georgi4511.victbot.entity.VictGuild;
-import com.github.georgi4511.victbot.entity.dto.ImpressionsDto;
+import com.github.georgi4511.victbot.model.Impressions;
+import com.github.georgi4511.victbot.model.VictGuild;
+import com.github.georgi4511.victbot.model.dto.ImpressionsDto;
 import com.github.georgi4511.victbot.service.ImpressionsService;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,11 +29,10 @@ public class ImpressionController {
   }
 
   @GetMapping("/guild/{victGuild}")
-  public ImpressionsDto getImpressions(@PathVariable VictGuild victGuild) {
+  public Optional<ImpressionsDto> getImpressions(@PathVariable VictGuild victGuild) {
     return impressionsService
         .getImpressionsByVictGuild(victGuild)
-        .map(ImpressionsDto::fromImpressions)
-        .orElse(new ImpressionsDto(null, 0, 0, null));
+        .map(ImpressionsDto::fromImpressions);
   }
 
   @PostMapping("/create")

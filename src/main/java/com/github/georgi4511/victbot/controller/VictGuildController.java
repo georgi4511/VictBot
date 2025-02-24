@@ -1,7 +1,6 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.controller;
 
-import com.github.georgi4511.victbot.entity.VictGuild;
+import com.github.georgi4511.victbot.model.VictGuild;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import java.util.List;
 import java.util.Optional;
@@ -25,12 +24,12 @@ public class VictGuildController {
     return victGuildService.saveVictGuild(reminder);
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("id/{id}")
   public Optional<VictGuild> getVictGuild(@PathVariable Long id) {
     return victGuildService.getByVictGuildId(id);
   }
 
-  @GetMapping("/{discordId}")
+  @GetMapping("discordId/{discordId}")
   public Optional<VictGuild> getVictGuild(@PathVariable String discordId) {
     return victGuildService.getByVictGuildDiscordId(discordId);
   }

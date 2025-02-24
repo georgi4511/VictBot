@@ -1,16 +1,17 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.service;
 
-import com.github.georgi4511.victbot.entity.Reminder;
-import com.github.georgi4511.victbot.entity.VictGuild;
+import com.github.georgi4511.victbot.model.Reminder;
+import com.github.georgi4511.victbot.model.VictGuild;
 import com.github.georgi4511.victbot.repository.ReminderRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReminderEntryService {
   final ReminderRepository reminderRepository;
 
