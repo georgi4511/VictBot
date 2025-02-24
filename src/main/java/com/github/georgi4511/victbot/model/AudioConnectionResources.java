@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 @Builder
 @Getter
 public class AudioConnectionResources {
-    Byte[] connectionAudioResources;
-    AudioManager connectionPlayer;
-    Integer connectionTimeout;
+  Byte[] connectionAudioResources;
+  AudioManager connectionPlayer;
+  Integer connectionTimeout;
 }

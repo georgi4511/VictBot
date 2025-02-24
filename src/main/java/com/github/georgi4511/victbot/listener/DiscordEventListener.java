@@ -8,6 +8,8 @@ import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
 import com.github.georgi4511.victbot.util.Utils;
+import java.time.Instant;
+import java.util.*;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -22,138 +24,135 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.*;
-
 @Service
 @Profile("!dev")
 public class DiscordEventListener extends ListenerAdapter {
 
-    private static final Logger log = LoggerFactory.getLogger(DiscordEventListener.class);
-    private final Map<String, VictCommand> commands;
-    private final VictGuildService victGuildService;
-    private final VictUserService victUserService;
+  private static final Logger log = LoggerFactory.getLogger(DiscordEventListener.class);
+  private final Map<String, VictCommand> commands;
+  private final VictGuildService victGuildService;
+  private final VictUserService victUserService;
 
-    private final Map<User, ArrayList<CommandCooldownRecord>> commandCooldownMap;
+  private final Map<User, ArrayList<CommandCooldownRecord>> commandCooldownMap;
 
-    @Value("${twitter.fix:true}")
-    boolean fixTwitterFlag;
+  @Value("${twitter.fix:true}")
+  boolean fixTwitterFlag;
 
-    DiscordEventListener(
-            List<VictCommand> commandList,
-            VictUserService victUserService,
-            VictGuildService victGuildService) {
-        this.commands = new HashMap<>();
-        commandList.forEach(command -> commands.put(command.getName(), command));
+  DiscordEventListener(
+      List<VictCommand> commandList,
+      VictUserService victUserService,
+      VictGuildService victGuildService) {
+    this.commands = new HashMap<>();
+    commandList.forEach(command -> commands.put(command.getName(), command));
 
-        this.victUserService = victUserService;
-        this.victGuildService = victGuildService;
+    this.victUserService = victUserService;
+    this.victGuildService = victGuildService;
 
-        this.commandCooldownMap = new HashMap<>();
+    this.commandCooldownMap = new HashMap<>();
+  }
+
+  @Override
+  public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    String commandName = event.getName();
+    VictCommand command = commands.get(commandName);
+
+    User eventUser = event.getUser();
+    Guild eventGuild = event.getGuild();
+
+    validateExistingOrCreateEntities(eventUser, eventGuild);
+
+    try {
+      handleSlashCommandExecution(event, eventUser, command);
+    } catch (UnsupportedOperationException e) {
+      event.reply("Unknown command").setEphemeral(true).queue();
+    } catch (CommandUnderCooldownException e) {
+      event
+          .reply(String.format("%s, %s", event.getUser().getAsMention(), e.getMessage()))
+          .setEphemeral(true)
+          .queue();
+    }
+  }
+
+  private void handleSlashCommandExecution(
+      @NotNull SlashCommandInteractionEvent event, User eventUser, VictCommand command) {
+    if (command == null) {
+      throw new UnsupportedOperationException();
     }
 
-    @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        String commandName = event.getName();
-        VictCommand command = commands.get(commandName);
+    ArrayList<CommandCooldownRecord> cooldownRecords = commandCooldownMap.get(eventUser);
 
-        User eventUser = event.getUser();
-        Guild eventGuild = event.getGuild();
-
-        validateExistingOrCreateEntities(eventUser, eventGuild);
-
-        try {
-            handleSlashCommandExecution(event, eventUser, command);
-        } catch (UnsupportedOperationException e) {
-            event.reply("Unknown command").setEphemeral(true).queue();
-        } catch (CommandUnderCooldownException e) {
-            event
-                    .reply(String.format("%s, %s", event.getUser().getAsMention(), e.getMessage()))
-                    .setEphemeral(true)
-                    .queue();
-        }
+    if (cooldownRecords == null) {
+      cooldownRecords = new ArrayList<>();
     }
 
-    private void handleSlashCommandExecution(
-            @NotNull SlashCommandInteractionEvent event, User eventUser, VictCommand command) {
-        if (command == null) {
-            throw new UnsupportedOperationException();
-        }
+    String commandName = command.getName();
+    Long commandCooldown = command.getCooldown();
 
-        ArrayList<CommandCooldownRecord> cooldownRecords = commandCooldownMap.get(eventUser);
+    validateCommandExecution(cooldownRecords, commandName, commandCooldown);
 
-        if (cooldownRecords == null) {
-            cooldownRecords = new ArrayList<>();
-        }
+    command.callback(event);
 
-        String commandName = command.getName();
-        Long commandCooldown = command.getCooldown();
-
-        validateCommandExecution(cooldownRecords, commandName, commandCooldown);
-
-        command.callback(event);
-
-        if (commandCooldown != 0) {
-            CommandCooldownRecord cooldownRecord =
-                    new CommandCooldownRecord(Instant.now().plusSeconds(commandCooldown), commandName);
-            cooldownRecords.add(cooldownRecord);
-            commandCooldownMap.put(eventUser, cooldownRecords);
-        }
+    if (commandCooldown != 0) {
+      CommandCooldownRecord cooldownRecord =
+          new CommandCooldownRecord(Instant.now().plusSeconds(commandCooldown), commandName);
+      cooldownRecords.add(cooldownRecord);
+      commandCooldownMap.put(eventUser, cooldownRecords);
     }
+  }
 
-    private void validateCommandExecution(
-            ArrayList<CommandCooldownRecord> cooldownRecords, String commandName, Long commandCooldown) {
-        if (cooldownRecords.isEmpty()) return;
-        if (commandCooldown == 0) return;
-        Optional<CommandCooldownRecord> cooldownRecordOptional =
-                cooldownRecords.stream().filter(li -> li.name().equals(commandName)).findFirst();
+  private void validateCommandExecution(
+      ArrayList<CommandCooldownRecord> cooldownRecords, String commandName, Long commandCooldown) {
+    if (cooldownRecords.isEmpty()) return;
+    if (commandCooldown == 0) return;
+    Optional<CommandCooldownRecord> cooldownRecordOptional =
+        cooldownRecords.stream().filter(li -> li.name().equals(commandName)).findFirst();
 
-        if (cooldownRecordOptional.isEmpty()) return;
+    if (cooldownRecordOptional.isEmpty()) return;
 
-        CommandCooldownRecord cooldownRecord = cooldownRecordOptional.get();
-        Instant created = cooldownRecord.created();
+    CommandCooldownRecord cooldownRecord = cooldownRecordOptional.get();
+    Instant created = cooldownRecord.created();
 
-        Instant now = Instant.now();
-        if (created.getEpochSecond() > now.getEpochSecond()) {
-            throw new CommandUnderCooldownException(
-                    String.format(
-                            "the %s command is under cooldown for another %s seconds.",
-                            commandName, now.until(created).getSeconds()));
-        }
-        cooldownRecords.remove(cooldownRecord);
+    Instant now = Instant.now();
+    if (created.getEpochSecond() > now.getEpochSecond()) {
+      throw new CommandUnderCooldownException(
+          String.format(
+              "the %s command is under cooldown for another %s seconds.",
+              commandName, now.until(created).getSeconds()));
     }
+    cooldownRecords.remove(cooldownRecord);
+  }
 
-    private void validateExistingOrCreateEntities(User eventUser, Guild eventGuild) {
-        if (!victUserService.existsVictUserByDiscordId(eventUser.getId()))
-            victUserService.saveVictUser(new VictUser(eventUser.getId()));
-        if (eventGuild != null && !victGuildService.existsVictGuildByDiscordId(eventGuild.getId())) {
-            victGuildService.saveVictGuild(new VictGuild(eventGuild.getId()));
-        }
+  private void validateExistingOrCreateEntities(User eventUser, Guild eventGuild) {
+    if (!victUserService.existsVictUserByDiscordId(eventUser.getId()))
+      victUserService.saveVictUser(new VictUser(eventUser.getId()));
+    if (eventGuild != null && !victGuildService.existsVictGuildByDiscordId(eventGuild.getId())) {
+      victGuildService.saveVictGuild(new VictGuild(eventGuild.getId()));
     }
+  }
 
-    @Override
-    public void onStringSelectInteraction(@NotNull StringSelectInteractionEvent event) {
-        String customId = event.getComponentId();
+  @Override
+  public void onStringSelectInteraction(@NotNull StringSelectInteractionEvent event) {
+    String customId = event.getComponentId();
 
-        // Assuming custom IDs are in the format "commandName_menuIdentifier"
-        VictCommand command = commands.get(customId.split("_", 2)[0]);
-        if (command != null) {
-            command.handleSelectInteraction(event);
-        } else {
-            event.reply("Unknown select interaction").setEphemeral(true).queue();
-        }
+    // Assuming custom IDs are in the format "commandName_menuIdentifier"
+    VictCommand command = commands.get(customId.split("_", 2)[0]);
+    if (command != null) {
+      command.handleSelectInteraction(event);
+    } else {
+      event.reply("Unknown select interaction").setEphemeral(true).queue();
     }
+  }
 
-    @Override
-    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) return;
-        if (!fixTwitterFlag) return;
-        String content = event.getMessage().getContentRaw();
-        Utils.fixTwitter(event, content);
-    }
+  @Override
+  public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+    if (event.getAuthor().isBot()) return;
+    if (!fixTwitterFlag) return;
+    String content = event.getMessage().getContentRaw();
+    Utils.fixTwitter(event, content);
+  }
 
-    @Override
-    public void onReady(@NotNull ReadyEvent event) {
-        log.info("{} logged in.", event.getJDA().getSelfUser().getEffectiveName());
-    }
+  @Override
+  public void onReady(@NotNull ReadyEvent event) {
+    log.info("{} logged in.", event.getJDA().getSelfUser().getEffectiveName());
+  }
 }

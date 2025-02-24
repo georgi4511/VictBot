@@ -10,18 +10,18 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 @Getter
 @Setter
 public class VictCommandTemplate extends VictCommand {
-    private SlashCommandData data;
-    private String name;
-    private String description;
+  private SlashCommandData data;
+  private String name;
+  private String description;
 
-    public VictCommandTemplate() {
-        this.name = "<CHANGE ME>";
-        this.description = "<CHANGE ME>";
-        this.data = Commands.slash(this.name, this.description);
-    }
+  public VictCommandTemplate() {
+    this.name = "<CHANGE ME>";
+    this.description = "<CHANGE ME>";
+    this.data = Commands.slash(this.name, this.description);
+  }
 
-    @Override
-    public void callback(SlashCommandInteractionEvent event) {
-        event.reply("<CHANGE ME>").queue();
-    }
+  @Override
+  public void callback(SlashCommandInteractionEvent event) {
+    event.reply("<CHANGE ME>").queue();
+  }
 }
