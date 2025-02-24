@@ -1,7 +1,6 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.command.misc;
 
-import com.github.georgi4511.victbot.entity.VictCommand;
+import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.CatPicService;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +42,10 @@ public class CatPicCommand extends VictCommand {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         CatPicCommand that = (CatPicCommand) o;
-        return Objects.equals(data, that.data) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(catPicService, that.catPicService);
+        return Objects.equals(data, that.data)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && Objects.equals(catPicService, that.catPicService);
     }
 
     @Override

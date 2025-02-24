@@ -1,7 +1,6 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.command.chat;
 
-import com.github.georgi4511.victbot.entity.VictCommand;
+import com.github.georgi4511.victbot.model.VictCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -69,7 +68,10 @@ public class AiChatCommand extends VictCommand {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         AiChatCommand that = (AiChatCommand) o;
-        return Objects.equals(data, that.data) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(ollamaChatModel, that.ollamaChatModel);
+        return Objects.equals(data, that.data)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && Objects.equals(ollamaChatModel, that.ollamaChatModel);
     }
 
     @Override

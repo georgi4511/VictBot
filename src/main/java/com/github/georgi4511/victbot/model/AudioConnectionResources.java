@@ -1,4 +1,4 @@
-package com.github.georgi4511.victbot.entity;
+package com.github.georgi4511.victbot.model;
 
 import lombok.Builder;
 import lombok.Getter;

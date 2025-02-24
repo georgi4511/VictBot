@@ -28,3 +28,5 @@
 - [ ] QR code creator
 - [x] etc. API commands
 - [x] Separate dev and prod bot!
+- [ ] Separate current monolith into at the very least modules (example Bot Module, API Module, Logging Module, AI
+  Module et cet.)

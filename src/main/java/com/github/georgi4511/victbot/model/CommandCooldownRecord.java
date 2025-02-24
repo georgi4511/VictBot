@@ -1,4 +1,4 @@
-package com.github.georgi4511.victbot.entity;
+package com.github.georgi4511.victbot.model;
 
 import java.time.Instant;
 

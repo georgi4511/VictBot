@@ -1,11 +1,10 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.listener;
 
-import com.github.georgi4511.victbot.entity.CommandCooldownRecord;
-import com.github.georgi4511.victbot.entity.VictCommand;
-import com.github.georgi4511.victbot.entity.VictGuild;
-import com.github.georgi4511.victbot.entity.VictUser;
 import com.github.georgi4511.victbot.exception.CommandUnderCooldownException;
+import com.github.georgi4511.victbot.model.CommandCooldownRecord;
+import com.github.georgi4511.victbot.model.VictCommand;
+import com.github.georgi4511.victbot.model.VictGuild;
+import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
 import com.github.georgi4511.victbot.util.Utils;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.*;
-
 
 @Service
 @Profile("!dev")
@@ -69,12 +67,15 @@ public class DiscordEventListener extends ListenerAdapter {
         } catch (UnsupportedOperationException e) {
             event.reply("Unknown command").setEphemeral(true).queue();
         } catch (CommandUnderCooldownException e) {
-            event.reply(String.format("%s, %s", event.getUser().getAsMention(), e.getMessage())).setEphemeral(true).queue();
+            event
+                    .reply(String.format("%s, %s", event.getUser().getAsMention(), e.getMessage()))
+                    .setEphemeral(true)
+                    .queue();
         }
     }
 
-
-    private void handleSlashCommandExecution(@NotNull SlashCommandInteractionEvent event, User eventUser, VictCommand command) {
+    private void handleSlashCommandExecution(
+            @NotNull SlashCommandInteractionEvent event, User eventUser, VictCommand command) {
         if (command == null) {
             throw new UnsupportedOperationException();
         }
@@ -93,17 +94,19 @@ public class DiscordEventListener extends ListenerAdapter {
         command.callback(event);
 
         if (commandCooldown != 0) {
-            CommandCooldownRecord cooldownRecord = new CommandCooldownRecord(Instant.now().plusSeconds(commandCooldown), commandName);
+            CommandCooldownRecord cooldownRecord =
+                    new CommandCooldownRecord(Instant.now().plusSeconds(commandCooldown), commandName);
             cooldownRecords.add(cooldownRecord);
             commandCooldownMap.put(eventUser, cooldownRecords);
         }
     }
 
-
-    private void validateCommandExecution(ArrayList<CommandCooldownRecord> cooldownRecords, String commandName, Long commandCooldown) {
+    private void validateCommandExecution(
+            ArrayList<CommandCooldownRecord> cooldownRecords, String commandName, Long commandCooldown) {
         if (cooldownRecords.isEmpty()) return;
         if (commandCooldown == 0) return;
-        Optional<CommandCooldownRecord> cooldownRecordOptional = cooldownRecords.stream().filter(li -> li.name().equals(commandName)).findFirst();
+        Optional<CommandCooldownRecord> cooldownRecordOptional =
+                cooldownRecords.stream().filter(li -> li.name().equals(commandName)).findFirst();
 
         if (cooldownRecordOptional.isEmpty()) return;
 
@@ -112,7 +115,10 @@ public class DiscordEventListener extends ListenerAdapter {
 
         Instant now = Instant.now();
         if (created.getEpochSecond() > now.getEpochSecond()) {
-            throw new CommandUnderCooldownException(String.format("the %s command is under cooldown for another %s seconds.", commandName, now.until(created).getSeconds()));
+            throw new CommandUnderCooldownException(
+                    String.format(
+                            "the %s command is under cooldown for another %s seconds.",
+                            commandName, now.until(created).getSeconds()));
         }
         cooldownRecords.remove(cooldownRecord);
     }
@@ -120,8 +126,7 @@ public class DiscordEventListener extends ListenerAdapter {
     private void validateExistingOrCreateEntities(User eventUser, Guild eventGuild) {
         if (!victUserService.existsVictUserByDiscordId(eventUser.getId()))
             victUserService.saveVictUser(new VictUser(eventUser.getId()));
-        if (eventGuild != null
-                && !victGuildService.existsVictGuildByDiscordId(eventGuild.getId())) {
+        if (eventGuild != null && !victGuildService.existsVictGuildByDiscordId(eventGuild.getId())) {
             victGuildService.saveVictGuild(new VictGuild(eventGuild.getId()));
         }
     }

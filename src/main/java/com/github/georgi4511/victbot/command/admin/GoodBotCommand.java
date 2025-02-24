@@ -1,8 +1,7 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.command.admin;
 
-import com.github.georgi4511.victbot.entity.Impressions;
-import com.github.georgi4511.victbot.entity.VictCommand;
+import com.github.georgi4511.victbot.model.Impressions;
+import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.ImpressionsService;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import lombok.Getter;
@@ -71,11 +70,16 @@ public class GoodBotCommand extends VictCommand {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         GoodBotCommand that = (GoodBotCommand) o;
-        return Objects.equals(impressionsService, that.impressionsService) && Objects.equals(victGuildService, that.victGuildService) && Objects.equals(data, that.data) && Objects.equals(name, that.name) && Objects.equals(description, that.description);
+        return Objects.equals(impressionsService, that.impressionsService)
+                && Objects.equals(victGuildService, that.victGuildService)
+                && Objects.equals(data, that.data)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), impressionsService, victGuildService, data, name, description);
+        return Objects.hash(
+                super.hashCode(), impressionsService, victGuildService, data, name, description);
     }
 }

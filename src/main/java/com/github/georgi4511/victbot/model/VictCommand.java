@@ -1,5 +1,4 @@
-/* (C)2025 */
-package com.github.georgi4511.victbot.entity;
+package com.github.georgi4511.victbot.model;
 
 import lombok.Data;
 import net.dv8tion.jda.api.Permission;

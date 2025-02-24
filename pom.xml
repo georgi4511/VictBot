@@ -46,7 +46,6 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -171,10 +170,6 @@
                     <java>
                         <googleJavaFormat>
                         </googleJavaFormat>
-                        <licenseHeader>
-                            <content>/* (C)$YEAR */
-                            </content>
-                        </licenseHeader>
                     </java>
                 </configuration>
                 <executions>

@@ -1,8 +1,7 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.command.admin;
 
-import com.github.georgi4511.victbot.entity.Impressions;
-import com.github.georgi4511.victbot.entity.VictCommand;
+import com.github.georgi4511.victbot.model.Impressions;
+import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.ImpressionsService;
 import lombok.Getter;
 import lombok.Setter;
@@ -65,7 +64,10 @@ public class BadBotCommand extends VictCommand {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         BadBotCommand that = (BadBotCommand) o;
-        return Objects.equals(impressionsService, that.impressionsService) && Objects.equals(data, that.data) && Objects.equals(name, that.name) && Objects.equals(description, that.description);
+        return Objects.equals(impressionsService, that.impressionsService)
+                && Objects.equals(data, that.data)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description);
     }
 
     @Override
