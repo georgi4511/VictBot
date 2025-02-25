@@ -33,8 +33,8 @@ public class ReminderController {
   }
 
   @GetMapping("/guild/{victGuild}")
-  public Optional<Reminder> getReminder(@PathVariable VictGuild victGuild) {
-    return reminderService.getReminderByVictGuild(victGuild);
+  public List<Reminder> getReminder(@PathVariable VictGuild victGuild) {
+    return reminderService.getRemindersByVictGuild(victGuild);
   }
 
   @GetMapping("/{id}")

@@ -3,7 +3,6 @@ package com.github.georgi4511.victbot.command.reminder;
 import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.ReminderService;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
@@ -34,6 +33,8 @@ public class AddReminderCommand extends VictCommand {
   public static final String MINUTES = "minutes";
   public static final String HOURS = "hours";
   public static final String DAYS = "days";
+  public static final DateTimeFormatter DATE_TIME_FORMATTER =
+      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.MEDIUM);
   private static final Logger log = LoggerFactory.getLogger(AddReminderCommand.class);
   private final ReminderService reminderService;
 
@@ -68,41 +69,41 @@ public class AddReminderCommand extends VictCommand {
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
-    String message = "";
-    boolean personal = false;
-    int time = 1;
-    String chronoUnitS = MINUTES;
-    List<OptionMapping> options = event.getOptions();
+    try {
+      String message = "";
+      boolean personal = false;
+      int time = 1;
+      String chronoUnitS = MINUTES;
+      List<OptionMapping> options = event.getOptions();
 
-    for (OptionMapping option : options) {
-      switch (option.getName()) {
-        case MESSAGE -> message = option.getAsString();
-        case PERSONAL -> personal = option.getAsBoolean();
-        case TARGET_TIME -> time = option.getAsInt();
-        case TIME_UNIT -> chronoUnitS = option.getAsString();
-        default -> log.info("Unexpected option received, {}", option.getName());
+      for (OptionMapping option : options) {
+        switch (option.getName()) {
+          case MESSAGE -> message = option.getAsString();
+          case PERSONAL -> personal = option.getAsBoolean();
+          case TARGET_TIME -> time = option.getAsInt();
+          case TIME_UNIT -> chronoUnitS = option.getAsString();
+          default -> log.info("Unexpected option received, {}", option.getName());
+        }
+      }
+
+      String channelId = event.getChannelId();
+
+      Guild guild = event.getGuild();
+      String guildId = guild == null ? null : guild.getId();
+      String userId = event.getUser().getId();
+
+      Instant targetTime = Instant.now().plus(time, ChronoUnit.valueOf(chronoUnitS.toUpperCase()));
+      reminderService.saveReminder(message, personal, targetTime, channelId, guildId, userId);
+
+      event
+          .reply(String.format("Set reminder for: %s", DATE_TIME_FORMATTER.format(targetTime)))
+          .queue();
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      if (!event.isAcknowledged()) {
+        event.reply("Failed to execute command").queue();
       }
     }
-
-    String channelId = event.getChannelId();
-
-    Guild guild = event.getGuild();
-    String guildId = guild == null ? null : guild.getId();
-    String userId = event.getUser().getId();
-
-    Instant targetTime = Instant.now().plus(time, ChronoUnit.valueOf(chronoUnitS.toUpperCase()));
-    reminderService.saveReminder(message, personal, targetTime, channelId, guildId, userId);
-
-    event
-        .reply(
-            String.format(
-                "Set reminder for: %s",
-                targetTime
-                    .atZone(ZoneId.systemDefault())
-                    .format(
-                        DateTimeFormatter.ofLocalizedDateTime(
-                            FormatStyle.FULL, FormatStyle.MEDIUM))))
-        .queue();
   }
 
   @Override

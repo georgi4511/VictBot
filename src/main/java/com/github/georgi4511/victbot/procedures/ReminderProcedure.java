@@ -5,6 +5,9 @@ import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.service.ReminderService;
 import com.github.georgi4511.victbot.service.VictUserService;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.Instant;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -13,10 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -54,10 +53,9 @@ public class ReminderProcedure {
     if (reminder.getPersonal()) {
       Long victUserId = reminder.getVictUser().getId();
       VictUser victUser =
-          victUserService
-              .getByVictUserId(victUserId)
-              .orElseThrow(EntityNotFoundException::new);
-      Objects.requireNonNull(jda.getUserById(victUser.getDiscordId())).openPrivateChannel()
+          victUserService.getByVictUserId(victUserId).orElseThrow(EntityNotFoundException::new);
+      Objects.requireNonNull(jda.getUserById(victUser.getDiscordId()))
+          .openPrivateChannel()
           .flatMap(channel -> channel.sendMessage(reminder.getMessage()))
           .queue();
     } else {

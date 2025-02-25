@@ -26,8 +26,14 @@ public class ReminderService {
     return reminderRepository.findAll();
   }
 
-  public Optional<Reminder> getReminderByVictGuild(VictGuild victGuild) {
+  public List<Reminder> getRemindersByVictGuild(VictGuild victGuild) {
     return reminderRepository.findByVictGuild(victGuild);
+  }
+
+  public List<Reminder> getRemindersByDiscordId(String id) {
+    VictUser victUser =
+        victUserRepository.findByDiscordId(id).orElseThrow(NullPointerException::new);
+    return reminderRepository.findByVictUser(victUser);
   }
 
   public void removeReminders(List<Reminder> reminders) {
