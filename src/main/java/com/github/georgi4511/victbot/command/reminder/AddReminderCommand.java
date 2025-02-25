@@ -3,6 +3,7 @@ package com.github.georgi4511.victbot.command.reminder;
 import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.ReminderService;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
@@ -33,8 +34,6 @@ public class AddReminderCommand extends VictCommand {
   public static final String MINUTES = "minutes";
   public static final String HOURS = "hours";
   public static final String DAYS = "days";
-  public static final DateTimeFormatter DATE_TIME_FORMATTER =
-      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.MEDIUM);
   private static final Logger log = LoggerFactory.getLogger(AddReminderCommand.class);
   private final ReminderService reminderService;
 
@@ -96,7 +95,14 @@ public class AddReminderCommand extends VictCommand {
       reminderService.saveReminder(message, personal, targetTime, channelId, guildId, userId);
 
       event
-          .reply(String.format("Set reminder for: %s", DATE_TIME_FORMATTER.format(targetTime)))
+          .reply(
+              String.format(
+                  "Set reminder for: %s",
+                  targetTime
+                      .atZone(ZoneId.systemDefault())
+                      .format(
+                          DateTimeFormatter.ofLocalizedDateTime(
+                              FormatStyle.FULL, FormatStyle.MEDIUM))))
           .queue();
     } catch (Exception e) {
       log.error(e.getMessage(), e);

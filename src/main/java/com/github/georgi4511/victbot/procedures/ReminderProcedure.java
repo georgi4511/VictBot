@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,18 +51,21 @@ public class ReminderProcedure {
   }
 
   private void sendReminder(Reminder reminder) {
+
+    Long victUserId = reminder.getVictUser().getId();
+    VictUser victUser =
+        victUserService.getByVictUserId(victUserId).orElseThrow(EntityNotFoundException::new);
+    User user = Objects.requireNonNull(jda.getUserById(victUser.getDiscordId()));
+
+    String message =
+        String.format("%s, you have a reminder:%n%s", user.getAsMention(), reminder.getMessage());
+
     if (reminder.getPersonal()) {
-      Long victUserId = reminder.getVictUser().getId();
-      VictUser victUser =
-          victUserService.getByVictUserId(victUserId).orElseThrow(EntityNotFoundException::new);
-      Objects.requireNonNull(jda.getUserById(victUser.getDiscordId()))
-          .openPrivateChannel()
-          .flatMap(channel -> channel.sendMessage(reminder.getMessage()))
-          .queue();
+      user.openPrivateChannel().flatMap(channel -> channel.sendMessage(message)).queue();
     } else {
       String channelSentFrom = reminder.getChannelSentFrom();
       Objects.requireNonNull(jda.getChannelById(TextChannel.class, channelSentFrom))
-          .sendMessage(reminder.getMessage())
+          .sendMessage(message)
           .queue();
     }
   }

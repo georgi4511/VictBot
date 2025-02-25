@@ -3,6 +3,7 @@ package com.github.georgi4511.victbot.command.reminder;
 import com.github.georgi4511.victbot.model.Reminder;
 import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.ReminderService;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
@@ -23,8 +24,6 @@ import org.springframework.stereotype.Component;
 public class ListRemindersCommand extends VictCommand {
   public static final String SHOW_MESSAGE = "show-message";
   private static final Logger log = LoggerFactory.getLogger(ListRemindersCommand.class);
-  private static final DateTimeFormatter DATE_TIME_FORMATTER =
-      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
   private final ReminderService reminderService;
   private SlashCommandData data;
   private String name;
@@ -47,6 +46,10 @@ public class ListRemindersCommand extends VictCommand {
     try {
 
       List<Reminder> reminders = reminderService.getRemindersByDiscordId(event.getUser().getId());
+      if (reminders.isEmpty()) {
+        event.reply("There are no currently existing reminders, how about you add one?").queue();
+        return;
+      }
 
       boolean showMessages = Objects.requireNonNull(event.getOption(SHOW_MESSAGE)).getAsBoolean();
 
@@ -56,15 +59,23 @@ public class ListRemindersCommand extends VictCommand {
                   r -> {
                     if (showMessages) {
                       return String.format(
-                          "createdTime: %s, message: %s, targetTime:%s",
-                          DATE_TIME_FORMATTER.format(r.getCreatedTime()),
+                          "Created at: %s, Message: %s, Target time:%s",
+                          r.getCreatedTime()
+                              .atZone(ZoneId.systemDefault())
+                              .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
                           r.getMessage(),
-                          DATE_TIME_FORMATTER.format(r.getTargetTime()));
+                          r.getTargetTime()
+                              .atZone(ZoneId.systemDefault())
+                              .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
                     }
                     return String.format(
-                        "createdTime: %s, targetTime:%s",
-                        DATE_TIME_FORMATTER.format(r.getCreatedTime()),
-                        DATE_TIME_FORMATTER.format(r.getTargetTime()));
+                        "Created at: %s, Target time:%s",
+                        r.getCreatedTime()
+                            .atZone(ZoneId.systemDefault())
+                            .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
+                        r.getTargetTime()
+                            .atZone(ZoneId.systemDefault())
+                            .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
                   })
               .reduce("Currently existing reminders:", (agg, curr) -> agg + "\n" + curr);
 
