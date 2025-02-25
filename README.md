@@ -1,6 +1,7 @@
 # **VictBot the DiscordBot**
 
 ### **This** is **the Public repository** for a Java Discord bot made by me using the [JDA](https://github.com/discord-jda/JDA) library
+[![CodeQL](https://github.com/georgi4511/VictBot/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/georgi4511/VictBot/actions/workflows/github-code-scanning/codeql)
 
 ## Steps to run
 
