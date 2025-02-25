@@ -36,8 +36,11 @@ springdoc:
 discord:
   token: ${BOT_TOKEN}
   guild: ${BOT_GUILD}
-procedure:
-  cron: "0 0 * * * ?"
 vict:
+  procedure:
+    logging:
+      cron: "0 0 * * * ?"
+    reminder:
+      cron: "0 * * * * ?"
   stable-diffusion:
     url: ${STABLE_DIFFUSION_URL}

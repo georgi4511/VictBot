@@ -2,10 +2,11 @@ package com.github.georgi4511.victbot.controller;
 
 import com.github.georgi4511.victbot.model.Reminder;
 import com.github.georgi4511.victbot.model.VictGuild;
-import com.github.georgi4511.victbot.service.ReminderEntryService;
+import com.github.georgi4511.victbot.service.ReminderService;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,20 +14,31 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ReminderController {
 
-  private final ReminderEntryService reminderEntryService;
+  private final ReminderService reminderService;
 
   @GetMapping
   public List<Reminder> getAllReminders() {
-    return reminderEntryService.getAllReminderEntry();
+    return reminderService.getAllReminderEntry();
   }
 
   @PostMapping
   public Reminder saveReminder(@RequestBody Reminder reminder) {
-    return reminderEntryService.saveReminderEntry(reminder);
+    return reminderService.saveReminder(reminder);
+  }
+
+  @DeleteMapping
+  public ResponseEntity<Object> removeReminderById(Long id) {
+    reminderService.removeById(id);
+    return ResponseEntity.ok().build();
   }
 
   @GetMapping("/guild/{victGuild}")
   public Optional<Reminder> getReminder(@PathVariable VictGuild victGuild) {
-    return reminderEntryService.getReminderEntryByVictGuild(victGuild);
+    return reminderService.getReminderByVictGuild(victGuild);
+  }
+
+  @GetMapping("/{id}")
+  public Optional<Reminder> getReminderById(@PathVariable Long id) {
+    return reminderService.getReminderById(id);
   }
 }
