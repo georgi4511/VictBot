@@ -3,6 +3,7 @@ package com.github.georgi4511.victbot.command.ai;
 import com.github.georgi4511.victbot.model.GenerateImageInput;
 import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.AiGenerationService;
+import java.util.List;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,14 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 public class AiArtCommand extends VictCommand {
+  public static final String PROMPT = "prompt";
+  public static final String NEGATIVE_PROMPT = "negative-prompt";
+  public static final String SAMPLER_NAME = "sampler-name";
+  public static final String STEPS = "steps";
+  public static final String CFG_SCALE = "cfg-scale";
+  public static final String WIDTH = "width";
+  public static final String HEIGHT = "height";
+
   private static final Logger log = LoggerFactory.getLogger(AiArtCommand.class);
   private final AiGenerationService aiGenerationService;
   private SlashCommandData data;
@@ -32,13 +41,13 @@ public class AiArtCommand extends VictCommand {
     this.description = "create ai image using stable diffusion";
     this.data =
         Commands.slash(this.name, this.description)
-            .addOption(OptionType.STRING, "prompt", "the prompt sent to the bot", true)
-            .addOption(OptionType.STRING, "negative-prompt", "the negative prompt sent to the bot")
-            .addOption(OptionType.STRING, "sampler-name", "sampler to use")
-            .addOption(OptionType.INTEGER, "steps", "steps for image generation")
-            .addOption(OptionType.INTEGER, "cfg-scale", "cfg-scale for image generation")
-            .addOption(OptionType.INTEGER, "width", "width for image generation")
-            .addOption(OptionType.INTEGER, "height", "height for image generation");
+            .addOption(OptionType.STRING, PROMPT, "the prompt sent to the bot", true)
+            .addOption(OptionType.STRING, NEGATIVE_PROMPT, "the negative prompt sent to the bot")
+            .addOption(OptionType.STRING, SAMPLER_NAME, "sampler to use")
+            .addOption(OptionType.INTEGER, STEPS, "steps for image generation")
+            .addOption(OptionType.INTEGER, CFG_SCALE, "cfg-scale for image generation")
+            .addOption(OptionType.INTEGER, WIDTH, "width for image generation")
+            .addOption(OptionType.INTEGER, HEIGHT, "height for image generation");
   }
 
   @Override
@@ -47,7 +56,7 @@ public class AiArtCommand extends VictCommand {
 
     try {
 
-      GenerateImageInput imageInput = getGenerateImageInput(event);
+      GenerateImageInput imageInput = getGenerateImageInput(event.getOptions());
 
       byte[] image = aiGenerationService.generateImage(imageInput);
 
@@ -59,27 +68,27 @@ public class AiArtCommand extends VictCommand {
     }
   }
 
-  private GenerateImageInput getGenerateImageInput(SlashCommandInteractionEvent event) {
+  private GenerateImageInput getGenerateImageInput(List<OptionMapping> options) {
 
-    String prompt = Objects.requireNonNull(event.getOption("prompt")).getAsString();
+    String prompt = "";
+    String negativePrompt = "";
+    String samplerName = "Euler a";
+    Integer steps = 28;
+    int width = 1024;
+    int height = 1024;
+    int cfgScale = 5;
 
-    OptionMapping negativePromptOption = event.getOption("negative-prompt");
-    String negativePrompt = negativePromptOption == null ? "" : negativePromptOption.getAsString();
-
-    OptionMapping samplerNameOption = event.getOption("sampler-name");
-    String samplerName = samplerNameOption == null ? "Euler a" : samplerNameOption.getAsString();
-
-    OptionMapping stepsOption = event.getOption("steps");
-    Integer steps = stepsOption == null ? 28 : stepsOption.getAsInt();
-
-    OptionMapping widthOption = event.getOption("width");
-    Integer width = widthOption == null ? 1024 : widthOption.getAsInt();
-
-    OptionMapping heightOption = event.getOption("height");
-    Integer height = heightOption == null ? 1024 : heightOption.getAsInt();
-
-    OptionMapping cfgScaleOption = event.getOption("cfg-scale");
-    Integer cfgScale = cfgScaleOption == null ? 5 : cfgScaleOption.getAsInt();
+    for (OptionMapping option : options) {
+      switch (option.getName()) {
+        case PROMPT -> prompt = option.getAsString();
+        case NEGATIVE_PROMPT -> negativePrompt = option.getAsString();
+        case SAMPLER_NAME -> samplerName = option.getAsString();
+        case WIDTH -> width = option.getAsInt();
+        case HEIGHT -> height = option.getAsInt();
+        case CFG_SCALE -> cfgScale = option.getAsInt();
+        default -> log.info("Unexpected option {}", option.getName());
+      }
+    }
 
     return new GenerateImageInput(
         prompt, negativePrompt, steps, width, height, cfgScale, samplerName);

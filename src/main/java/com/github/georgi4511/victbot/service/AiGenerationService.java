@@ -3,9 +3,6 @@ package com.github.georgi4511.victbot.service;
 import com.github.georgi4511.victbot.exception.GenerateImageException;
 import com.github.georgi4511.victbot.model.GenerateImageInput;
 import com.github.georgi4511.victbot.model.GenerateImageResponse;
-import java.util.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -15,11 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
 
+import java.util.Base64;
+
 @Service
 public class AiGenerationService {
   private static final String GENERATE_ENDPOINT = "/sdapi/v1/txt2img";
-  private static final Logger log = LoggerFactory.getLogger(AiGenerationService.class);
-  private final ChatClient chatClient;
+    private final ChatClient chatClient;
   private final RestTemplate restTemplate;
 
   public AiGenerationService(
