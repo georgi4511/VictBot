@@ -7,8 +7,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -18,13 +16,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class AddReminderCommandTest {
 
-  private static final Logger log = LoggerFactory.getLogger(AddReminderCommandTest.class);
-
-  @Test
+    @Test
   void test_callback_ok() {
     ReminderService reminderServiceMock = mock(ReminderService.class);
     SlashCommandInteractionEvent eventMock = mock(SlashCommandInteractionEvent.class);
@@ -42,7 +39,7 @@ class AddReminderCommandTest {
 
     when(eventMock.reply(entityCaptor.capture())).thenReturn(mock(ReplyCallbackAction.class));
 
-    AddReminderCommand addReminderCommand = spy(new AddReminderCommand(reminderServiceMock));
+    AddReminderCommand addReminderCommand = new AddReminderCommand(reminderServiceMock);
 
     addReminderCommand.callback(eventMock);
 
