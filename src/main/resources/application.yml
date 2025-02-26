@@ -26,17 +26,20 @@ spring:
   sql:
     init:
       mode: never
+
 application:
   name: VictBot
-twitter:
-  fix: false
+
 springdoc:
   swagger-ui:
     path: /
-discord:
-  token: ${BOT_TOKEN}
-  guild: ${BOT_GUILD}
+
 vict:
+  twitter:
+    fix: false
+  discord:
+    token: ${BOT_TOKEN}
+    guilds: ${BOT_GUILDS}
   procedure:
     logging:
       cron: "0 0 * * * ?"

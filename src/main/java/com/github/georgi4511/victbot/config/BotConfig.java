@@ -2,15 +2,11 @@ package com.github.georgi4511.victbot.config;
 
 import com.github.georgi4511.victbot.listener.DiscordEventListener;
 import com.github.georgi4511.victbot.model.VictCommand;
-import java.util.EnumSet;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
@@ -21,12 +17,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.MissingRequiredPropertiesException;
 
+import java.util.EnumSet;
+import java.util.List;
+
 @Configuration
 @RequiredArgsConstructor
 @Profile("!dev")
-public class BotConfiguration {
+public class BotConfig {
 
-  private static final Logger log = LoggerFactory.getLogger(BotConfiguration.class);
+  private static final Logger log = LoggerFactory.getLogger(BotConfig.class);
   private static final EnumSet<GatewayIntent> intents =
       EnumSet.of(
           GatewayIntent.GUILD_MESSAGES,
@@ -36,11 +35,9 @@ public class BotConfiguration {
           GatewayIntent.SCHEDULED_EVENTS,
           GatewayIntent.GUILD_PRESENCES);
 
-  @Value("${discord.token}")
+  @Value("${vict.discord.token}")
   private String token;
 
-  @Value("${discord.guild}")
-  private String guild;
 
   @Bean
   public JDA jda(DiscordEventListener discordEventListener, List<VictCommand> commands)
@@ -60,20 +57,7 @@ public class BotConfiguration {
 
     jda.awaitReady();
 
-    List<SlashCommandData> commandData = commands.stream().map(VictCommand::getData).toList();
-
-    log.info("Commands: {}", commandData.stream().map(SlashCommandData::getName).toList());
-
-    if (guild == null || jda.getGuildById(guild) == null) {
-      jda.updateCommands().addCommands(commandData).queue();
-    } else {
-      Guild guildById = jda.getGuildById(guild);
-      assert guildById != null;
-      guildById.updateCommands().addCommands(commandData).queue();
-    }
-
-    log.info("{} commands set", commands.size());
-
     return jda;
   }
+
 }

@@ -9,9 +9,9 @@ import lombok.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Reminder {
 
-  @NonNull
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

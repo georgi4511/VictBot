@@ -7,9 +7,10 @@ import lombok.*;
 
 @Data
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @RequiredArgsConstructor
+@Builder
 @Table(name = "vict_guild")
 public class VictGuild {
 

@@ -5,6 +5,9 @@ import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.service.ReminderService;
 import com.github.georgi4511.victbot.service.VictUserService;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.Instant;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
@@ -15,10 +18,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -53,8 +52,9 @@ public class ReminderProcedureImpl implements ReminderProcedure {
       log.error("Failed to complete reminder procedure, {}", e.getMessage(), e);
     }
   }
-@Override
-public void sendReminder(Reminder reminder) {
+
+  @Override
+  public void sendReminder(Reminder reminder) {
 
     Long victUserId = reminder.getVictUser().getId();
     VictUser victUser =
