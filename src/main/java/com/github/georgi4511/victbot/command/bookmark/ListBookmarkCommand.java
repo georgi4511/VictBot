@@ -3,6 +3,9 @@ package com.github.georgi4511.victbot.command.bookmark;
 import com.github.georgi4511.victbot.model.Bookmark;
 import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.BookmarkService;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Objects;
 import lombok.Data;
@@ -16,7 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ListBookmarkCommand implements VictCommand {
-  private final SlashCommandData data = Commands.slash("list-bookmark", "Creates a bookmark");
+  private final SlashCommandData data =
+      Commands.slash("list-bookmark", "Lists bookmarks created by user in server");
   private final BookmarkService bookmarkService;
 
   @Override
@@ -42,7 +46,11 @@ public class ListBookmarkCommand implements VictCommand {
                   bookmark ->
                       "%s - %s - %s%n"
                           .formatted(
-                              bookmark.getCreatedTime(),
+                              bookmark
+                                  .getCreatedTime()
+                                  .atZone(ZoneId.systemDefault())
+                                  .format(
+                                      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
                               bookmark.getAlias(),
                               bookmark.getResponse()))
               .reduce(String::concat)

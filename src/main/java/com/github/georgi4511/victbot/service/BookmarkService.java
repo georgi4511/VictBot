@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BookmarkService {
   final BookmarkRepository bookmarkRepository;
@@ -35,7 +36,7 @@ public class BookmarkService {
     return bookmarkRepository.save(bookmark);
   }
 
-  public void createBookmark(
+  public void addBookmark(
       String alias, String response, String discordGuildId, String discordUserId) {
     Instant now = Instant.now();
     Bookmark bookmark = new Bookmark(now, alias, response);
@@ -56,5 +57,18 @@ public class BookmarkService {
     VictGuild victGuild =
         victGuildService.getByVictGuildDiscordId(guildId).orElseThrow(EntityNotFoundException::new);
     return bookmarkRepository.findByVictGuildIdAndVictUserId(victGuild.getId(), victUser.getId());
+  }
+
+  public Optional<Bookmark> getBookmarkByAlias(String alias) {
+
+    return bookmarkRepository.findByAlias(alias);
+  }
+
+  public boolean removeBookmarkByAliasAndVictUserId(String alias, String userDiscordId) {
+    VictUser victUser =
+        victUserService
+            .getByVictUserDiscordId(userDiscordId)
+            .orElseThrow(EntityNotFoundException::new);
+    return bookmarkRepository.deleteByVictUserIdAndAlias(victUser.getId(), alias) > 0;
   }
 }

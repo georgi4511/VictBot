@@ -13,7 +13,11 @@ public interface BookmarkRepository extends ListCrudRepository<Bookmark, Long> {
 
   Optional<Bookmark> findByVictGuild(VictGuild victGuild);
 
-  List<Bookmark> findByVictGuildIdAndVictUserId(Long guildId, Long userId);
+  List<Bookmark> findByVictGuildIdAndVictUserId(Long guildId, Long victUserId);
 
   List<Bookmark> findByVictUserId(Long userId);
+
+  Optional<Bookmark> findByAlias(String alias);
+
+  Long deleteByVictUserIdAndAlias(Long victUserId, String alias);
 }

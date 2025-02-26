@@ -14,13 +14,11 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @RequiredArgsConstructor
-public class CreateBookmarkCommand implements VictCommand {
+public class RemoveBookmarkCommand implements VictCommand {
   public static final String ALIAS = "alias";
-  public static final String RESPONSE = "response";
   private final SlashCommandData data =
-      Commands.slash("create-bookmark", "Creates a bookmark")
-          .addOption(OptionType.STRING, ALIAS, "Alias for the bookmark", true)
-          .addOption(OptionType.STRING, RESPONSE, "Response for the bookmark", true);
+      Commands.slash("remove-bookmark", "Removes a bookmark by user using alias")
+          .addOption(OptionType.STRING, ALIAS, "Alias of the bookmark", true);
   private final BookmarkService bookmarkService;
 
   @Override
@@ -28,17 +26,15 @@ public class CreateBookmarkCommand implements VictCommand {
     try {
 
       String alias = Objects.requireNonNull(event.getOption(ALIAS)).getAsString();
-      String response = Objects.requireNonNull(event.getOption(RESPONSE)).getAsString();
+      String userDiscordId = Objects.requireNonNull(event.getUser()).getId();
 
-      String guildId = null;
-      if (event.isFromGuild()) {
-        guildId = Objects.requireNonNull(event.getGuild()).getId();
+      boolean result = bookmarkService.removeBookmarkByAliasAndVictUserId(alias, userDiscordId);
+
+      if (!result) {
+        event.reply("Failed to remove bookmark").queue();
+        return;
       }
-      String userId = Objects.requireNonNull(event.getUser()).getId();
-
-      bookmarkService.createBookmark(alias, response, guildId, userId);
-
-      event.reply("Bookmark created with alias: %s".formatted(alias)).queue();
+      event.reply("Bookmark removed").queue();
     } catch (Exception e) {
       if (!event.isAcknowledged()) event.reply("Failed to execute command").queue();
     }
