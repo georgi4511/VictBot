@@ -1,29 +1,36 @@
 # **VictBot the DiscordBot**
 
-### **This** is **the Public repository** for a Java Discord bot made by me using the [JDA](https://github.com/discord-jda/JDA) library
+### **This** is **the Public repository** for a [Spring](https://spring.io) Java<sup>runs on 3 billion devices btw</sup> Discord Bot Application^ using the [JDA](https://github.com/discord-jda/JDA) library
 [![CodeQL](https://github.com/georgi4511/VictBot/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/georgi4511/VictBot/actions/workflows/github-code-scanning/codeql)
 
 ## Steps to run
 
-- add environment variable BOT_TOKEN with the value of the token gotten from Discord API Dashboard
-- if testing with servers add enviroment variable BOT_GUILDS with the value of the guild IDs separated by commas
+>[!NOTE]
+> Add an environment variable BOT_TOKEN with the value of the token gotten from Discord API Dashboard and
+> if testing with servers add an enviroment variable BOT_GUILDS with the value of the guild IDs separated by commas
+
+```bash
+mvn clean compile
+java -jar target\VictBot-X.jar
+```
+replace X with current version which can be found in the pom.xml or by noting 
 
 ## Description
 
-### This is a Java Discord bot that aims to appeal to my interests in regard to APIs and also silly bots. It is not currently planned to be used in prod, Viable but use at own risk.
+### This is a Java Discord Bot Application that aims to appeal to my interests in regard to APIs and also silly bots. It is not currently planned to be used in prod, Viable but use at own risk.
 
 ### Checklist for planned things
 
 - [ ] Query image repos for funny **memes**
-- [x] DB of memes for ease of use
-- [ ] Reminder function
-- [ ] Gacha functionality
+- [x] Impressions of the bot
+- [x] Reminder function
+- [x] Bookmark* functionality 
 - [ ] Economy system
-- [ ] Random art
+- [x] Random art
 - [ ] Games?
 - [❌] Music
 - [x] LLM Integration?
-- [ ] Stable Diffusion Integration
+- [x] Stable Diffusion Integration
 - [ ] Open Library Books
 - [x] Administrative functionality (eg. Ban/Timeout command)
 - [ ] Change Icons
