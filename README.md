@@ -1,6 +1,6 @@
 # **VictBot the DiscordBot**
 
-### **This** is **the Public repository** for a [Spring](https://spring.io) Java<sup>runs on 3 billion devices btw</sup> Discord Bot Application^ using the [JDA](https://github.com/discord-jda/JDA) library
+### **This** is **the Public repository** for a [Spring](https://spring.io) Java<sup>runs on 3 billion devices btw</sup> Discord Bot Application using the [JDA](https://github.com/discord-jda/JDA) library
 [![CodeQL](https://github.com/georgi4511/VictBot/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/georgi4511/VictBot/actions/workflows/github-code-scanning/codeql)
 
 ## Steps to run
