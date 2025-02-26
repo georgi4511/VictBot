@@ -18,7 +18,7 @@ public class Bookmark {
 
   @NonNull private Instant createdTime;
 
-  @NonNull private String message;
+  @NonNull private String alias;
 
   @NonNull private String response;
 

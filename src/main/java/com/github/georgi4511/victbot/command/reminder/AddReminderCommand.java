@@ -2,8 +2,14 @@ package com.github.georgi4511.victbot.command.reminder;
 
 import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.ReminderService;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -16,18 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Objects;
-
-@Getter
-@Setter
+@Data
+@RequiredArgsConstructor
 @Component
-public class AddReminderCommand extends VictCommand {
+public class AddReminderCommand implements VictCommand {
   public static final String MESSAGE = "message";
   public static final String PERSONAL = "personal";
   public static final String TARGET_TIME = "target-time";
@@ -36,35 +34,33 @@ public class AddReminderCommand extends VictCommand {
   public static final String HOURS = "hours";
   public static final String DAYS = "days";
   private static final Logger log = LoggerFactory.getLogger(AddReminderCommand.class);
+  private static final OptionData MESSAGE_OPTION_DATA =
+      new OptionData(OptionType.STRING, MESSAGE, "message to send when reminder pops", true);
+
+  private static final OptionData PERSONAL_OPTION_DATA =
+      new OptionData(
+          OptionType.BOOLEAN, PERSONAL, "send reminder in DM or in current channel", true);
+
+  private static final OptionData TIME_UNIT_OPTION_DATA =
+      new OptionData(OptionType.STRING, TIME_UNIT, "what time unit do you want to use", true)
+          .addChoices(
+              new Command.Choice(MINUTES, MINUTES),
+              new Command.Choice(HOURS, HOURS),
+              new Command.Choice(DAYS, DAYS));
+
+  private static final OptionData TARGET_TIME_OPTION_DATA =
+      new OptionData(
+          OptionType.INTEGER, TARGET_TIME, "in how many units of time should this trigger", true);
+
+  private final SlashCommandData data =
+      Commands.slash("add-reminder", "Adds a reminder for whatever whenever")
+          .addOptions(
+              MESSAGE_OPTION_DATA,
+              PERSONAL_OPTION_DATA,
+              TARGET_TIME_OPTION_DATA,
+              TIME_UNIT_OPTION_DATA);
+
   private final ReminderService reminderService;
-
-  private SlashCommandData data;
-  private String name;
-  private String description;
-
-  public AddReminderCommand(ReminderService reminderService) {
-    OptionData message =
-        new OptionData(OptionType.STRING, MESSAGE, "message to send when reminder pops", true);
-    OptionData personal =
-        new OptionData(
-            OptionType.BOOLEAN, PERSONAL, "send reminder in DM or in current channel", true);
-    OptionData timeUnit =
-        new OptionData(OptionType.STRING, TIME_UNIT, "what time unit do you want to use", true)
-            .addChoices(
-                new Command.Choice(MINUTES, MINUTES),
-                new Command.Choice(HOURS, HOURS),
-                new Command.Choice(DAYS, DAYS));
-    OptionData targetTime =
-        new OptionData(
-            OptionType.INTEGER, TARGET_TIME, "in how many units of time should this trigger", true);
-
-    this.name = "add-reminder";
-    this.description = "Adds a reminder for whatever whenever";
-    this.data =
-        Commands.slash(this.name, this.description)
-            .addOptions(message, personal, targetTime, timeUnit);
-    this.reminderService = reminderService;
-  }
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
@@ -110,21 +106,5 @@ public class AddReminderCommand extends VictCommand {
         event.reply("Failed to execute command").queue();
       }
     }
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
-    AddReminderCommand that = (AddReminderCommand) o;
-    return Objects.equals(data, that.data)
-        && Objects.equals(name, that.name)
-        && Objects.equals(description, that.description)
-        && Objects.equals(reminderService, that.reminderService);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(super.hashCode(), data, name, description, reminderService);
   }
 }

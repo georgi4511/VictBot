@@ -5,27 +5,19 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.springframework.stereotype.Component;
 
-@Getter
-@Setter
+@Data
 @Component
-public class GetTimeCommand extends VictCommand {
-  private SlashCommandData data;
-  private String name;
-  private String description;
+@RequiredArgsConstructor
+public class GetTimeCommand implements VictCommand {
+  private SlashCommandData data = Commands.slash("get-time", "gets the time, cmon");
   private Boolean devCommand = true;
-
-  public GetTimeCommand() {
-    this.name = "get-time";
-    this.description = "gets the time, cmon";
-    this.data = Commands.slash(this.name, this.description);
-  }
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
