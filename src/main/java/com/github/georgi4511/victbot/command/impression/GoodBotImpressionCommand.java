@@ -1,4 +1,4 @@
-package com.github.georgi4511.victbot.command.admin;
+package com.github.georgi4511.victbot.command.impression;
 
 import com.github.georgi4511.victbot.model.Impressions;
 import com.github.georgi4511.victbot.model.VictCommand;
@@ -20,15 +20,15 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-public class GoodBotCommand extends VictCommand {
-  private static final Logger log = LoggerFactory.getLogger(GoodBotCommand.class);
+public class GoodBotImpressionCommand extends VictCommand {
+  private static final Logger log = LoggerFactory.getLogger(GoodBotImpressionCommand.class);
   @NonNull private final ImpressionsService impressionsService;
   private final VictGuildService victGuildService;
   private SlashCommandData data;
   private String name;
   private String description;
 
-  public GoodBotCommand(
+  public GoodBotImpressionCommand(
       @NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
     this.name = "good-bot";
     this.description = "When bot is good";
@@ -67,7 +67,7 @@ public class GoodBotCommand extends VictCommand {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     if (!super.equals(o)) return false;
-    GoodBotCommand that = (GoodBotCommand) o;
+    GoodBotImpressionCommand that = (GoodBotImpressionCommand) o;
     return Objects.equals(impressionsService, that.impressionsService)
         && Objects.equals(victGuildService, that.victGuildService)
         && Objects.equals(data, that.data)
