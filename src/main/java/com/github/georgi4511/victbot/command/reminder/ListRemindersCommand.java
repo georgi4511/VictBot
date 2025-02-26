@@ -8,8 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Objects;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -18,31 +18,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Getter
-@Setter
+@Data
 @Component
-public class ListRemindersCommand extends VictCommand {
+@RequiredArgsConstructor
+public class ListRemindersCommand implements VictCommand {
   public static final String SHOW_MESSAGE = "show-message";
   private static final Logger log = LoggerFactory.getLogger(ListRemindersCommand.class);
   private final ReminderService reminderService;
-  private SlashCommandData data;
-  private String name;
-  private String description;
-
-  public ListRemindersCommand(ReminderService reminderService) {
-
-    this.name = "list-reminders";
-    this.description = "Lists all your reminders for whatever whenever";
-    this.data =
-        Commands.slash(this.name, this.description)
-            .addOption(
-                OptionType.BOOLEAN, SHOW_MESSAGE, "to show the message or keep it hidden", true);
-    this.reminderService = reminderService;
-  }
+  private SlashCommandData data =
+      Commands.slash("list-reminders", "Lists all your reminders for whatever whenever")
+          .addOption(
+              OptionType.BOOLEAN, SHOW_MESSAGE, "to show the message or keep it hidden", true);
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
-
     try {
 
       List<Reminder> reminders = reminderService.getRemindersByDiscordId(event.getUser().getId());
@@ -87,21 +76,5 @@ public class ListRemindersCommand extends VictCommand {
         event.reply("Failed to execute command").queue();
       }
     }
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
-    ListRemindersCommand that = (ListRemindersCommand) o;
-    return Objects.equals(data, that.data)
-        && Objects.equals(name, that.name)
-        && Objects.equals(description, that.description)
-        && Objects.equals(reminderService, that.reminderService);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(super.hashCode(), data, name, description, reminderService);
   }
 }

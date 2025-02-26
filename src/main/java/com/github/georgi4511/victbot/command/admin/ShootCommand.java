@@ -3,8 +3,8 @@ package com.github.georgi4511.victbot.command.admin;
 import com.github.georgi4511.victbot.model.VictCommand;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -15,25 +15,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Getter
-@Setter
+@Data
 @Component
-public class ShootCommand extends VictCommand {
+@RequiredArgsConstructor
+public class ShootCommand implements VictCommand {
   public static final String USER = "user";
   public static final String TIME = "time";
   private static final Logger log = LoggerFactory.getLogger(ShootCommand.class);
-  private SlashCommandData data;
-  private String name;
-  private String description;
 
-  public ShootCommand() {
-    this.name = "shoot";
-    this.description = "Times out a user";
-    this.data =
-        Commands.slash(this.name, this.description)
-            .addOption(OptionType.USER, USER, "The user to shoot", true)
-            .addOption(OptionType.INTEGER, TIME, "Time out time in seconds", true);
-  }
+  private final SlashCommandData data =
+      Commands.slash("shoot", "Times out a user")
+          .addOption(OptionType.USER, USER, "The user to shoot", true)
+          .addOption(OptionType.INTEGER, TIME, "Time out time in seconds", true);
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
@@ -64,20 +57,5 @@ public class ShootCommand extends VictCommand {
       log.error(e.getMessage());
       event.reply("Command failed to execute").queue();
     }
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
-    ShootCommand that = (ShootCommand) o;
-    return Objects.equals(data, that.data)
-        && Objects.equals(name, that.name)
-        && Objects.equals(description, that.description);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(super.hashCode(), data, name, description);
   }
 }

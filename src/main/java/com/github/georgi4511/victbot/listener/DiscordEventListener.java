@@ -5,9 +5,12 @@ import com.github.georgi4511.victbot.model.CommandCooldownRecord;
 import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.model.VictGuild;
 import com.github.georgi4511.victbot.model.VictUser;
+import com.github.georgi4511.victbot.service.BookmarkService;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
-import com.github.georgi4511.victbot.util.Utils;
+import com.github.georgi4511.victbot.util.Util;
+import java.time.Instant;
+import java.util.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
@@ -23,9 +26,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.*;
-
 @Service
 @Profile("!dev")
 public class DiscordEventListener extends ListenerAdapter {
@@ -34,6 +34,7 @@ public class DiscordEventListener extends ListenerAdapter {
   private final Map<String, VictCommand> commandMap;
   private final VictGuildService victGuildService;
   private final VictUserService victUserService;
+  private final BookmarkService bookmarkService;
 
   private final Map<User, ArrayList<CommandCooldownRecord>> commandCooldownMap;
 
@@ -46,12 +47,14 @@ public class DiscordEventListener extends ListenerAdapter {
   DiscordEventListener(
       List<VictCommand> commandList,
       VictUserService victUserService,
-      VictGuildService victGuildService) {
+      VictGuildService victGuildService,
+      BookmarkService bookmarkService) {
     this.commandMap = new HashMap<>();
     commandList.forEach(command -> commandMap.put(command.getName(), command));
 
     this.victUserService = victUserService;
     this.victGuildService = victGuildService;
+    this.bookmarkService = bookmarkService;
 
     this.commandCooldownMap = new HashMap<>();
   }
@@ -151,37 +154,56 @@ public class DiscordEventListener extends ListenerAdapter {
   @Override
   public void onMessageReceived(@NotNull MessageReceivedEvent event) {
     if (event.getAuthor().isBot()) return;
-    if (!fixTwitterFlag) return;
+
     String content = event.getMessage().getContentRaw();
-    Utils.fixTwitter(event, content);
+    if (fixTwitterFlag) {
+      Util.fixTwitter(event, content);
+      return;
+    }
+
+    if (content.startsWith("!")) {
+      String alias = content.substring(1);
+      bookmarkService
+          .getBookmarkByAlias(alias)
+          .ifPresent(
+              bookmark ->
+                  event.getChannel().asTextChannel().sendMessage(bookmark.getResponse()).queue());
+    }
   }
 
   @Override
   public void onReady(@NotNull ReadyEvent event) {
-    log.info("{} logged in.", event.getJDA().getSelfUser().getEffectiveName());
-    uploadCommands(event.getJDA());
-  }
+    JDA jda = event.getJDA();
 
-  private void uploadCommands(JDA jda) {
+    log.info("{} logged in.", jda.getSelfUser().getEffectiveName());
+
     Collection<VictCommand> commands = commandMap.values();
 
     String commandLog = commands.stream().map(VictCommand::getName).toList().toString();
     log.info(commandLog);
 
-
     if (guilds.isEmpty()) {
       log.info("Setting commands for production");
-      jda.updateCommands().addCommands(commands.stream().filter(victCommand -> !victCommand.getDevCommand()).map(VictCommand::getData).toList()).queue();
+      jda.updateCommands()
+          .addCommands(
+              commands.stream()
+                  .filter(victCommand -> !victCommand.getDevCommand())
+                  .map(VictCommand::getData)
+                  .toList())
+          .queue();
     }
 
     guilds.forEach(
-            guildS -> {
-              Guild guild = jda.getGuildById(guildS);
-              if (guild != null) {
-                log.info("Setting commands for development in guild: {}", guild.getName());
-                guild.updateCommands().addCommands(commands.stream().map(VictCommand::getData).toList()).queue();
-              }
-            });
+        guildS -> {
+          Guild guild = jda.getGuildById(guildS);
+          if (guild != null) {
+            log.info("Setting commands for development in guild: {}", guild.getName());
+            guild
+                .updateCommands()
+                .addCommands(commands.stream().map(VictCommand::getData).toList())
+                .queue();
+          }
+        });
 
     log.info("{} commands set", commandMap.size());
   }

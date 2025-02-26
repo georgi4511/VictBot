@@ -1,7 +1,7 @@
 package com.github.georgi4511.victbot.config;
 
 import com.github.georgi4511.victbot.listener.DiscordEventListener;
-import com.github.georgi4511.victbot.model.VictCommand;
+import java.util.EnumSet;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -16,9 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.MissingRequiredPropertiesException;
-
-import java.util.EnumSet;
-import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -38,10 +35,8 @@ public class BotConfig {
   @Value("${vict.discord.token}")
   private String token;
 
-
   @Bean
-  public JDA jda(DiscordEventListener discordEventListener, List<VictCommand> commands)
-      throws InterruptedException {
+  public JDA jda(DiscordEventListener discordEventListener) throws InterruptedException {
 
     if (token == null) {
       throw new MissingRequiredPropertiesException();
@@ -59,5 +54,4 @@ public class BotConfig {
 
     return jda;
   }
-
 }

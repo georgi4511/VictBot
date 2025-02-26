@@ -4,9 +4,8 @@ import com.github.georgi4511.victbot.model.GenerateImageInput;
 import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.AiGenerationService;
 import java.util.List;
-import java.util.Objects;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -17,10 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Getter
-@Setter
+@Data
 @Component
-public class AiArtCommand extends VictCommand {
+@RequiredArgsConstructor
+public class AiArtCommand implements VictCommand {
   public static final String PROMPT = "prompt";
   public static final String NEGATIVE_PROMPT = "negative-prompt";
   public static final String SAMPLER_NAME = "sampler-name";
@@ -28,27 +27,18 @@ public class AiArtCommand extends VictCommand {
   public static final String CFG_SCALE = "cfg-scale";
   public static final String WIDTH = "width";
   public static final String HEIGHT = "height";
-
   private static final Logger log = LoggerFactory.getLogger(AiArtCommand.class);
-  private final AiGenerationService aiGenerationService;
-  private SlashCommandData data;
-  private String name;
-  private String description;
 
-  public AiArtCommand(AiGenerationService aiGenerationService) {
-    this.aiGenerationService = aiGenerationService;
-    this.name = "ai-art";
-    this.description = "create ai image using stable diffusion";
-    this.data =
-        Commands.slash(this.name, this.description)
-            .addOption(OptionType.STRING, PROMPT, "the prompt sent to the bot", true)
-            .addOption(OptionType.STRING, NEGATIVE_PROMPT, "the negative prompt sent to the bot")
-            .addOption(OptionType.STRING, SAMPLER_NAME, "sampler to use")
-            .addOption(OptionType.INTEGER, STEPS, "steps for image generation")
-            .addOption(OptionType.INTEGER, CFG_SCALE, "cfg-scale for image generation")
-            .addOption(OptionType.INTEGER, WIDTH, "width for image generation")
-            .addOption(OptionType.INTEGER, HEIGHT, "height for image generation");
-  }
+  private final AiGenerationService aiGenerationService;
+  private final SlashCommandData data =
+      Commands.slash("ai-art", "create ai image using stable diffusion")
+          .addOption(OptionType.STRING, PROMPT, "the prompt sent to the bot", true)
+          .addOption(OptionType.STRING, NEGATIVE_PROMPT, "the negative prompt sent to the bot")
+          .addOption(OptionType.STRING, SAMPLER_NAME, "sampler to use")
+          .addOption(OptionType.INTEGER, STEPS, "steps for image generation")
+          .addOption(OptionType.INTEGER, CFG_SCALE, "cfg-scale for image generation")
+          .addOption(OptionType.INTEGER, WIDTH, "width for image generation")
+          .addOption(OptionType.INTEGER, HEIGHT, "height for image generation");
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
@@ -92,21 +82,5 @@ public class AiArtCommand extends VictCommand {
 
     return new GenerateImageInput(
         prompt, negativePrompt, steps, width, height, cfgScale, samplerName);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
-    AiArtCommand that = (AiArtCommand) o;
-    return Objects.equals(data, that.data)
-        && Objects.equals(name, that.name)
-        && Objects.equals(description, that.description)
-        && Objects.equals(aiGenerationService, that.aiGenerationService);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(super.hashCode(), data, name, description, aiGenerationService);
   }
 }

@@ -5,43 +5,29 @@ import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.ImpressionsService;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import java.util.List;
-import java.util.Objects;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Getter
-@Setter
+@Data
+@RequiredArgsConstructor
 @Component
-public class GetBotImpressionsCommand extends VictCommand {
+public class GetBotImpressionsCommand implements VictCommand {
   private static final Logger log = LoggerFactory.getLogger(GetBotImpressionsCommand.class);
-  @NonNull private final ImpressionsService impressionsService;
+  private final ImpressionsService impressionsService;
   private final VictGuildService victGuildService;
-  private SlashCommandData data;
-  private String name;
-  private String description;
-
-  public GetBotImpressionsCommand(
-      @NotNull ImpressionsService impressionsService, VictGuildService victGuildService) {
-    this.name = "get-bot-impressions";
-    this.description = "Get amount of bot is good/bad sent in server/globally";
-    this.data =
-        Commands.slash(this.name, this.description)
-            .addOption(
-                OptionType.BOOLEAN, "global", "do the search globally or only for this server");
-    this.impressionsService = impressionsService;
-    this.victGuildService = victGuildService;
-  }
+  private SlashCommandData data =
+      Commands.slash("get-bot-impressions", "Get amount of bot is good/bad sent in server/globally")
+          .addOption(
+              OptionType.BOOLEAN, "global", "do the search globally or only for this server");
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
@@ -93,23 +79,5 @@ public class GetBotImpressionsCommand extends VictCommand {
             String.format(
                 "I have received %d good bots and %d bad bots globally", goodBotSum, badBotSum))
         .queue();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
-    GetBotImpressionsCommand that = (GetBotImpressionsCommand) o;
-    return Objects.equals(impressionsService, that.impressionsService)
-        && Objects.equals(victGuildService, that.victGuildService)
-        && Objects.equals(data, that.data)
-        && Objects.equals(name, that.name)
-        && Objects.equals(description, that.description);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        super.hashCode(), impressionsService, victGuildService, data, name, description);
   }
 }
