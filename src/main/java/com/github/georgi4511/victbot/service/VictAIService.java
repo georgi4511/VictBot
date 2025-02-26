@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 @Service
-public class SpringAI {
+public class VictAIService {
   private final ChatClient chatClient;
 
-  public SpringAI(ChatClient.Builder builder) {
+  public VictAIService(ChatClient.Builder builder) {
     this.chatClient = builder.build();
   }
 

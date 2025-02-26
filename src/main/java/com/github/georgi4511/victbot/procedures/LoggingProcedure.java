@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoggingProcedure {
 
-    private static final Logger log = LoggerFactory.getLogger(LoggingProcedure.class);
-    private long timeAlive = 0L;
+  private static final Logger log = LoggerFactory.getLogger(LoggingProcedure.class);
+  private long timeAlive = 0L;
 
-    @Scheduled(cron = "${procedure.cron}")
-    @Async
-    public void logging() {
-        timeAlive++;
-        log.info("Bot has been alive for {} hours", timeAlive);
-    }
+  @Scheduled(cron = "${vict.procedure.logging.cron}")
+  @Async
+  public void logging() {
+    timeAlive++;
+    log.info("Bot has been alive for {} hours", timeAlive);
+  }
 }
