@@ -1,4 +1,4 @@
-package com.github.georgi4511.victbot.command.admin;
+package com.github.georgi4511.victbot.command.impression;
 
 import com.github.georgi4511.victbot.model.Impressions;
 import com.github.georgi4511.victbot.model.VictCommand;
