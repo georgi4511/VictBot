@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ReminderProcedureDev implements ReminderProcedure {
-    @Override
-    public void handleReminders() {
-        throw new NotImplementedException();
-    }
+  @Override
+  public void handleReminders() {
+    throw new NotImplementedException();
+  }
 
-    @Override
-    public void sendReminder(Reminder reminder) {
-        throw new NotImplementedException();
-    }
+  @Override
+  public void sendReminder(Reminder reminder) {
+    throw new NotImplementedException();
+  }
 }

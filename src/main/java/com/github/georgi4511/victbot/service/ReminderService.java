@@ -26,6 +26,14 @@ public class ReminderService {
     return reminderRepository.findAll();
   }
 
+  public List<Reminder> getRemindersByVictUser(VictUser victUser) {
+    return reminderRepository.findByVictUser(victUser);
+  }
+
+  public List<Reminder> getRemindersByVictUserAndVictGuild(VictGuild victGuild, VictUser victUser) {
+    return reminderRepository.findByVictGuildAndVictUser(victGuild, victUser);
+  }
+
   public List<Reminder> getRemindersByVictGuild(VictGuild victGuild) {
     return reminderRepository.findByVictGuild(victGuild);
   }
@@ -56,14 +64,18 @@ public class ReminderService {
       String guildId,
       String userId) {
 
-    Reminder reminder = new Reminder();
-
-    reminder.setMessage(message);
-    reminder.setPersonal(personal);
     Instant now = Instant.now();
-    reminder.setCreatedTime(now);
-    reminder.setTargetTime(targetTime);
-    reminder.setChannelSentFrom(channelSentFrom);
+    Reminder reminder =
+        Reminder.builder()
+            .id(null)
+            .createdTime(now)
+            .victUser(null)
+            .victGuild(null)
+            .message(message)
+            .personal(personal)
+            .targetTime(targetTime)
+            .channelSentFrom(channelSentFrom)
+            .build();
 
     if (guildId != null) {
       VictGuild victGuild =

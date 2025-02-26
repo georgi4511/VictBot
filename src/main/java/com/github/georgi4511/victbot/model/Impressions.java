@@ -6,8 +6,9 @@ import lombok.*;
 @Data
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder
 public class Impressions {
 
   @Id

@@ -2,13 +2,6 @@ package com.github.georgi4511.victbot.command.reminder;
 
 import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.ReminderService;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.Guild;
@@ -22,6 +15,14 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -42,7 +43,6 @@ public class AddReminderCommand extends VictCommand {
   private String description;
 
   public AddReminderCommand(ReminderService reminderService) {
-
     OptionData message =
         new OptionData(OptionType.STRING, MESSAGE, "message to send when reminder pops", true);
     OptionData personal =

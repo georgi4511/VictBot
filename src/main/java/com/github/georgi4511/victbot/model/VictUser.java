@@ -8,8 +8,9 @@ import lombok.*;
 @Data
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder
 @Table(name = "vict_user")
 public class VictUser {
 

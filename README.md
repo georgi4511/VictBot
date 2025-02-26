@@ -6,6 +6,7 @@
 ## Steps to run
 
 - add environment variable BOT_TOKEN with the value of the token gotten from Discord API Dashboard
+- if testing with servers add enviroment variable BOT_GUILDS with the value of the guild IDs separated by commas
 
 ## Description
 

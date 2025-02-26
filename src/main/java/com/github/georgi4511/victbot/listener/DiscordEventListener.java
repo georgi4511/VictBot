@@ -8,8 +8,7 @@ import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
 import com.github.georgi4511.victbot.util.Utils;
-import java.time.Instant;
-import java.util.*;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -24,26 +23,32 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.*;
+
 @Service
 @Profile("!dev")
 public class DiscordEventListener extends ListenerAdapter {
 
   private static final Logger log = LoggerFactory.getLogger(DiscordEventListener.class);
-  private final Map<String, VictCommand> commands;
+  private final Map<String, VictCommand> commandMap;
   private final VictGuildService victGuildService;
   private final VictUserService victUserService;
 
   private final Map<User, ArrayList<CommandCooldownRecord>> commandCooldownMap;
 
-  @Value("${twitter.fix:true}")
+  @Value("${vict.twitter.fix:true}")
   boolean fixTwitterFlag;
+
+  @Value("${vict.discord.guilds}")
+  private List<String> guilds;
 
   DiscordEventListener(
       List<VictCommand> commandList,
       VictUserService victUserService,
       VictGuildService victGuildService) {
-    this.commands = new HashMap<>();
-    commandList.forEach(command -> commands.put(command.getName(), command));
+    this.commandMap = new HashMap<>();
+    commandList.forEach(command -> commandMap.put(command.getName(), command));
 
     this.victUserService = victUserService;
     this.victGuildService = victGuildService;
@@ -54,7 +59,7 @@ public class DiscordEventListener extends ListenerAdapter {
   @Override
   public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
     String commandName = event.getName();
-    VictCommand command = commands.get(commandName);
+    VictCommand command = commandMap.get(commandName);
 
     User eventUser = event.getUser();
     Guild eventGuild = event.getGuild();
@@ -135,7 +140,7 @@ public class DiscordEventListener extends ListenerAdapter {
     String customId = event.getComponentId();
 
     // Assuming custom IDs are in the format "commandName_menuIdentifier"
-    VictCommand command = commands.get(customId.split("_", 2)[0]);
+    VictCommand command = commandMap.get(customId.split("_", 2)[0]);
     if (command != null) {
       command.handleSelectInteraction(event);
     } else {
@@ -154,5 +159,30 @@ public class DiscordEventListener extends ListenerAdapter {
   @Override
   public void onReady(@NotNull ReadyEvent event) {
     log.info("{} logged in.", event.getJDA().getSelfUser().getEffectiveName());
+    uploadCommands(event.getJDA());
+  }
+
+  private void uploadCommands(JDA jda) {
+    Collection<VictCommand> commands = commandMap.values();
+
+    String commandLog = commands.stream().map(VictCommand::getName).toList().toString();
+    log.info(commandLog);
+
+
+    if (guilds.isEmpty()) {
+      log.info("Setting commands for production");
+      jda.updateCommands().addCommands(commands.stream().filter(victCommand -> !victCommand.getDevCommand()).map(VictCommand::getData).toList()).queue();
+    }
+
+    guilds.forEach(
+            guildS -> {
+              Guild guild = jda.getGuildById(guildS);
+              if (guild != null) {
+                log.info("Setting commands for development in guild: {}", guild.getName());
+                guild.updateCommands().addCommands(commands.stream().map(VictCommand::getData).toList()).queue();
+              }
+            });
+
+    log.info("{} commands set", commandMap.size());
   }
 }

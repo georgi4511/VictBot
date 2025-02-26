@@ -9,5 +9,7 @@ import org.springframework.data.repository.ListCrudRepository;
 public interface ReminderRepository extends ListCrudRepository<Reminder, Long> {
   List<Reminder> findByVictGuild(VictGuild victGuildId);
 
+  List<Reminder> findByVictGuildAndVictUser(VictGuild victGuild, VictUser victUser);
+
   List<Reminder> findByVictUser(VictUser victUser);
 }
