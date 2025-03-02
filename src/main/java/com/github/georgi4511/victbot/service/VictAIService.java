@@ -15,10 +15,6 @@ public class VictAIService {
     this.chatClient = builder.build();
   }
 
-  public Flux<String> getAmongus() {
-    return chatClient.prompt().user("Amogus").stream().content();
-  }
-
   public String call(String message) {
     return chatClient.prompt().user(message).call().content();
   }

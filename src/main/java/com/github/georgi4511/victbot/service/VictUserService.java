@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,33 +16,37 @@ import org.springframework.transaction.annotation.Transactional;
 public class VictUserService {
   final VictUserRepository victUserRepository;
 
-  public List<VictUser> getAllVictUsers() {
+  public List<VictUser> findAllVictUsers() {
     return victUserRepository.findAll();
   }
 
-  public VictUser getVictUserByDiscordIdOrCreate(@NonNull String discordId) {
-    return victUserRepository
-        .findByDiscordId(discordId)
-        .orElseGet(() -> victUserRepository.save(new VictUser(discordId)));
+  public boolean existsById(String id) {
+    return victUserRepository.existsById(id);
   }
 
-  public boolean victUserExists(VictUser victUser) {
-    return victUserRepository.existsById(victUser.getId());
-  }
-
-  public boolean existsVictUserByDiscordId(String discordId) {
-    return victUserRepository.existsVictUserByDiscordId(discordId);
-  }
-
-  public VictUser saveVictUser(VictUser victUser) {
+  public VictUser save(VictUser victUser) {
     return victUserRepository.save(victUser);
   }
 
-  public Optional<VictUser> getByVictUserId(Long id) {
+  public Optional<VictUser> findById(String id) {
     return victUserRepository.findById(id);
   }
 
-  public Optional<VictUser> getByVictUserDiscordId(String discordId) {
-    return victUserRepository.findByDiscordId(discordId);
+  public VictUser findByIdOrCreate(@NonNull String victUserId) {
+    try {
+      Optional<VictUser> existing = victUserRepository.findById(victUserId);
+      if (existing.isPresent()) {
+        return existing.get();
+      }
+
+      VictUser newEntity = new VictUser();
+      newEntity.setId(victUserId);
+
+      return victUserRepository.save(newEntity);
+    } catch (DataIntegrityViolationException e) {
+      return victUserRepository
+          .findById(victUserId)
+          .orElseThrow(() -> new RuntimeException("Failed to get or create entity"));
+    }
   }
 }

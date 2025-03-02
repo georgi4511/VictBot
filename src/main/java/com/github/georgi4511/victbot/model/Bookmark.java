@@ -23,12 +23,12 @@ public class Bookmark {
   @NonNull private String response;
 
   @JsonIgnore
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "vict_user_id", nullable = false)
   private VictUser victUser;
 
   @JsonIgnore
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "vict_guild_id", nullable = false)
   private VictGuild victGuild;
 }

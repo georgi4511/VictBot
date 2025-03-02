@@ -1,8 +1,6 @@
 package com.github.georgi4511.victbot.command.impression;
 
-import com.github.georgi4511.victbot.model.Impressions;
 import com.github.georgi4511.victbot.model.VictCommand;
-import com.github.georgi4511.victbot.service.ImpressionsService;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class GoodBotImpressionCommand implements VictCommand {
   private static final Logger log = LoggerFactory.getLogger(GoodBotImpressionCommand.class);
-  private final ImpressionsService impressionsService;
   private final VictGuildService victGuildService;
   private SlashCommandData data = Commands.slash("good-bot", "When bot is good");
 
@@ -31,14 +28,12 @@ public class GoodBotImpressionCommand implements VictCommand {
         throw new UnsupportedOperationException();
       }
 
-      Impressions impressions =
-          impressionsService.incrementImpressionsByDiscordId(guild.getId(), true);
+      Long impressions = victGuildService.incrementGoodBotImpressions(guild.getId());
 
       event
           .reply(
               String.format(
-                  "I have received %d good bot impressions. Thank you very much.",
-                  impressions.getGoodBotCount()))
+                  "I have received %d good bot impressions. Thank you very much.", impressions))
           .queue();
 
     } catch (Exception e) {

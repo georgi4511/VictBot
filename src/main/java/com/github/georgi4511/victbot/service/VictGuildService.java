@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,29 +16,48 @@ import org.springframework.transaction.annotation.Transactional;
 public class VictGuildService {
   final VictGuildRepository victGuildRepository;
 
-  public List<VictGuild> getAllVictGuilds() {
+  public List<VictGuild> findAll() {
     return victGuildRepository.findAll();
   }
 
-  public VictGuild findVictGuildByDiscordIdOrCreate(@NonNull String discordId) {
-    return victGuildRepository
-        .findByDiscordId(discordId)
-        .orElseGet(() -> victGuildRepository.save(new VictGuild(discordId)));
+  public VictGuild findByIdOrCreate(@NonNull String victGuildId) {
+    try {
+      Optional<VictGuild> existing = victGuildRepository.findById(victGuildId);
+      if (existing.isPresent()) {
+        return existing.get();
+      }
+
+      VictGuild newEntity = new VictGuild();
+      newEntity.setId(victGuildId);
+      return victGuildRepository.save(newEntity);
+    } catch (DataIntegrityViolationException e) {
+      return victGuildRepository
+          .findById(victGuildId)
+          .orElseThrow(() -> new RuntimeException("Failed to get or create entity"));
+    }
   }
 
-  public boolean existsVictGuildByDiscordId(@NonNull String discordId) {
-    return victGuildRepository.existsVictGuildByDiscordId(discordId);
+  public boolean existsById(@NonNull String discordId) {
+    return victGuildRepository.existsById(discordId);
   }
 
-  public VictGuild saveVictGuild(VictGuild victGuild) {
+  public VictGuild save(VictGuild victGuild) {
     return victGuildRepository.save(victGuild);
   }
 
-  public Optional<VictGuild> getByVictGuildId(Long id) {
+  public Optional<VictGuild> findById(String id) {
     return victGuildRepository.findById(id);
   }
 
-  public Optional<VictGuild> getByVictGuildDiscordId(String discordId) {
-    return victGuildRepository.findByDiscordId(discordId);
+  public Long incrementBadBotImpressions(String id) {
+    VictGuild victGuild = findByIdOrCreate(id);
+    victGuild.setBadBotImpressions(victGuild.getBadBotImpressions() + 1);
+    return victGuildRepository.save(victGuild).getBadBotImpressions();
+  }
+
+  public Long incrementGoodBotImpressions(String id) {
+    VictGuild victGuild = findByIdOrCreate(id);
+    victGuild.setGoodBotImpressions(victGuild.getGoodBotImpressions() + 1);
+    return victGuildRepository.save(victGuild).getGoodBotImpressions();
   }
 }

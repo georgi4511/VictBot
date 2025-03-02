@@ -1,8 +1,7 @@
 package com.github.georgi4511.victbot.command.impression;
 
-import com.github.georgi4511.victbot.model.Impressions;
 import com.github.georgi4511.victbot.model.VictCommand;
-import com.github.georgi4511.victbot.service.ImpressionsService;
+import com.github.georgi4511.victbot.model.VictGuild;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import java.util.List;
 import lombok.Data;
@@ -22,12 +21,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class GetBotImpressionsCommand implements VictCommand {
   private static final Logger log = LoggerFactory.getLogger(GetBotImpressionsCommand.class);
-  private final ImpressionsService impressionsService;
   private final VictGuildService victGuildService;
-  private SlashCommandData data =
-      Commands.slash("get-bot-impressions", "Get amount of bot is good/bad sent in server/globally")
-          .addOption(
-              OptionType.BOOLEAN, "global", "do the search globally or only for this server");
+  private SlashCommandData data = Commands
+      .slash("get-bot-impressions", "Get amount of bot is good/bad sent in server/globally")
+      .addOption(
+          OptionType.BOOLEAN, "global", "do the search globally or only for this server");
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
@@ -56,28 +54,25 @@ public class GetBotImpressionsCommand implements VictCommand {
     if (guild == null) {
       throw new UnsupportedOperationException("Global but not in guild");
     }
-    Impressions impressions = impressionsService.getImpressionsOrCreateByDiscordId(guild.getId());
+
+    VictGuild victGuild = victGuildService.findByIdOrCreate(guild.getId());
 
     event
         .reply(
             String.format(
                 "I have received %d good bots and %d bad bots in this server",
-                impressions.getGoodBotCount(), impressions.getBadBotCount()))
+                victGuild.getGoodBotImpressions(), victGuild.getBadBotImpressions()))
         .queue();
   }
 
   private void returnGlobalImpressions(SlashCommandInteractionEvent event) {
-    List<Impressions> allImpressions = impressionsService.getAllImpressions();
+    List<VictGuild> allGuilds = victGuildService.findAll();
 
-    Integer badBotSum =
-        allImpressions.stream().map(Impressions::getBadBotCount).reduce(0, Integer::sum);
-    Integer goodBotSum =
-        allImpressions.stream().map(Impressions::getGoodBotCount).reduce(0, Integer::sum);
-
-    event
-        .reply(
-            String.format(
-                "I have received %d good bots and %d bad bots globally", goodBotSum, badBotSum))
+    Long badBotSum = allGuilds.stream().map(VictGuild::getBadBotImpressions).reduce(0L, Long::sum);
+    Long goodBotSum = allGuilds.stream().map(VictGuild::getGoodBotImpressions).reduce(0L, Long::sum);
+    event.reply(
+        String.format(
+            "I have received %d good bots and %d bad bots globally", goodBotSum, badBotSum))
         .queue();
   }
 }

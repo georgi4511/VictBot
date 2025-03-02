@@ -4,8 +4,6 @@ import com.github.georgi4511.victbot.model.Reminder;
 import com.github.georgi4511.victbot.model.VictGuild;
 import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.repository.ReminderRepository;
-import com.github.georgi4511.victbot.repository.VictGuildRepository;
-import com.github.georgi4511.victbot.repository.VictUserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
@@ -19,36 +17,34 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ReminderService {
   final ReminderRepository reminderRepository;
-  final VictGuildRepository victGuildRepository;
-  final VictUserRepository victUserRepository;
+  final VictGuildService victGuildService;
+  final VictUserService victUserService;
 
-  public List<Reminder> getAllReminderEntry() {
+  public List<Reminder> findAllReminderEntry() {
     return reminderRepository.findAll();
   }
 
-  public List<Reminder> getRemindersByVictUser(VictUser victUser) {
-    return reminderRepository.findByVictUser(victUser);
+  public List<Reminder> findRemindersByVictUserId(String victUserId) {
+    return reminderRepository.findByVictUserId(victUserId);
   }
 
-  public List<Reminder> getRemindersByVictUserAndVictGuild(VictGuild victGuild, VictUser victUser) {
-    return reminderRepository.findByVictGuildAndVictUser(victGuild, victUser);
+  public List<Reminder> findRemindersByVictUserAndVictGuild(String victGuildId, String victUserId) {
+    return reminderRepository.findByVictGuildIdAndVictUserId(victGuildId, victUserId);
   }
 
-  public List<Reminder> getRemindersByVictGuild(VictGuild victGuild) {
-    return reminderRepository.findByVictGuild(victGuild);
+  public List<Reminder> findRemindersByVictGuildId(String victGuildId) {
+    return reminderRepository.findByVictGuildId(victGuildId);
   }
 
-  public List<Reminder> getRemindersByDiscordId(String id) {
-    VictUser victUser =
-        victUserRepository.findByDiscordId(id).orElseThrow(NullPointerException::new);
-    return reminderRepository.findByVictUser(victUser);
+  public List<Reminder> findRemindersByUserId(String victUserId) {
+    return reminderRepository.findByVictUserId(victUserId);
   }
 
-  public void removeReminders(List<Reminder> reminders) {
+  public void deleteReminders(List<Reminder> reminders) {
     reminderRepository.deleteAll(reminders);
   }
 
-  public void removeReminder(Reminder reminders) {
+  public void deleteReminder(Reminder reminders) {
     reminderRepository.delete(reminders);
   }
 
@@ -79,26 +75,26 @@ public class ReminderService {
 
     if (guildId != null) {
       VictGuild victGuild =
-          victGuildRepository
-              .findByDiscordId(guildId)
+          victGuildService
+              .findById(guildId)
               .orElseThrow(() -> new EntityNotFoundException("Vict Guild not found"));
       reminder.setVictGuild(victGuild);
     }
 
     VictUser victUser =
-        victUserRepository
-            .findByDiscordId(userId)
+        victUserService
+            .findById(userId)
             .orElseThrow(() -> new EntityNotFoundException("Vict User not found"));
     reminder.setVictUser(victUser);
 
     reminderRepository.save(reminder);
   }
 
-  public void removeById(Long id) {
+  public void deleteById(Long id) {
     reminderRepository.deleteById(id);
   }
 
-  public Optional<Reminder> getReminderById(Long id) {
+  public Optional<Reminder> findReminderById(Long id) {
     return reminderRepository.findById(id);
   }
 }

@@ -16,21 +16,16 @@ public class VictGuildController {
 
   @GetMapping
   public List<VictGuild> getAllVictGuilds() {
-    return victGuildService.getAllVictGuilds();
+    return victGuildService.findAll();
   }
 
   @PostMapping
   public VictGuild saveVictGuild(@RequestBody VictGuild reminder) {
-    return victGuildService.saveVictGuild(reminder);
+    return victGuildService.save(reminder);
   }
 
   @GetMapping("id/{id}")
-  public Optional<VictGuild> getVictGuild(@PathVariable Long id) {
-    return victGuildService.getByVictGuildId(id);
-  }
-
-  @GetMapping("discordId/{discordId}")
-  public Optional<VictGuild> getVictGuild(@PathVariable String discordId) {
-    return victGuildService.getByVictGuildDiscordId(discordId);
+  public Optional<VictGuild> getVictGuild(@PathVariable String id) {
+    return victGuildService.findById(id);
   }
 }

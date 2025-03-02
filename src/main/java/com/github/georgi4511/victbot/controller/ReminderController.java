@@ -1,7 +1,6 @@
 package com.github.georgi4511.victbot.controller;
 
 import com.github.georgi4511.victbot.model.Reminder;
-import com.github.georgi4511.victbot.model.VictGuild;
 import com.github.georgi4511.victbot.service.ReminderService;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +17,7 @@ public class ReminderController {
 
   @GetMapping
   public List<Reminder> getAllReminders() {
-    return reminderService.getAllReminderEntry();
+    return reminderService.findAllReminderEntry();
   }
 
   @PostMapping
@@ -28,17 +27,17 @@ public class ReminderController {
 
   @DeleteMapping
   public ResponseEntity<Object> removeReminderById(Long id) {
-    reminderService.removeById(id);
+    reminderService.deleteById(id);
     return ResponseEntity.ok().build();
   }
 
   @GetMapping("/guild/{victGuild}")
-  public List<Reminder> getReminder(@PathVariable VictGuild victGuild) {
-    return reminderService.getRemindersByVictGuild(victGuild);
+  public List<Reminder> getReminder(@PathVariable String victGuildId) {
+    return reminderService.findRemindersByVictGuildId(victGuildId);
   }
 
   @GetMapping("/{id}")
   public Optional<Reminder> getReminderById(@PathVariable Long id) {
-    return reminderService.getReminderById(id);
+    return reminderService.findReminderById(id);
   }
 }

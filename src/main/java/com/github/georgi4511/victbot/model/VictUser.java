@@ -14,13 +14,7 @@ import lombok.*;
 @Table(name = "vict_user")
 public class VictUser {
 
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Id
-  Long id;
-
-  @Column(unique = true)
-  @NonNull
-  String discordId;
+  @Id @NonNull String id;
 
   @JsonIgnore
   @OneToMany(mappedBy = "victUser", cascade = CascadeType.ALL)

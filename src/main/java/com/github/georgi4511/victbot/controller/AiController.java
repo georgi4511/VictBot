@@ -27,7 +27,7 @@ public class AiController {
   }
 
   @GetMapping("/generate/stream")
-  public Flux<ChatResponse> generateJokeStream(
+  public Flux<ChatResponse> generateWithStream(
       @RequestParam(defaultValue = "Tell me a joke") String message) {
     Prompt prompt = new Prompt(new UserMessage(message));
     return aiGenerationService.stream(prompt);

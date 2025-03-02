@@ -26,9 +26,9 @@ public class BookmarkService {
   }
 
   @Transactional(readOnly = true)
-  public Optional<Bookmark> getBookmarkByVictGuild(VictGuild victGuild) {
+  public List<Bookmark> getBookmarksByVictGuildId(String victGuildId) {
 
-    return bookmarkRepository.findByVictGuild(victGuild);
+    return bookmarkRepository.findByVictGuildId(victGuildId);
   }
 
   @Transactional
@@ -36,39 +36,34 @@ public class BookmarkService {
     return bookmarkRepository.save(bookmark);
   }
 
-  public void addBookmark(
-      String alias, String response, String discordGuildId, String discordUserId) {
+  public void addBookmark(String alias, String response, String victGuildId, String victUserId) {
     Instant now = Instant.now();
     Bookmark bookmark = new Bookmark(now, alias, response);
 
-    victUserService.getByVictUserDiscordId(discordUserId).ifPresent(bookmark::setVictUser);
-    if (discordGuildId != null) {
-      victGuildService.getByVictGuildDiscordId(discordGuildId).ifPresent(bookmark::setVictGuild);
+    victUserService.findById(victUserId).ifPresent(bookmark::setVictUser);
+    if (victGuildId != null) {
+      victGuildService.findById(victGuildId).ifPresent(bookmark::setVictGuild);
     }
     bookmarkRepository.save(bookmark);
   }
 
   public List<Bookmark> getBookmarksByGuildAndUser(String guildId, String userId) {
-    VictUser victUser =
-        victUserService.getByVictUserDiscordId(userId).orElseThrow(EntityNotFoundException::new);
+    VictUser victUser = victUserService.findById(userId).orElseThrow(EntityNotFoundException::new);
     if (guildId == null) {
       return bookmarkRepository.findByVictUserId(victUser.getId());
     }
     VictGuild victGuild =
-        victGuildService.getByVictGuildDiscordId(guildId).orElseThrow(EntityNotFoundException::new);
+        victGuildService.findById(guildId).orElseThrow(EntityNotFoundException::new);
     return bookmarkRepository.findByVictGuildIdAndVictUserId(victGuild.getId(), victUser.getId());
   }
 
   public Optional<Bookmark> getBookmarkByAlias(String alias) {
-
     return bookmarkRepository.findByAlias(alias);
   }
 
   public boolean removeBookmarkByAliasAndVictUserId(String alias, String userDiscordId) {
     VictUser victUser =
-        victUserService
-            .getByVictUserDiscordId(userDiscordId)
-            .orElseThrow(EntityNotFoundException::new);
+        victUserService.findById(userDiscordId).orElseThrow(EntityNotFoundException::new);
     return bookmarkRepository.deleteByVictUserIdAndAlias(victUser.getId(), alias) > 0;
   }
 }
