@@ -1,11 +1,11 @@
 package com.github.georgi4511.victbot.repository;
 
 import com.github.georgi4511.victbot.model.VictGuild;
-import java.util.Optional;
+import java.util.List;
 import org.springframework.data.repository.ListCrudRepository;
 
-public interface VictGuildRepository extends ListCrudRepository<VictGuild, Long> {
-  Optional<VictGuild> findByDiscordId(String discordId);
+public interface VictGuildRepository extends ListCrudRepository<VictGuild, String> {
+  <T> List<T> findBy(Class<T> clazz);
 
-  Boolean existsVictGuildByDiscordId(String discordId);
+  <T> T findById(Class<T> clazz, String id);
 }

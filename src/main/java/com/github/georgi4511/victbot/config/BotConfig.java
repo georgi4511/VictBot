@@ -9,8 +9,6 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +20,6 @@ import org.springframework.core.env.MissingRequiredPropertiesException;
 @Profile("!dev")
 public class BotConfig {
 
-  private static final Logger log = LoggerFactory.getLogger(BotConfig.class);
   private static final EnumSet<GatewayIntent> intents =
       EnumSet.of(
           GatewayIntent.GUILD_MESSAGES,
@@ -36,7 +33,7 @@ public class BotConfig {
   private String token;
 
   @Bean
-  public JDA jda(DiscordEventListener discordEventListener) throws InterruptedException {
+  JDA jda(DiscordEventListener discordEventListener) throws InterruptedException {
 
     if (token == null) {
       throw new MissingRequiredPropertiesException();

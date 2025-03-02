@@ -1,10 +1,8 @@
 package com.github.georgi4511.victbot.procedures;
 
 import com.github.georgi4511.victbot.model.Reminder;
-import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.service.ReminderService;
 import com.github.georgi4511.victbot.service.VictUserService;
-import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +31,7 @@ public class ReminderProcedureImpl implements ReminderProcedure {
   @Async
   @Override
   public void handleReminders() {
-    List<Reminder> allReminderEntry = reminderService.getAllReminderEntry();
+    List<Reminder> allReminderEntry = reminderService.findAllReminderEntry();
     Instant now = Instant.now();
     List<Reminder> reminders =
         allReminderEntry.stream()
@@ -46,7 +44,7 @@ public class ReminderProcedureImpl implements ReminderProcedure {
 
     try {
       reminders.forEach(this::sendReminder);
-      reminderService.removeReminders(reminders);
+      reminderService.deleteReminders(reminders);
 
     } catch (NullPointerException e) {
       log.error("Failed to complete reminder procedure, {}", e.getMessage(), e);
@@ -56,10 +54,8 @@ public class ReminderProcedureImpl implements ReminderProcedure {
   @Override
   public void sendReminder(Reminder reminder) {
 
-    Long victUserId = reminder.getVictUser().getId();
-    VictUser victUser =
-        victUserService.getByVictUserId(victUserId).orElseThrow(EntityNotFoundException::new);
-    User user = Objects.requireNonNull(jda.getUserById(victUser.getDiscordId()));
+    String victUserId = reminder.getVictUser().getId();
+    User user = Objects.requireNonNull(jda.getUserById(victUserId));
 
     String message =
         String.format("%s, you have a reminder:%n%s", user.getAsMention(), reminder.getMessage());

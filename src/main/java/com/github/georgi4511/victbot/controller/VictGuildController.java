@@ -1,6 +1,7 @@
 package com.github.georgi4511.victbot.controller;
 
 import com.github.georgi4511.victbot.model.VictGuild;
+import com.github.georgi4511.victbot.model.VictGuildImpressions;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import java.util.List;
 import java.util.Optional;
@@ -16,21 +17,26 @@ public class VictGuildController {
 
   @GetMapping
   public List<VictGuild> getAllVictGuilds() {
-    return victGuildService.getAllVictGuilds();
+    return victGuildService.findAll();
+  }
+
+  @GetMapping("impressions")
+  public List<VictGuildImpressions> getAllVictGuildImpressions() {
+    return victGuildService.findAllImpressions();
+  }
+
+  @GetMapping("impressions/{id}")
+  public VictGuildImpressions getImpressionsById(@PathVariable String id) {
+    return victGuildService.findImpressionsById(id);
   }
 
   @PostMapping
   public VictGuild saveVictGuild(@RequestBody VictGuild reminder) {
-    return victGuildService.saveVictGuild(reminder);
+    return victGuildService.save(reminder);
   }
 
   @GetMapping("id/{id}")
-  public Optional<VictGuild> getVictGuild(@PathVariable Long id) {
-    return victGuildService.getByVictGuildId(id);
-  }
-
-  @GetMapping("discordId/{discordId}")
-  public Optional<VictGuild> getVictGuild(@PathVariable String discordId) {
-    return victGuildService.getByVictGuildDiscordId(discordId);
+  public Optional<VictGuild> getVictGuild(@PathVariable String id) {
+    return victGuildService.findById(id);
   }
 }

@@ -8,15 +8,12 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Data
 @Component
 @RequiredArgsConstructor
 public class CatFactCommand implements VictCommand {
-  private static final Logger log = LoggerFactory.getLogger(CatFactCommand.class);
   private final CatFactService catFactService;
   private final SlashCommandData data = Commands.slash("cat-fact", "receive random cat fact 🐈");
 

@@ -7,15 +7,12 @@ import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Data
 @Component
 @RequiredArgsConstructor
 public class CatPicCommand implements VictCommand {
-  private static final Logger log = LoggerFactory.getLogger(CatPicCommand.class);
   private final CatPicService catPicService;
   private final SlashCommandData data = Commands.slash("cat", "receive random cat");
 

@@ -2,25 +2,28 @@ package com.github.georgi4511.victbot.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 import lombok.*;
+import lombok.Builder.Default;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Builder
 @Table(name = "vict_guild")
 public class VictGuild {
 
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Id
-  Long id;
+  public VictGuild(String id) {
+    this.id = id;
+    this.badBotImpressions = 0L;
+    this.goodBotImpressions = 0L;
+    this.bookmarks = null;
+    this.reminders = null;
+  }
 
-  @Column(unique = true)
-  @NonNull
-  String discordId;
+  @Id String id;
 
   @JsonIgnore
   @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
@@ -30,8 +33,7 @@ public class VictGuild {
   @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
   Set<Bookmark> bookmarks;
 
-  @JsonIgnore
-  @OneToOne(mappedBy = "victGuild", cascade = CascadeType.ALL)
-  @PrimaryKeyJoinColumn
-  Impressions impressions;
+  @Default @NotNull private Long badBotImpressions = 0L;
+
+  @Default @NotNull private Long goodBotImpressions = 0L;
 }

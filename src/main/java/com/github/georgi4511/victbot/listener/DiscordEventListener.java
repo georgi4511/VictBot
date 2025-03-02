@@ -131,10 +131,11 @@ public class DiscordEventListener extends ListenerAdapter {
   }
 
   private void validateExistingOrCreateEntities(User eventUser, Guild eventGuild) {
-    if (!victUserService.existsVictUserByDiscordId(eventUser.getId()))
-      victUserService.saveVictUser(new VictUser(eventUser.getId()));
-    if (eventGuild != null && !victGuildService.existsVictGuildByDiscordId(eventGuild.getId())) {
-      victGuildService.saveVictGuild(new VictGuild(eventGuild.getId()));
+    if (!victUserService.existsById(eventUser.getId())) {
+      victUserService.save(new VictUser(eventUser.getId()));
+    }
+    if (eventGuild != null && !victGuildService.existsById(eventGuild.getId())) {
+      victGuildService.save(new VictGuild(eventGuild.getId()));
     }
   }
 

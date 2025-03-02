@@ -1,8 +1,7 @@
 package com.github.georgi4511.victbot.command.impression;
 
-import com.github.georgi4511.victbot.model.Impressions;
 import com.github.georgi4511.victbot.model.VictCommand;
-import com.github.georgi4511.victbot.service.ImpressionsService;
+import com.github.georgi4511.victbot.service.VictGuildService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BadBotImpressionCommand implements VictCommand {
   private static final Logger log = LoggerFactory.getLogger(BadBotImpressionCommand.class);
-  private final ImpressionsService impressionsService;
+  private final VictGuildService victGuildService;
   private SlashCommandData data = Commands.slash("bad-bot", "When bot is bad");
 
   @Override
@@ -30,14 +29,12 @@ public class BadBotImpressionCommand implements VictCommand {
         throw new UnsupportedOperationException();
       }
 
-      Impressions impressions =
-          impressionsService.incrementImpressionsByDiscordId(guild.getId(), false);
+      Long badBotImpressions = victGuildService.incrementBadBotImpressions(guild.getId());
 
       event
           .reply(
               String.format(
-                  "I have received %d bad bot impressions. Frick you.",
-                  impressions.getBadBotCount()))
+                  "I have received %d bad bot impressions. Frick you.", badBotImpressions))
           .queue();
 
     } catch (Exception e) {
