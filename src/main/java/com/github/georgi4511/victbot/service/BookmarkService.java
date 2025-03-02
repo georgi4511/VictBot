@@ -27,7 +27,6 @@ public class BookmarkService {
 
   @Transactional(readOnly = true)
   public List<Bookmark> getBookmarksByVictGuildId(String victGuildId) {
-
     return bookmarkRepository.findByVictGuildId(victGuildId);
   }
 
@@ -58,8 +57,7 @@ public class BookmarkService {
     return bookmarkRepository.findByAlias(alias);
   }
 
-  public boolean removeBookmarkByAliasAndVictUserId(String alias, String userDiscordId) {
-    VictUser victUser = victUserService.findById(userDiscordId).orElseThrow(EntityNotFoundException::new);
-    return bookmarkRepository.deleteByVictUserIdAndAlias(victUser.getId(), alias) > 0;
+  public boolean removeBookmarkByAliasAndVictUserId(String alias, String userId) {
+    return bookmarkRepository.deleteByVictUserIdAndAlias(userId, alias) > 0;
   }
 }
