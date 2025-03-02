@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: dev
   datasource:
     url: jdbc:h2:file:./assets/database
     username: sa

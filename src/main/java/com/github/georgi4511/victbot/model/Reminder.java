@@ -2,6 +2,9 @@ package com.github.georgi4511.victbot.model;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 import lombok.Builder.Default;
 
@@ -17,21 +20,29 @@ public class Reminder {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NonNull private Instant createdTime;
+  @NonNull
+  private Instant createdTime;
 
-  @NonNull private String message;
+  @NonNull
+  private String message;
 
-  @NonNull private Instant targetTime;
+  @NonNull
+  private Instant targetTime;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "vict_user_id", nullable = false)
   private VictUser victUser;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "vict_guild_id", nullable = false)
   private VictGuild victGuild;
 
-  @NonNull private String channelSentFrom;
+  @NonNull
+  private String channelSentFrom;
 
-  @NonNull @Default private Boolean personal = false;
+  @NonNull
+  @Default
+  private Boolean personal = false;
 }
