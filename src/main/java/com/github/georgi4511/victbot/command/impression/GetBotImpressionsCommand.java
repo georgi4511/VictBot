@@ -22,10 +22,10 @@ import org.springframework.stereotype.Component;
 public class GetBotImpressionsCommand implements VictCommand {
   private static final Logger log = LoggerFactory.getLogger(GetBotImpressionsCommand.class);
   private final VictGuildService victGuildService;
-  private SlashCommandData data = Commands
-      .slash("get-bot-impressions", "Get amount of bot is good/bad sent in server/globally")
-      .addOption(
-          OptionType.BOOLEAN, "global", "do the search globally or only for this server");
+  private SlashCommandData data =
+      Commands.slash("get-bot-impressions", "Get amount of bot is good/bad sent in server/globally")
+          .addOption(
+              OptionType.BOOLEAN, "global", "do the search globally or only for this server");
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
@@ -68,8 +68,10 @@ public class GetBotImpressionsCommand implements VictCommand {
   private void returnGlobalImpressions(SlashCommandInteractionEvent event) {
     List<VictGuildImpressions> impressions = victGuildService.findAllImpressions();
 
-    Long badBotSum = impressions.stream().map(VictGuildImpressions::getBadBotImpressions).reduce(0L, Long::sum);
-    Long goodBotSum = impressions.stream().map(VictGuildImpressions::getGoodBotImpressions).reduce(0L, Long::sum);
+    Long badBotSum =
+        impressions.stream().map(VictGuildImpressions::getBadBotImpressions).reduce(0L, Long::sum);
+    Long goodBotSum =
+        impressions.stream().map(VictGuildImpressions::getGoodBotImpressions).reduce(0L, Long::sum);
     event
         .reply(
             String.format(

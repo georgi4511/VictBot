@@ -1,10 +1,7 @@
 package com.github.georgi4511.victbot.service;
 
 import com.github.georgi4511.victbot.model.Bookmark;
-import com.github.georgi4511.victbot.model.VictGuild;
-import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.repository.BookmarkRepository;
-import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;

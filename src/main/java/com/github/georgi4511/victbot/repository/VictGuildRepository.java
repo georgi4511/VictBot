@@ -8,5 +8,4 @@ public interface VictGuildRepository extends ListCrudRepository<VictGuild, Strin
   <T> List<T> findBy(Class<T> clazz);
 
   <T> T findById(Class<T> clazz, String id);
-
 }
