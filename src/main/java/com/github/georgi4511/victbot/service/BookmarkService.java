@@ -48,13 +48,10 @@ public class BookmarkService {
   }
 
   public List<Bookmark> getBookmarksByGuildAndUser(String guildId, String userId) {
-    VictUser victUser = victUserService.findById(userId).orElseThrow(EntityNotFoundException::new);
     if (guildId == null) {
-      return bookmarkRepository.findByVictUserId(victUser.getId());
+      return bookmarkRepository.findByVictUserId(userId);
     }
-    VictGuild victGuild =
-        victGuildService.findById(guildId).orElseThrow(EntityNotFoundException::new);
-    return bookmarkRepository.findByVictGuildIdAndVictUserId(victGuild.getId(), victUser.getId());
+    return bookmarkRepository.findByVictGuildIdAndVictUserId(guildId, userId);
   }
 
   public Optional<Bookmark> getBookmarkByAlias(String alias) {
@@ -62,8 +59,7 @@ public class BookmarkService {
   }
 
   public boolean removeBookmarkByAliasAndVictUserId(String alias, String userDiscordId) {
-    VictUser victUser =
-        victUserService.findById(userDiscordId).orElseThrow(EntityNotFoundException::new);
+    VictUser victUser = victUserService.findById(userDiscordId).orElseThrow(EntityNotFoundException::new);
     return bookmarkRepository.deleteByVictUserIdAndAlias(victUser.getId(), alias) > 0;
   }
 }

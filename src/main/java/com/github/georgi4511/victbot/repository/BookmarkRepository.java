@@ -9,7 +9,7 @@ public interface BookmarkRepository extends ListCrudRepository<Bookmark, Long> {
 
   List<Bookmark> findByVictGuildId(String victGuildId);
 
-  List<Bookmark> findByVictGuildIdAndVictUserId(String guildId, String victUserId);
+  List<Bookmark> findByVictGuildIdAndVictUserId(String victGuildId, String victUserId);
 
   List<Bookmark> findByVictUserId(String userId);
 
