@@ -3,8 +3,8 @@ spring:
     active: local
   datasource:
     url: jdbc:h2:file:./assets/database
-    username: sa
-    password: password
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASS}
     driverClassName: org.h2.Driver
     hikari:
       auto-commit: false
@@ -28,9 +28,8 @@ spring:
   sql:
     init:
       mode: never
-
-application:
-  name: VictBot
+  application:
+    name: VictBot
 
 springdoc:
   swagger-ui:

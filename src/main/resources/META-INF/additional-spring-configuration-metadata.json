@@ -1,0 +1,34 @@
+{
+    "properties": [
+        {
+            "name": "vict.twitter.fix",
+            "type": "java.lang.String",
+            "description": "Switches functionality that automatically replaces any link towards x.com to a more discord embed friendly alternative"
+        },
+        {
+            "name": "vict.discord.token",
+            "type": "java.lang.String",
+            "description": "Should be value of the discord token required for bot operation"
+        },
+        {
+            "name": "vict.stable-diffusion.url",
+            "type": "java.lang.String",
+            "description": "Link to local stable diffusion instance"
+        },
+        {
+            "name": "vict.discord.guilds",
+            "type": "java.lang.String",
+            "description": "List of string variables separated by a ',' which denote which servers the bot should deploy to using its test/development behavior"
+        },
+        {
+            "name": "vict.procedure.logging.cron",
+            "type": "java.lang.String",
+            "description": "Cron job related to logging scheduled activities"
+        },
+        {
+            "name": "vict.procedure.reminder.cron",
+            "type": "java.lang.String",
+            "description": "Chron job related to reminder activities"
+        }
+    ]
+}

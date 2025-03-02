@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:mydb
-    username: sa
-    password: password
+    url: jdbc:h2:mem:db
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASS}
     driverClassName: org.h2.Driver
   h2:
     console:
@@ -24,10 +24,19 @@ spring:
     hibernate:
       ddl-auto: create-drop
     open-in-view: false
-application:
-  name: VictBot
-twitter:
-  fix: true
+  application:
+    name: VictBot
 springdoc:
   swagger-ui:
     path: /
+
+vict:
+  twitter:
+    fix: false
+  procedure:
+    logging:
+      cron: "0 0 * * * ?"
+    reminder:
+      cron: "0 * * * * ?"
+  stable-diffusion:
+    url: ${STABLE_DIFFUSION_URL}
