@@ -41,7 +41,7 @@ public class ShootCommand implements VictCommand {
 
       Member guildMember =
           Objects.requireNonNull(event.getGuild())
-              .findMembers(e -> e.equals(user))
+              .findMembers(e -> e.getUser().equals(user))
               .get()
               .getFirst();
 

@@ -21,7 +21,7 @@ class CatFactServiceTest {
   private CatFactService unitTestService;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     unitTestService = new CatFactService(restTemplate);
   }
 
@@ -64,7 +64,7 @@ class CatFactServiceTest {
   @Test
   void getRandomCatFact_null_failed() {
     // then
-    ResponseEntity<CatFactDto> catFactDtoResponseEntity = new ResponseEntity<>(null, HttpStatus.OK);
+    ResponseEntity<CatFactDto> catFactDtoResponseEntity = new ResponseEntity<>(HttpStatus.OK);
     when(restTemplate.getForEntity(URL, CatFactDto.class)).thenReturn(catFactDtoResponseEntity);
 
     String randomCatFact = unitTestService.getRandomCatFact();
