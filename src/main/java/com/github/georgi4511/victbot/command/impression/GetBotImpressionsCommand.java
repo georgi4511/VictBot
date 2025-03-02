@@ -1,7 +1,7 @@
 package com.github.georgi4511.victbot.command.impression;
 
 import com.github.georgi4511.victbot.model.VictCommand;
-import com.github.georgi4511.victbot.model.VictGuild;
+import com.github.georgi4511.victbot.model.VictGuildImpressions;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import java.util.List;
 import lombok.Data;
@@ -55,7 +55,7 @@ public class GetBotImpressionsCommand implements VictCommand {
       throw new UnsupportedOperationException("Global but not in guild");
     }
 
-    VictGuild victGuild = victGuildService.findByIdOrCreate(guild.getId());
+    VictGuildImpressions victGuild = victGuildService.findImpressionsById(guild.getId());
 
     event
         .reply(
@@ -66,13 +66,14 @@ public class GetBotImpressionsCommand implements VictCommand {
   }
 
   private void returnGlobalImpressions(SlashCommandInteractionEvent event) {
-    List<VictGuild> allGuilds = victGuildService.findAll();
+    List<VictGuildImpressions> impressions = victGuildService.findAllImpressions();
 
-    Long badBotSum = allGuilds.stream().map(VictGuild::getBadBotImpressions).reduce(0L, Long::sum);
-    Long goodBotSum = allGuilds.stream().map(VictGuild::getGoodBotImpressions).reduce(0L, Long::sum);
-    event.reply(
-        String.format(
-            "I have received %d good bots and %d bad bots globally", goodBotSum, badBotSum))
+    Long badBotSum = impressions.stream().map(VictGuildImpressions::getBadBotImpressions).reduce(0L, Long::sum);
+    Long goodBotSum = impressions.stream().map(VictGuildImpressions::getGoodBotImpressions).reduce(0L, Long::sum);
+    event
+        .reply(
+            String.format(
+                "I have received %d good bots and %d bad bots globally", goodBotSum, badBotSum))
         .queue();
   }
 }

@@ -1,6 +1,7 @@
 package com.github.georgi4511.victbot.service;
 
 import com.github.georgi4511.victbot.model.VictGuild;
+import com.github.georgi4511.victbot.model.VictGuildImpressions;
 import com.github.georgi4511.victbot.repository.VictGuildRepository;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,14 @@ public class VictGuildService {
 
   public List<VictGuild> findAll() {
     return victGuildRepository.findAll();
+  }
+
+  public List<VictGuildImpressions> findAllImpressions() {
+    return victGuildRepository.findBy(VictGuildImpressions.class);
+  }
+
+  public VictGuildImpressions findImpressionsById(String id) {
+    return victGuildRepository.findById(VictGuildImpressions.class, id);
   }
 
   public VictGuild findByIdOrCreate(@NonNull String victGuildId) {

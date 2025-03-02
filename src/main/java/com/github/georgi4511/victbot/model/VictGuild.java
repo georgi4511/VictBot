@@ -23,8 +23,7 @@ public class VictGuild {
     this.reminders = null;
   }
 
-  @Id
-  String id;
+  @Id String id;
 
   @JsonIgnore
   @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
@@ -34,11 +33,7 @@ public class VictGuild {
   @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
   Set<Bookmark> bookmarks;
 
-  @Default
-  @NotNull
-  private Long badBotImpressions = 0L;
+  @Default @NotNull private Long badBotImpressions = 0L;
 
-  @Default
-  @NotNull
-  private Long goodBotImpressions = 0L;
+  @Default @NotNull private Long goodBotImpressions = 0L;
 }
