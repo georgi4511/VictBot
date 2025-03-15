@@ -33,7 +33,7 @@ public class ListBookmarkCommand implements VictCommand {
       }
       String userId = Objects.requireNonNull(event.getUser()).getId();
 
-      List<Bookmark> bookmarks = bookmarkService.getBookmarksByGuildAndUser(guildId, userId);
+      List<Bookmark> bookmarks = bookmarkService.getByGuildAndUser(guildId, userId);
 
       if (bookmarks.isEmpty()) {
         event.reply("No bookmarks found").queue();

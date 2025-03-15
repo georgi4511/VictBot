@@ -15,16 +15,16 @@ public class BookmarkController {
 
   @GetMapping
   public List<Bookmark> getAllBookmarks() {
-    return bookmarkService.getAllBookmarks();
+    return bookmarkService.getAll();
   }
 
   @PostMapping
   public Bookmark saveBookmark(@RequestBody Bookmark bookmark) {
-    return bookmarkService.saveBookmark(bookmark);
+    return bookmarkService.create(bookmark);
   }
 
   @GetMapping("/guild/{victGuildId}")
   public List<Bookmark> getBookmarksByGuildId(@PathVariable String victGuildId) {
-    return bookmarkService.getBookmarksByVictGuildId(victGuildId);
+    return bookmarkService.getByVictGuildId(victGuildId);
   }
 }

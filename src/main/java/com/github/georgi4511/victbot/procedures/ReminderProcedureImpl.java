@@ -2,10 +2,8 @@ package com.github.georgi4511.victbot.procedures;
 
 import com.github.georgi4511.victbot.model.Reminder;
 import com.github.georgi4511.victbot.service.ReminderService;
-import com.github.georgi4511.victbot.service.VictUserService;
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
@@ -22,51 +20,53 @@ import org.springframework.stereotype.Service;
 @Profile("!dev")
 public class ReminderProcedureImpl implements ReminderProcedure {
 
-  private static final Logger log = LoggerFactory.getLogger(ReminderProcedureImpl.class);
+  private static final Logger logger = LoggerFactory.getLogger(ReminderProcedureImpl.class);
   final ReminderService reminderService;
-  final VictUserService victUserService;
   final JDA jda;
 
   @Scheduled(cron = "${vict.procedure.reminder.cron}")
   @Async
   @Override
   public void handleReminders() {
-    List<Reminder> allReminderEntry = reminderService.findAllReminderEntry();
+    List<Reminder> reminders = reminderService.findAll();
     Instant now = Instant.now();
-    List<Reminder> reminders =
-        allReminderEntry.stream()
-            .filter(reminder -> now.isAfter(reminder.getTargetTime()))
-            .toList();
+    List<Reminder> triggeredReminders =
+        reminders.stream().filter(reminder -> now.isAfter(reminder.getTargetTime())).toList();
 
-    if (reminders.isEmpty()) {
+    if (triggeredReminders.isEmpty()) {
       return;
     }
 
-    try {
-      reminders.forEach(this::sendReminder);
-      reminderService.deleteReminders(reminders);
-
-    } catch (NullPointerException e) {
-      log.error("Failed to complete reminder procedure, {}", e.getMessage(), e);
-    }
+    triggeredReminders.forEach(this::sendReminder);
+    reminderService.delete(triggeredReminders);
   }
 
   @Override
   public void sendReminder(Reminder reminder) {
 
     String victUserId = reminder.getVictUser().getId();
-    User user = Objects.requireNonNull(jda.getUserById(victUserId));
+    User user = jda.getUserById(victUserId);
+
+    if (user == null) {
+      logger.info("Failed to send reminder, {} user is not a real user", victUserId);
+      return;
+    }
 
     String message =
         String.format("%s, you have a reminder:%n%s", user.getAsMention(), reminder.getMessage());
 
     if (reminder.getPersonal()) {
       user.openPrivateChannel().flatMap(channel -> channel.sendMessage(message)).queue();
-    } else {
-      String channelSentFrom = reminder.getChannelSentFrom();
-      Objects.requireNonNull(jda.getChannelById(TextChannel.class, channelSentFrom))
-          .sendMessage(message)
-          .queue();
+      return;
     }
+
+    String channelId = reminder.getChannelSentFrom();
+    TextChannel channel = jda.getChannelById(TextChannel.class, channelId);
+
+    if (channel == null) {
+      return;
+    }
+
+    channel.sendMessage(message).queue();
   }
 }

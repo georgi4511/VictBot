@@ -88,7 +88,7 @@ public class AddReminderCommand implements VictCommand {
       String userId = event.getUser().getId();
 
       Instant targetTime = Instant.now().plus(time, ChronoUnit.valueOf(chronoUnitS.toUpperCase()));
-      reminderService.saveReminder(message, personal, targetTime, channelId, guildId, userId);
+      reminderService.create(message, personal, targetTime, channelId, guildId, userId);
 
       event
           .reply(

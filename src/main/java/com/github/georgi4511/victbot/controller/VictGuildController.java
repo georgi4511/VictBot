@@ -30,9 +30,14 @@ public class VictGuildController {
     return victGuildService.findImpressionsById(id);
   }
 
-  @PostMapping
-  public VictGuild saveVictGuild(@RequestBody VictGuild reminder) {
-    return victGuildService.save(reminder);
+  @PostMapping("create")
+  public VictGuild saveVictGuild(@RequestBody VictGuild victGuild) {
+    return victGuildService.create(victGuild);
+  }
+
+  @PostMapping("create/id")
+  public VictGuild saveVictGuild(@RequestBody String id) {
+    return victGuildService.create(id);
   }
 
   @GetMapping("id/{id}")

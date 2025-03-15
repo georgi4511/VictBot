@@ -28,7 +28,7 @@ public class RemoveBookmarkCommand implements VictCommand {
       String alias = Objects.requireNonNull(event.getOption(ALIAS)).getAsString();
       String userDiscordId = Objects.requireNonNull(event.getUser()).getId();
 
-      boolean result = bookmarkService.removeBookmarkByAliasAndVictUserId(alias, userDiscordId);
+      boolean result = bookmarkService.removeByAliasAndVictUserId(alias, userDiscordId);
 
       if (!result) {
         event.reply("Failed to remove bookmark").queue();

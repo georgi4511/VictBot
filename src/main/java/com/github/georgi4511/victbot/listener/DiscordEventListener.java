@@ -132,10 +132,10 @@ public class DiscordEventListener extends ListenerAdapter {
 
   private void validateExistingOrCreateEntities(User eventUser, Guild eventGuild) {
     if (!victUserService.existsById(eventUser.getId())) {
-      victUserService.save(new VictUser(eventUser.getId()));
+      victUserService.create(new VictUser(eventUser.getId()));
     }
     if (eventGuild != null && !victGuildService.existsById(eventGuild.getId())) {
-      victGuildService.save(new VictGuild(eventGuild.getId()));
+      victGuildService.create(new VictGuild(eventGuild.getId()));
     }
   }
 
@@ -165,7 +165,7 @@ public class DiscordEventListener extends ListenerAdapter {
     if (content.startsWith("!")) {
       String alias = content.substring(1);
       bookmarkService
-          .getBookmarkByAlias(alias)
+          .getByAlias(alias)
           .ifPresent(
               bookmark ->
                   event.getChannel().asTextChannel().sendMessage(bookmark.getResponse()).queue());
