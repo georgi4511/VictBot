@@ -2,8 +2,6 @@ package com.github.georgi4511.victbot.procedures;
 
 import com.github.georgi4511.victbot.model.Reminder;
 import com.github.georgi4511.victbot.service.ReminderService;
-import java.time.Instant;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
@@ -15,12 +13,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 @Profile("!dev")
 public class ReminderProcedureImpl implements ReminderProcedure {
 
-  private static final Logger logger = LoggerFactory.getLogger(ReminderProcedureImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(ReminderProcedureImpl.class);
   final ReminderService reminderService;
   final JDA jda;
 
@@ -48,7 +49,7 @@ public class ReminderProcedureImpl implements ReminderProcedure {
     User user = jda.getUserById(victUserId);
 
     if (user == null) {
-      logger.info("Failed to send reminder, {} user is not a real user", victUserId);
+      log.info("Failed to send reminder, {} user is not a real user", victUserId);
       return;
     }
 

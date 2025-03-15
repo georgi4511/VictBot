@@ -9,8 +9,6 @@ import com.github.georgi4511.victbot.service.BookmarkService;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
 import com.github.georgi4511.victbot.util.Util;
-import java.time.Instant;
-import java.util.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
@@ -26,9 +24,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Service
 @Profile("!dev")
-public class DiscordEventListener extends ListenerAdapter {
+public class DiscordEventListener extends ListenerAdapter implements CommandInteractionHandler {
 
   private static final Logger log = LoggerFactory.getLogger(DiscordEventListener.class);
   private final Map<String, VictCommand> commandMap;
@@ -49,13 +51,11 @@ public class DiscordEventListener extends ListenerAdapter {
       VictUserService victUserService,
       VictGuildService victGuildService,
       BookmarkService bookmarkService) {
-    this.commandMap = new HashMap<>();
-    commandList.forEach(command -> commandMap.put(command.getName(), command));
 
+    this.commandMap = commandList.stream().collect(Collectors.toMap(VictCommand::getName, victCommand -> victCommand));
     this.victUserService = victUserService;
     this.victGuildService = victGuildService;
     this.bookmarkService = bookmarkService;
-
     this.commandCooldownMap = new HashMap<>();
   }
 
@@ -64,6 +64,11 @@ public class DiscordEventListener extends ListenerAdapter {
     String commandName = event.getName();
     VictCommand command = commandMap.get(commandName);
 
+    if (command == null) {
+      event.reply("Unknown command").setEphemeral(true).queue();
+      return;
+    }
+
     User eventUser = event.getUser();
     Guild eventGuild = event.getGuild();
 
@@ -71,8 +76,6 @@ public class DiscordEventListener extends ListenerAdapter {
 
     try {
       handleSlashCommandExecution(event, eventUser, command);
-    } catch (UnsupportedOperationException e) {
-      event.reply("Unknown command").setEphemeral(true).queue();
     } catch (CommandUnderCooldownException e) {
       event
           .reply(String.format("%s, %s", event.getUser().getAsMention(), e.getMessage()))
@@ -81,11 +84,9 @@ public class DiscordEventListener extends ListenerAdapter {
     }
   }
 
-  private void handleSlashCommandExecution(
+  @Override
+  public void handleSlashCommandExecution(
       @NotNull SlashCommandInteractionEvent event, User eventUser, VictCommand command) {
-    if (command == null) {
-      throw new UnsupportedOperationException();
-    }
 
     ArrayList<CommandCooldownRecord> cooldownRecords = commandCooldownMap.get(eventUser);
 
@@ -108,7 +109,8 @@ public class DiscordEventListener extends ListenerAdapter {
     }
   }
 
-  private void validateCommandExecution(
+  @Override
+  public void validateCommandExecution(
       ArrayList<CommandCooldownRecord> cooldownRecords, String commandName, Long commandCooldown) {
     if (cooldownRecords.isEmpty()) return;
     if (commandCooldown == 0) return;
@@ -130,7 +132,9 @@ public class DiscordEventListener extends ListenerAdapter {
     cooldownRecords.remove(cooldownRecord);
   }
 
-  private void validateExistingOrCreateEntities(User eventUser, Guild eventGuild) {
+
+  @Override
+  public void validateExistingOrCreateEntities(User eventUser, Guild eventGuild) {
     if (!victUserService.existsById(eventUser.getId())) {
       victUserService.create(new VictUser(eventUser.getId()));
     }
@@ -179,9 +183,9 @@ public class DiscordEventListener extends ListenerAdapter {
     log.info("{} logged in.", jda.getSelfUser().getEffectiveName());
 
     Collection<VictCommand> commands = commandMap.values();
+    String commandNames = commandMap.keySet().toString();
 
-    String commandLog = commands.stream().map(VictCommand::getName).toList().toString();
-    log.info(commandLog);
+    log.info(commandNames);
 
     if (guilds.isEmpty()) {
       log.info("Setting commands for production");
