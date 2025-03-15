@@ -36,7 +36,7 @@ public class AddBookmarkCommand implements VictCommand {
       }
       String userId = Objects.requireNonNull(event.getUser()).getId();
 
-      bookmarkService.addBookmark(alias, response, guildId, userId);
+      bookmarkService.create(alias, response, guildId, userId);
 
       event.reply("Bookmark created with alias: %s".formatted(alias)).queue();
     } catch (Exception e) {

@@ -13,26 +13,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class BookmarkService {
-  final BookmarkRepository bookmarkRepository;
-  final VictGuildService victGuildService;
-  final VictUserService victUserService;
+
+  private final BookmarkRepository bookmarkRepository;
+  private final VictGuildService victGuildService;
+  private final VictUserService victUserService;
 
   @Transactional(readOnly = true)
-  public List<Bookmark> getAllBookmarks() {
+  public List<Bookmark> getAll() {
     return bookmarkRepository.findAll();
   }
 
   @Transactional(readOnly = true)
-  public List<Bookmark> getBookmarksByVictGuildId(String victGuildId) {
+  public List<Bookmark> getByVictGuildId(String victGuildId) {
     return bookmarkRepository.findByVictGuildId(victGuildId);
   }
 
-  @Transactional
-  public Bookmark saveBookmark(Bookmark bookmark) {
+  public Bookmark create(Bookmark bookmark) {
     return bookmarkRepository.save(bookmark);
   }
 
-  public void addBookmark(String alias, String response, String victGuildId, String victUserId) {
+  public void create(String alias, String response, String victGuildId, String victUserId) {
     Instant now = Instant.now();
     Bookmark bookmark = new Bookmark(now, alias, response);
 
@@ -43,18 +43,20 @@ public class BookmarkService {
     bookmarkRepository.save(bookmark);
   }
 
-  public List<Bookmark> getBookmarksByGuildAndUser(String guildId, String userId) {
+  @Transactional(readOnly = true)
+  public List<Bookmark> getByGuildAndUser(String guildId, String userId) {
     if (guildId == null) {
       return bookmarkRepository.findByVictUserId(userId);
     }
     return bookmarkRepository.findByVictGuildIdAndVictUserId(guildId, userId);
   }
 
-  public Optional<Bookmark> getBookmarkByAlias(String alias) {
+  @Transactional(readOnly = true)
+  public Optional<Bookmark> getByAlias(String alias) {
     return bookmarkRepository.findByAlias(alias);
   }
 
-  public boolean removeBookmarkByAliasAndVictUserId(String alias, String userId) {
+  public boolean removeByAliasAndVictUserId(String alias, String userId) {
     return bookmarkRepository.deleteByVictUserIdAndAlias(userId, alias) > 0;
   }
 }

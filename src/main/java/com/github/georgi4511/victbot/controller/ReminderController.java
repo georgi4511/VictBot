@@ -17,12 +17,12 @@ public class ReminderController {
 
   @GetMapping
   public List<Reminder> getAllReminders() {
-    return reminderService.findAllReminderEntry();
+    return reminderService.findAll();
   }
 
   @PostMapping
   public Reminder saveReminder(@RequestBody Reminder reminder) {
-    return reminderService.saveReminder(reminder);
+    return reminderService.create(reminder);
   }
 
   @DeleteMapping
@@ -31,13 +31,13 @@ public class ReminderController {
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/guild/{victGuild}")
+  @GetMapping("/guild/{victGuildId}")
   public List<Reminder> getReminder(@PathVariable String victGuildId) {
-    return reminderService.findRemindersByVictGuildId(victGuildId);
+    return reminderService.findByVictGuildId(victGuildId);
   }
 
   @GetMapping("/{id}")
   public Optional<Reminder> getReminderById(@PathVariable Long id) {
-    return reminderService.findReminderById(id);
+    return reminderService.findById(id);
   }
 }

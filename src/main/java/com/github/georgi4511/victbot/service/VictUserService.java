@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class VictUserService {
-  final VictUserRepository victUserRepository;
+
+  private final VictUserRepository victUserRepository;
 
   public List<VictUser> findAllVictUsers() {
     return victUserRepository.findAll();
@@ -24,7 +24,12 @@ public class VictUserService {
     return victUserRepository.existsById(id);
   }
 
-  public VictUser save(VictUser victUser) {
+  public VictUser create(VictUser victUser) {
+    return victUserRepository.save(victUser);
+  }
+
+  public VictUser create(String id) {
+    VictUser victUser = new VictUser(id);
     return victUserRepository.save(victUser);
   }
 
@@ -33,20 +38,14 @@ public class VictUserService {
   }
 
   public VictUser findByIdOrCreate(@NonNull String victUserId) {
-    try {
-      Optional<VictUser> existing = victUserRepository.findById(victUserId);
-      if (existing.isPresent()) {
-        return existing.get();
-      }
-
-      VictUser newEntity = new VictUser();
-      newEntity.setId(victUserId);
-
-      return victUserRepository.save(newEntity);
-    } catch (DataIntegrityViolationException e) {
-      return victUserRepository
-          .findById(victUserId)
-          .orElseThrow(() -> new RuntimeException("Failed to get or create entity"));
+    Optional<VictUser> optionalVictUser = victUserRepository.findById(victUserId);
+    if (optionalVictUser.isPresent()) {
+      return optionalVictUser.get();
     }
+
+    VictUser victUser = new VictUser();
+    victUser.setId(victUserId);
+
+    return victUserRepository.save(victUser);
   }
 }

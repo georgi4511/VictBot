@@ -34,7 +34,7 @@ public class ListRemindersCommand implements VictCommand {
   public void callback(SlashCommandInteractionEvent event) {
     try {
 
-      List<Reminder> reminders = reminderService.findRemindersByUserId(event.getUser().getId());
+      List<Reminder> reminders = reminderService.findByUserId(event.getUser().getId());
       if (reminders.isEmpty()) {
         event.reply("There are no currently existing reminders, how about you add one?").queue();
         return;

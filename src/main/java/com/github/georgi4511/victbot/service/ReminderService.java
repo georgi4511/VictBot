@@ -16,43 +16,44 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class ReminderService {
-  final ReminderRepository reminderRepository;
-  final VictGuildService victGuildService;
-  final VictUserService victUserService;
 
-  public List<Reminder> findAllReminderEntry() {
+  private final ReminderRepository reminderRepository;
+  private final VictGuildService victGuildService;
+  private final VictUserService victUserService;
+
+  public List<Reminder> findAll() {
     return reminderRepository.findAll();
   }
 
-  public List<Reminder> findRemindersByVictUserId(String victUserId) {
+  public List<Reminder> findByVictUserId(String victUserId) {
     return reminderRepository.findByVictUserId(victUserId);
   }
 
-  public List<Reminder> findRemindersByVictUserAndVictGuild(String victGuildId, String victUserId) {
+  public List<Reminder> findByVictUserAndVictGuild(String victGuildId, String victUserId) {
     return reminderRepository.findByVictGuildIdAndVictUserId(victGuildId, victUserId);
   }
 
-  public List<Reminder> findRemindersByVictGuildId(String victGuildId) {
+  public List<Reminder> findByVictGuildId(String victGuildId) {
     return reminderRepository.findByVictGuildId(victGuildId);
   }
 
-  public List<Reminder> findRemindersByUserId(String victUserId) {
+  public List<Reminder> findByUserId(String victUserId) {
     return reminderRepository.findByVictUserId(victUserId);
   }
 
-  public void deleteReminders(List<Reminder> reminders) {
+  public void delete(List<Reminder> reminders) {
     reminderRepository.deleteAll(reminders);
   }
 
-  public void deleteReminder(Reminder reminders) {
+  public void delete(Reminder reminders) {
     reminderRepository.delete(reminders);
   }
 
-  public Reminder saveReminder(Reminder reminder) {
+  public Reminder create(Reminder reminder) {
     return reminderRepository.save(reminder);
   }
 
-  public void saveReminder(
+  public void create(
       String message,
       Boolean personal,
       Instant targetTime,
@@ -94,7 +95,7 @@ public class ReminderService {
     reminderRepository.deleteById(id);
   }
 
-  public Optional<Reminder> findReminderById(Long id) {
+  public Optional<Reminder> findById(Long id) {
     return reminderRepository.findById(id);
   }
 }

@@ -19,9 +19,14 @@ public class VictUserController {
     return victUserService.findAllVictUsers();
   }
 
-  @PostMapping
-  public VictUser saveVictUser(@RequestBody VictUser reminder) {
-    return victUserService.save(reminder);
+  @PostMapping("/create")
+  public VictUser saveVictUser(@RequestBody VictUser victUser) {
+    return victUserService.create(victUser);
+  }
+
+  @PostMapping("/create/id")
+  public VictUser saveVictUser(@RequestBody String id) {
+    return victUserService.create(id);
   }
 
   @GetMapping("/{id}")
