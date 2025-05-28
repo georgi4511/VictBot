@@ -100,7 +100,7 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
 
     validateCommandExecution(cooldownRecords, commandName, commandCooldown);
 
-    command.callback(event);
+    command.executeCallback(event);
 
     if (commandCooldown != 0) {
       CommandCooldownRecord cooldownRecord =
