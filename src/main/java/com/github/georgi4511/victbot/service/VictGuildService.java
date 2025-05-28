@@ -59,11 +59,11 @@ public class VictGuildService {
 
   public Long incrementBadBotImpressions(String id) {
     VictGuild victGuild = findByIdOrCreate(id);
-    return victGuildRepository.save(victGuild.incrementBadImpressions(1)).badBotImpressions();
+    return victGuildRepository.save(victGuild.incrementBadImpressions(1L)).getBadBotImpressions();
   }
 
   public Long incrementGoodBotImpressions(String id) {
     VictGuild victGuild = findByIdOrCreate(id);
-    return victGuildRepository.save(victGuild.incrementGoodImpressions(1)).goodBotImpressions();
+    return victGuildRepository.save(victGuild.incrementGoodImpressions(1L)).getGoodBotImpressions();
   }
 }

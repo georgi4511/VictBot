@@ -47,11 +47,11 @@ public class ListBookmarkCommand extends AbstractVictCommand {
                     "%s - %s - %s%n"
                         .formatted(
                             bookmark
-                                .createdTime()
+                                .getCreatedTime()
                                 .atZone(ZoneId.systemDefault())
                                 .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
-                            bookmark.alias(),
-                            bookmark.response()))
+                            bookmark.getAlias(),
+                            bookmark.getResponse()))
             .reduce(String::concat)
             .orElse("No bookmarks found");
 

@@ -172,7 +172,7 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
           .getByAlias(alias)
           .ifPresent(
               bookmark ->
-                  event.getChannel().asTextChannel().sendMessage(bookmark.response()).queue());
+                  event.getChannel().asTextChannel().sendMessage(bookmark.getResponse()).queue());
     }
   }
 

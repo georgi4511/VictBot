@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class AbstractVictCommand implements VictCommand {
 
+  public static final String FAIL_TO_COMPLETE_MESSAGE = "Failed to complete command";
   private static final Logger log = LoggerFactory.getLogger(AbstractVictCommand.class);
 
   @Override
@@ -26,14 +27,12 @@ public abstract class AbstractVictCommand implements VictCommand {
       callback(event);
     } catch (Exception e) {
       if (Boolean.TRUE.equals(getIsDeferred())) {
-        event.getHook().deleteOriginal().queue();
-        log.error("Deferred reply command failed threw exception");
+        event.getHook().editOriginal(FAIL_TO_COMPLETE_MESSAGE).queue();
       }
       log.error("Command to execute: {}", e.getMessage(), e);
     } finally {
-
       if (!event.isAcknowledged()) {
-        event.reply("Command failed to complete").queue();
+        event.reply(FAIL_TO_COMPLETE_MESSAGE).queue();
       }
     }
   }

@@ -51,23 +51,23 @@ public class ListRemindersCommand extends AbstractVictCommand {
                     return String.format(
                         "Created at: %s, Message: %s, Target time:%s",
                         reminder
-                            .createdTime()
+                            .getCreatedTime()
                             .atZone(ZoneId.systemDefault())
                             .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
-                        reminder.message(),
+                        reminder.getMessage(),
                         reminder
-                            .targetTime()
+                            .getTargetTime()
                             .atZone(ZoneId.systemDefault())
                             .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
                   }
                   return String.format(
                       "Created at: %s, Target time:%s",
                       reminder
-                          .createdTime()
+                          .getCreatedTime()
                           .atZone(ZoneId.systemDefault())
                           .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
                       reminder
-                          .targetTime()
+                          .getTargetTime()
                           .atZone(ZoneId.systemDefault())
                           .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
                 })
