@@ -62,31 +62,22 @@ public class ReminderService {
       String userId) {
 
     Instant now = Instant.now();
-    Reminder reminder =
-        Reminder.builder()
-            .id(null)
-            .createdTime(now)
-            .victUser(null)
-            .victGuild(null)
-            .message(message)
-            .personal(personal)
-            .targetTime(targetTime)
-            .channelSentFrom(channelSentFrom)
-            .build();
 
-    if (guildId != null) {
-      VictGuild victGuild =
-          victGuildService
-              .findById(guildId)
-              .orElseThrow(() -> new EntityNotFoundException("Vict Guild not found"));
-      reminder.setVictGuild(victGuild);
-    }
+    VictGuild victGuild =
+        guildId == null
+            ? null
+            : victGuildService
+                .findById(guildId)
+                .orElseThrow(() -> new EntityNotFoundException("Vict Guild not found"));
 
     VictUser victUser =
         victUserService
             .findById(userId)
             .orElseThrow(() -> new EntityNotFoundException("Vict User not found"));
-    reminder.setVictUser(victUser);
+
+    Reminder reminder =
+        new Reminder(
+            null, now, message, targetTime, victUser, victGuild, channelSentFrom, personal);
 
     reminderRepository.save(reminder);
   }

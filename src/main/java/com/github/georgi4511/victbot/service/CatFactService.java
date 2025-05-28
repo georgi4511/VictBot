@@ -1,7 +1,5 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.service;
 
-import com.github.georgi4511.victbot.service.dto.CatFactDto;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,13 +15,15 @@ public class CatFactService {
   }
 
   public String getRandomCatFact() {
-    ResponseEntity<CatFactDto> response =
-        restTemplate.getForEntity(CAT_FACT_API_URL, CatFactDto.class);
+    ResponseEntity<CatFactRes> response =
+        restTemplate.getForEntity(CAT_FACT_API_URL, CatFactRes.class);
     HttpStatusCode responseStatusCode = response.getStatusCode();
-    CatFactDto responseBody = response.getBody();
+    CatFactRes responseBody = response.getBody();
     if (responseStatusCode.is2xxSuccessful() && responseBody != null) {
-      return responseBody.getFact();
+      return responseBody.fact();
     }
     return "Sorry, I couldn't fetch a cat fact right now.";
   }
+
+  private record CatFactRes(String fact) {}
 }

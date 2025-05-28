@@ -9,6 +9,9 @@ import com.github.georgi4511.victbot.service.BookmarkService;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
 import com.github.georgi4511.victbot.util.Util;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
@@ -23,10 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Profile("!dev")
@@ -52,7 +51,9 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
       VictGuildService victGuildService,
       BookmarkService bookmarkService) {
 
-    this.commandMap = commandList.stream().collect(Collectors.toMap(VictCommand::getName, victCommand -> victCommand));
+    this.commandMap =
+        commandList.stream()
+            .collect(Collectors.toMap(VictCommand::getName, victCommand -> victCommand));
     this.victUserService = victUserService;
     this.victGuildService = victGuildService;
     this.bookmarkService = bookmarkService;
@@ -132,7 +133,6 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
     cooldownRecords.remove(cooldownRecord);
   }
 
-
   @Override
   public void validateExistingOrCreateEntities(User eventUser, Guild eventGuild) {
     if (!victUserService.existsById(eventUser.getId())) {
@@ -172,7 +172,7 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
           .getByAlias(alias)
           .ifPresent(
               bookmark ->
-                  event.getChannel().asTextChannel().sendMessage(bookmark.getResponse()).queue());
+                  event.getChannel().asTextChannel().sendMessage(bookmark.response()).queue());
     }
   }
 

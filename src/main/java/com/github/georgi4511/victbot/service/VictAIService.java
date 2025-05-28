@@ -1,4 +1,3 @@
-/* (C)2025 */
 package com.github.georgi4511.victbot.service;
 
 import org.springframework.ai.chat.client.ChatClient;

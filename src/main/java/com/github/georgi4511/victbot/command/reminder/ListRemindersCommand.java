@@ -45,24 +45,28 @@ public class ListRemindersCommand implements VictCommand {
       String message =
           reminders.stream()
               .map(
-                  r -> {
+                  reminder -> {
                     if (showMessages) {
                       return String.format(
                           "Created at: %s, Message: %s, Target time:%s",
-                          r.getCreatedTime()
+                          reminder
+                              .createdTime()
                               .atZone(ZoneId.systemDefault())
                               .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
-                          r.getMessage(),
-                          r.getTargetTime()
+                          reminder.message(),
+                          reminder
+                              .targetTime()
                               .atZone(ZoneId.systemDefault())
                               .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
                     }
                     return String.format(
                         "Created at: %s, Target time:%s",
-                        r.getCreatedTime()
+                        reminder
+                            .createdTime()
                             .atZone(ZoneId.systemDefault())
                             .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
-                        r.getTargetTime()
+                        reminder
+                            .targetTime()
                             .atZone(ZoneId.systemDefault())
                             .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
                   })

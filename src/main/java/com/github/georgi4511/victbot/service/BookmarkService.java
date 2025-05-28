@@ -1,6 +1,8 @@
 package com.github.georgi4511.victbot.service;
 
 import com.github.georgi4511.victbot.model.Bookmark;
+import com.github.georgi4511.victbot.model.VictGuild;
+import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.repository.BookmarkRepository;
 import java.time.Instant;
 import java.util.List;
@@ -34,12 +36,14 @@ public class BookmarkService {
 
   public void create(String alias, String response, String victGuildId, String victUserId) {
     Instant now = Instant.now();
-    Bookmark bookmark = new Bookmark(now, alias, response);
 
-    victUserService.findById(victUserId).ifPresent(bookmark::setVictUser);
-    if (victGuildId != null) {
-      victGuildService.findById(victGuildId).ifPresent(bookmark::setVictGuild);
-    }
+    VictUser victUser = victUserService.findById(victUserId).orElse(null);
+
+    VictGuild victGuild =
+        victGuildId == null ? null : victGuildService.findById(victGuildId).orElse(null);
+
+    Bookmark bookmark = new Bookmark(now, alias, response, victUser, victGuild);
+
     bookmarkRepository.save(bookmark);
   }
 
