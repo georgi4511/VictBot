@@ -42,7 +42,7 @@ public class BookmarkService {
     VictGuild victGuild =
         victGuildId == null ? null : victGuildService.findById(victGuildId).orElse(null);
 
-    Bookmark bookmark = new Bookmark(now, alias, response, victUser, victGuild);
+    Bookmark bookmark = new Bookmark(null, now, alias, response, victUser, victGuild);
 
     bookmarkRepository.save(bookmark);
   }

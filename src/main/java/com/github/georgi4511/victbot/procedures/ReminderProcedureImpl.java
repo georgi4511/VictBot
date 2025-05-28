@@ -2,8 +2,6 @@ package com.github.georgi4511.victbot.procedures;
 
 import com.github.georgi4511.victbot.model.Reminder;
 import com.github.georgi4511.victbot.service.ReminderService;
-import java.time.Instant;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
@@ -14,6 +12,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -31,7 +32,7 @@ public class ReminderProcedureImpl implements ReminderProcedure {
     List<Reminder> reminders = reminderService.findAll();
     Instant now = Instant.now();
     List<Reminder> triggeredReminders =
-        reminders.stream().filter(reminder -> now.isAfter(reminder.targetTime())).toList();
+        reminders.stream().filter(reminder -> now.isAfter(reminder.getTargetTime())).toList();
 
     if (triggeredReminders.isEmpty()) {
       return;
@@ -44,7 +45,7 @@ public class ReminderProcedureImpl implements ReminderProcedure {
   @Override
   public void sendReminder(Reminder reminder) {
 
-    String victUserId = reminder.victUser().id();
+    String victUserId = reminder.getVictUser().getId();
     User user = jda.getUserById(victUserId);
 
     if (user == null) {
@@ -53,14 +54,14 @@ public class ReminderProcedureImpl implements ReminderProcedure {
     }
 
     String message =
-        String.format("%s, you have a reminder:%n%s", user.getAsMention(), reminder.message());
+        String.format("%s, you have a reminder:%n%s", user.getAsMention(), reminder.getMessage());
 
-    if (reminder.personal()) {
-      user.openPrivateChannel().flatMap(channel -> channel.sendMessage(message)).queue();
+    if (reminder.getPersonal()) {
+      user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessage(message)).queue();
       return;
     }
 
-    String channelId = reminder.channelSentFrom();
+    String channelId = reminder.getChannelSentFrom();
     TextChannel channel = jda.getChannelById(TextChannel.class, channelId);
 
     if (channel == null) {
