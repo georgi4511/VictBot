@@ -1,7 +1,7 @@
 package com.github.georgi4511.victbot.command.reminder;
 
+import com.github.georgi4511.victbot.model.AbstractVictCommand;
 import com.github.georgi4511.victbot.model.Reminder;
-import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.ReminderService;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -9,6 +9,7 @@ import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Objects;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -18,10 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Component
 @RequiredArgsConstructor
-public class ListRemindersCommand implements VictCommand {
+public class ListRemindersCommand extends AbstractVictCommand {
   public static final String SHOW_MESSAGE = "show-message";
   private static final Logger log = LoggerFactory.getLogger(ListRemindersCommand.class);
   private final ReminderService reminderService;
@@ -32,53 +34,45 @@ public class ListRemindersCommand implements VictCommand {
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
-    try {
 
-      List<Reminder> reminders = reminderService.findByUserId(event.getUser().getId());
-      if (reminders.isEmpty()) {
-        event.reply("There are no currently existing reminders, how about you add one?").queue();
-        return;
-      }
+    List<Reminder> reminders = reminderService.findByUserId(event.getUser().getId());
+    if (reminders.isEmpty()) {
+      event.reply("There are no currently existing reminders, how about you add one?").queue();
+      return;
+    }
 
-      boolean showMessages = Objects.requireNonNull(event.getOption(SHOW_MESSAGE)).getAsBoolean();
+    boolean showMessages = Objects.requireNonNull(event.getOption(SHOW_MESSAGE)).getAsBoolean();
 
-      String message =
-          reminders.stream()
-              .map(
-                  reminder -> {
-                    if (showMessages) {
-                      return String.format(
-                          "Created at: %s, Message: %s, Target time:%s",
-                          reminder
-                              .createdTime()
-                              .atZone(ZoneId.systemDefault())
-                              .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
-                          reminder.message(),
-                          reminder
-                              .targetTime()
-                              .atZone(ZoneId.systemDefault())
-                              .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
-                    }
+    String message =
+        reminders.stream()
+            .map(
+                reminder -> {
+                  if (showMessages) {
                     return String.format(
-                        "Created at: %s, Target time:%s",
+                        "Created at: %s, Message: %s, Target time:%s",
                         reminder
                             .createdTime()
                             .atZone(ZoneId.systemDefault())
                             .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
+                        reminder.message(),
                         reminder
                             .targetTime()
                             .atZone(ZoneId.systemDefault())
                             .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
-                  })
-              .reduce("Currently existing reminders:", (agg, curr) -> agg + "\n" + curr);
+                  }
+                  return String.format(
+                      "Created at: %s, Target time:%s",
+                      reminder
+                          .createdTime()
+                          .atZone(ZoneId.systemDefault())
+                          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
+                      reminder
+                          .targetTime()
+                          .atZone(ZoneId.systemDefault())
+                          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+                })
+            .reduce("Currently existing reminders:", (agg, curr) -> agg + "\n" + curr);
 
-      event.reply(message).queue();
-
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-      if (!event.isAcknowledged()) {
-        event.reply("Failed to execute command").queue();
-      }
-    }
+    event.reply(message).queue();
   }
 }

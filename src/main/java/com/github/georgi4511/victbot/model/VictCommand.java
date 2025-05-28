@@ -5,23 +5,20 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 public interface VictCommand {
+
   void callback(SlashCommandInteractionEvent event);
 
-  default void handleSelectInteraction(StringSelectInteractionEvent event) {
-    event.reply("Not implemented").queue();
-  }
+  void handleSelectInteraction(StringSelectInteractionEvent event);
 
   SlashCommandData getData();
 
-  default String getName() {
-    return getData().getName();
-  }
+  void executeCallback(SlashCommandInteractionEvent event);
 
-  default Long getCooldown() {
-    return 5L;
-  }
+  String getName();
 
-  default Boolean getDevCommand() {
-    return false;
-  }
+  Long getCooldown();
+
+  Boolean getDevCommand();
+
+  Boolean getIsDeferred();
 }

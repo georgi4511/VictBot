@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.reminder;
 
-import com.github.georgi4511.victbot.model.VictCommand;
+import com.github.georgi4511.victbot.model.AbstractVictCommand;
 import com.github.georgi4511.victbot.service.ReminderService;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -9,6 +9,7 @@ import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -22,10 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @RequiredArgsConstructor
 @Component
-public class AddReminderCommand implements VictCommand {
+public class AddReminderCommand extends AbstractVictCommand {
   public static final String MESSAGE = "message";
   public static final String PERSONAL = "personal";
   public static final String TARGET_TIME = "target-time";
@@ -64,47 +66,40 @@ public class AddReminderCommand implements VictCommand {
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
-    try {
-      String message = "";
-      boolean personal = false;
-      int time = 1;
-      String chronoUnitS = MINUTES;
-      List<OptionMapping> options = event.getOptions();
+    String message = "";
+    boolean personal = false;
+    int time = 1;
+    String chronoUnitS = MINUTES;
+    List<OptionMapping> options = event.getOptions();
 
-      for (OptionMapping option : options) {
-        switch (option.getName()) {
-          case MESSAGE -> message = option.getAsString();
-          case PERSONAL -> personal = option.getAsBoolean();
-          case TARGET_TIME -> time = option.getAsInt();
-          case TIME_UNIT -> chronoUnitS = option.getAsString();
-          default -> log.info("Unexpected option received, {}", option.getName());
-        }
-      }
-
-      String channelId = event.getChannelId();
-
-      Guild guild = event.getGuild();
-      String guildId = guild == null ? null : guild.getId();
-      String userId = event.getUser().getId();
-
-      Instant targetTime = Instant.now().plus(time, ChronoUnit.valueOf(chronoUnitS.toUpperCase()));
-      reminderService.create(message, personal, targetTime, channelId, guildId, userId);
-
-      event
-          .reply(
-              String.format(
-                  "Set reminder for: %s",
-                  targetTime
-                      .atZone(ZoneId.systemDefault())
-                      .format(
-                          DateTimeFormatter.ofLocalizedDateTime(
-                              FormatStyle.FULL, FormatStyle.MEDIUM))))
-          .queue();
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-      if (!event.isAcknowledged()) {
-        event.reply("Failed to execute command").queue();
+    for (OptionMapping option : options) {
+      switch (option.getName()) {
+        case MESSAGE -> message = option.getAsString();
+        case PERSONAL -> personal = option.getAsBoolean();
+        case TARGET_TIME -> time = option.getAsInt();
+        case TIME_UNIT -> chronoUnitS = option.getAsString();
+        default -> log.info("Unexpected option received, {}", option.getName());
       }
     }
+
+    String channelId = event.getChannelId();
+
+    Guild guild = event.getGuild();
+    String guildId = guild == null ? null : guild.getId();
+    String userId = event.getUser().getId();
+
+    Instant targetTime = Instant.now().plus(time, ChronoUnit.valueOf(chronoUnitS.toUpperCase()));
+    reminderService.create(message, personal, targetTime, channelId, guildId, userId);
+
+    event
+        .reply(
+            String.format(
+                "Set reminder for: %s",
+                targetTime
+                    .atZone(ZoneId.systemDefault())
+                    .format(
+                        DateTimeFormatter.ofLocalizedDateTime(
+                            FormatStyle.FULL, FormatStyle.MEDIUM))))
+        .queue();
   }
 }

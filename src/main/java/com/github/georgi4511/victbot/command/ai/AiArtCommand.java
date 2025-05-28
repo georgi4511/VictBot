@@ -1,10 +1,11 @@
 package com.github.georgi4511.victbot.command.ai;
 
+import com.github.georgi4511.victbot.model.AbstractVictCommand;
 import com.github.georgi4511.victbot.model.GenerateImageInput;
-import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.AiGenerationService;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -16,10 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Component
 @RequiredArgsConstructor
-public class AiArtCommand implements VictCommand {
+public class AiArtCommand extends AbstractVictCommand {
   public static final String PROMPT = "prompt";
   public static final String NEGATIVE_PROMPT = "negative-prompt";
   public static final String SAMPLER_NAME = "sampler-name";
@@ -40,22 +42,17 @@ public class AiArtCommand implements VictCommand {
           .addOption(OptionType.INTEGER, WIDTH, "width for image generation")
           .addOption(OptionType.INTEGER, HEIGHT, "height for image generation");
 
+  private Boolean isDeferred = true;
+
   @Override
   public void callback(SlashCommandInteractionEvent event) {
     event.deferReply().queue();
 
-    try {
+    GenerateImageInput imageInput = getGenerateImageInput(event.getOptions());
 
-      GenerateImageInput imageInput = getGenerateImageInput(event.getOptions());
+    byte[] image = aiGenerationService.generateImage(imageInput);
 
-      byte[] image = aiGenerationService.generateImage(imageInput);
-
-      event.getHook().editOriginalAttachments(AttachedFile.fromData(image, "o.png")).queue();
-
-    } catch (Exception e) {
-      log.info(e.getMessage());
-      event.getHook().editOriginal("Sorry command failed to execute").queue();
-    }
+    event.getHook().editOriginalAttachments(AttachedFile.fromData(image, "o.png")).queue();
   }
 
   private GenerateImageInput getGenerateImageInput(List<OptionMapping> options) {
