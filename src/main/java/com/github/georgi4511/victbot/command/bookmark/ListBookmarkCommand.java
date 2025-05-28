@@ -3,17 +3,18 @@ package com.github.georgi4511.victbot.command.bookmark;
 import com.github.georgi4511.victbot.model.Bookmark;
 import com.github.georgi4511.victbot.model.VictCommand;
 import com.github.georgi4511.victbot.service.BookmarkService;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.List;
-import java.util.Objects;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.springframework.stereotype.Component;
+
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.List;
+import java.util.Objects;
 
 @Data
 @Component
@@ -47,18 +48,18 @@ public class ListBookmarkCommand implements VictCommand {
                       "%s - %s - %s%n"
                           .formatted(
                               bookmark
-                                  .getCreatedTime()
+                                  .createdTime()
                                   .atZone(ZoneId.systemDefault())
                                   .format(
                                       DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
-                              bookmark.getAlias(),
-                              bookmark.getResponse()))
+                              bookmark.alias(),
+                              bookmark.response()))
               .reduce(String::concat)
               .orElse("No bookmarks found");
 
       event.reply(message).queue();
 
-    } catch (Exception e) {
+    } catch (Exception _) {
       if (!event.isAcknowledged()) event.reply("Failed to execute command").queue();
     }
   }

@@ -4,36 +4,38 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
-import lombok.*;
-import lombok.Builder.Default;
 
-@Data
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Table(name = "vict_guild")
-public class VictGuild {
+public record VictGuild(
+    @Id String id,
+    @JsonIgnore @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
+        Set<Reminder> reminders,
+    @JsonIgnore @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
+        Set<Bookmark> bookmarks,
+    @NotNull Long badBotImpressions,
+    @NotNull Long goodBotImpressions) {
 
   public VictGuild(String id) {
-    this.id = id;
-    this.badBotImpressions = 0L;
-    this.goodBotImpressions = 0L;
-    this.bookmarks = null;
-    this.reminders = null;
+    this(id, null, null, 0L, 0L);
   }
 
-  @Id String id;
+  public VictGuild incrementImpressions(Integer good, Integer bad) {
+    if (good == null) {
+      good = 0;
+    }
+    if (bad == null) {
+      bad = 0;
+    }
+    return new VictGuild(
+        id, reminders, bookmarks, badBotImpressions + bad, goodBotImpressions + good);
+  }
 
-  @JsonIgnore
-  @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
-  Set<Reminder> reminders;
+  public VictGuild incrementGoodImpressions(Integer good) {
+    return incrementImpressions(good, null);
+  }
 
-  @JsonIgnore
-  @OneToMany(mappedBy = "victGuild", cascade = CascadeType.ALL)
-  Set<Bookmark> bookmarks;
-
-  @Default @NotNull private Long badBotImpressions = 0L;
-
-  @Default @NotNull private Long goodBotImpressions = 0L;
+  public VictGuild incrementBadImpressions(Integer bad) {
+    return incrementImpressions(null, bad);
+  }
 }

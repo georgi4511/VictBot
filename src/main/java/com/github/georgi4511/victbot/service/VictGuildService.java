@@ -36,8 +36,7 @@ public class VictGuildService {
       return optionalVictGuild.get();
     }
 
-    VictGuild victGuild = new VictGuild();
-    victGuild.setId(victGuildId);
+    VictGuild victGuild = new VictGuild(victGuildId);
     return victGuildRepository.save(victGuild);
   }
 
@@ -60,13 +59,11 @@ public class VictGuildService {
 
   public Long incrementBadBotImpressions(String id) {
     VictGuild victGuild = findByIdOrCreate(id);
-    victGuild.setBadBotImpressions(victGuild.getBadBotImpressions() + 1);
-    return victGuildRepository.save(victGuild).getBadBotImpressions();
+    return victGuildRepository.save(victGuild.incrementBadImpressions(1)).badBotImpressions();
   }
 
   public Long incrementGoodBotImpressions(String id) {
     VictGuild victGuild = findByIdOrCreate(id);
-    victGuild.setGoodBotImpressions(victGuild.getGoodBotImpressions() + 1);
-    return victGuildRepository.save(victGuild).getGoodBotImpressions();
+    return victGuildRepository.save(victGuild.incrementGoodImpressions(1)).goodBotImpressions();
   }
 }
