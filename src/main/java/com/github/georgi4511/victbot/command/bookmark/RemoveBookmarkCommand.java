@@ -1,8 +1,10 @@
 package com.github.georgi4511.victbot.command.bookmark;
 
 import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.model.Bookmark;
 import com.github.georgi4511.victbot.service.BookmarkService;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +28,22 @@ public class RemoveBookmarkCommand extends AbstractVictCommand {
   @Override
   public void callback(SlashCommandInteractionEvent event) {
     String alias = Objects.requireNonNull(event.getOption(ALIAS)).getAsString();
-    String userDiscordId = Objects.requireNonNull(event.getUser()).getId();
+    String victUserId = Objects.requireNonNull(event.getUser()).getId();
 
-    boolean result = bookmarkService.removeByAliasAndVictUserId(alias, userDiscordId);
+    Optional<Bookmark> optionalBookmark =
+        bookmarkService.getByAliasAndVictUserId(alias, victUserId);
 
-    if (!result) {
-      event.reply("Failed to remove bookmark").queue();
+    if (optionalBookmark.isEmpty()) {
+      event
+          .reply(
+              String.format(
+                  "Bookmark does not exist for user %s", event.getUser().getEffectiveName()))
+          .queue();
       return;
     }
-    event.reply("Bookmark removed").queue();
+
+    boolean result = bookmarkService.removeByAliasAndVictUserId(alias, victUserId);
+
+    event.reply(result ? "Bookmark removed" : "Failed to remove bookmark").queue();
   }
 }

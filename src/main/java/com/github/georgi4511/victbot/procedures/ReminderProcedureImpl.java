@@ -2,6 +2,8 @@ package com.github.georgi4511.victbot.procedures;
 
 import com.github.georgi4511.victbot.model.Reminder;
 import com.github.georgi4511.victbot.service.ReminderService;
+import java.time.Instant;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
@@ -12,9 +14,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -39,7 +38,7 @@ public class ReminderProcedureImpl implements ReminderProcedure {
     }
 
     triggeredReminders.forEach(this::sendReminder);
-    reminderService.delete(triggeredReminders);
+    reminderService.deleteAll(triggeredReminders);
   }
 
   @Override
@@ -57,7 +56,9 @@ public class ReminderProcedureImpl implements ReminderProcedure {
         String.format("%s, you have a reminder:%n%s", user.getAsMention(), reminder.getMessage());
 
     if (reminder.getPersonal()) {
-      user.openPrivateChannel().flatMap(privateChannel -> privateChannel.sendMessage(message)).queue();
+      user.openPrivateChannel()
+          .flatMap(privateChannel -> privateChannel.sendMessage(message))
+          .queue();
       return;
     }
 

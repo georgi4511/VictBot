@@ -96,7 +96,7 @@ public class AddReminderCommand extends AbstractVictCommand {
             String.format(
                 "Set reminder for: %s",
                 targetTime
-                    .atZone(ZoneId.systemDefault())
+                    .atZone(ZoneId.of("UTC"))
                     .format(
                         DateTimeFormatter.ofLocalizedDateTime(
                             FormatStyle.FULL, FormatStyle.MEDIUM))))

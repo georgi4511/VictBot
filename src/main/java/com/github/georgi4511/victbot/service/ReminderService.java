@@ -5,12 +5,13 @@ import com.github.georgi4511.victbot.model.VictGuild;
 import com.github.georgi4511.victbot.model.VictUser;
 import com.github.georgi4511.victbot.repository.ReminderRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,24 +30,12 @@ public class ReminderService {
     return reminderRepository.findByVictUserId(victUserId);
   }
 
-  public List<Reminder> findByVictUserAndVictGuild(String victGuildId, String victUserId) {
-    return reminderRepository.findByVictGuildIdAndVictUserId(victGuildId, victUserId);
-  }
-
   public List<Reminder> findByVictGuildId(String victGuildId) {
     return reminderRepository.findByVictGuildId(victGuildId);
   }
 
-  public List<Reminder> findByUserId(String victUserId) {
-    return reminderRepository.findByVictUserId(victUserId);
-  }
-
-  public void delete(List<Reminder> reminders) {
+  public void deleteAll(List<Reminder> reminders) {
     reminderRepository.deleteAll(reminders);
-  }
-
-  public void delete(Reminder reminders) {
-    reminderRepository.delete(reminders);
   }
 
   public Reminder create(Reminder reminder) {
@@ -88,5 +77,9 @@ public class ReminderService {
 
   public Optional<Reminder> findById(Long id) {
     return reminderRepository.findById(id);
+  }
+
+  public List<Reminder> findByVictUserIdAndMessage(String victUserId, String message) {
+    return reminderRepository.findByVictUserIdAndMessage(victUserId, message);
   }
 }

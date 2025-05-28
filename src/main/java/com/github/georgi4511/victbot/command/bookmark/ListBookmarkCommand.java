@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.springframework.stereotype.Component;
@@ -21,19 +23,19 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ListBookmarkCommand extends AbstractVictCommand {
+  public static final String SHOW_GUILDS = "show-guilds";
   private final SlashCommandData data =
-      Commands.slash("list-bookmark", "Lists bookmarks created by user in server");
+      Commands.slash("list-bookmark", "Lists bookmarks created by user in server")
+          .addOption(
+              OptionType.BOOLEAN,
+              SHOW_GUILDS,
+              "to show the guilds reminders instead of you own",
+              false);
   private final BookmarkService bookmarkService;
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
-    String guildId = null;
-    if (event.isFromGuild()) {
-      guildId = Objects.requireNonNull(event.getGuild()).getId();
-    }
-    String userId = Objects.requireNonNull(event.getUser()).getId();
-
-    List<Bookmark> bookmarks = bookmarkService.getByGuildAndUser(guildId, userId);
+    List<Bookmark> bookmarks = getBookmarks(event);
 
     if (bookmarks.isEmpty()) {
       event.reply("No bookmarks found").queue();
@@ -48,13 +50,32 @@ public class ListBookmarkCommand extends AbstractVictCommand {
                         .formatted(
                             bookmark
                                 .getCreatedTime()
-                                .atZone(ZoneId.systemDefault())
+                                .atZone(ZoneId.of("UTC"))
                                 .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
                             bookmark.getAlias(),
                             bookmark.getResponse()))
-            .reduce(String::concat)
-            .orElse("No bookmarks found");
+            .reduce("", String::concat);
 
     event.reply(message).queue();
+  }
+
+  private List<Bookmark> getBookmarks(SlashCommandInteractionEvent event) {
+
+    OptionMapping bookmarksGuildOption = event.getOption(SHOW_GUILDS);
+
+    List<Bookmark> bookmarks;
+
+    if (!event.isFromGuild()) {
+      bookmarks = bookmarkService.getByVictUserId(event.getUser().getId());
+    } else if (bookmarksGuildOption != null && bookmarksGuildOption.getAsBoolean()) {
+      bookmarks =
+          bookmarkService.getByVictGuildId(Objects.requireNonNull(event.getGuild()).getId());
+    } else {
+      bookmarks =
+          bookmarkService.getByGuildAndUser(
+              Objects.requireNonNull(event.getGuild()).getId(), event.getUser().getId());
+    }
+
+    return bookmarks;
   }
 }
