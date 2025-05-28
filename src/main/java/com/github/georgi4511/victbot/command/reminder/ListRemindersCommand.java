@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
@@ -25,17 +26,24 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ListRemindersCommand extends AbstractVictCommand {
   public static final String SHOW_MESSAGE = "show-message";
+  public static final String SHOW_GUILDS = "show-guilds";
+  public static final DateTimeFormatter DATE_TIME_FORMATTER =
+      DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withZone(ZoneId.of("UTC"));
   private static final Logger log = LoggerFactory.getLogger(ListRemindersCommand.class);
   private final ReminderService reminderService;
   private SlashCommandData data =
       Commands.slash("list-reminders", "Lists all your reminders for whatever whenever")
           .addOption(
-              OptionType.BOOLEAN, SHOW_MESSAGE, "to show the message or keep it hidden", true);
+              OptionType.BOOLEAN, SHOW_MESSAGE, "to show the message or keep it hidden", true)
+          .addOption(
+              OptionType.BOOLEAN,
+              SHOW_GUILDS,
+              "to show the guilds bookmarks instead of you own",
+              false);
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {
-
-    List<Reminder> reminders = reminderService.findByUserId(event.getUser().getId());
+    List<Reminder> reminders = getReminders(event);
     if (reminders.isEmpty()) {
       event.reply("There are no currently existing reminders, how about you add one?").queue();
       return;
@@ -47,32 +55,34 @@ public class ListRemindersCommand extends AbstractVictCommand {
         reminders.stream()
             .map(
                 reminder -> {
+                  String line =
+                      String.format(
+                          "Created at: %s, Target time:%s",
+                          DATE_TIME_FORMATTER.format(reminder.getCreatedTime()),
+                          DATE_TIME_FORMATTER.format(reminder.getTargetTime()));
+
                   if (showMessages) {
-                    return String.format(
-                        "Created at: %s, Message: %s, Target time:%s",
-                        reminder
-                            .getCreatedTime()
-                            .atZone(ZoneId.systemDefault())
-                            .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
-                        reminder.getMessage(),
-                        reminder
-                            .getTargetTime()
-                            .atZone(ZoneId.systemDefault())
-                            .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+                    return line.concat(String.format(", Message:%n %s", reminder.getMessage()));
                   }
-                  return String.format(
-                      "Created at: %s, Target time:%s",
-                      reminder
-                          .getCreatedTime()
-                          .atZone(ZoneId.systemDefault())
-                          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
-                      reminder
-                          .getTargetTime()
-                          .atZone(ZoneId.systemDefault())
-                          .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+
+                  return line.concat(String.format("%n"));
                 })
-            .reduce("Currently existing reminders:", (agg, curr) -> agg + "\n" + curr);
+            .reduce(String.format("Currently existing reminders:%n"), String::concat);
 
     event.reply(message).queue();
+  }
+
+  private List<Reminder> getReminders(SlashCommandInteractionEvent event) {
+    OptionMapping reminderGuildOption = event.getOption(SHOW_GUILDS);
+
+    List<Reminder> reminders;
+
+    if (event.isFromGuild() && reminderGuildOption != null && reminderGuildOption.getAsBoolean()) {
+      reminders =
+          reminderService.findByVictGuildId(Objects.requireNonNull(event.getGuild()).getId());
+    } else {
+      reminders = reminderService.findByVictUserId(event.getUser().getId());
+    }
+    return reminders;
   }
 }

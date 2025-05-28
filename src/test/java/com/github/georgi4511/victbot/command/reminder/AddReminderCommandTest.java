@@ -48,7 +48,7 @@ class AddReminderCommandTest {
             "Set reminder for: %s",
             Instant.now()
                 .plus(1, ChronoUnit.MINUTES)
-                .atZone(ZoneId.systemDefault())
+                .atZone(ZoneId.of("UTC"))
                 .format(
                     DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.MEDIUM))),
         value);

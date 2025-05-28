@@ -1,10 +1,7 @@
 package com.github.georgi4511.victbot.listener;
 
 import com.github.georgi4511.victbot.exception.CommandUnderCooldownException;
-import com.github.georgi4511.victbot.model.CommandCooldownRecord;
-import com.github.georgi4511.victbot.model.VictCommand;
-import com.github.georgi4511.victbot.model.VictGuild;
-import com.github.georgi4511.victbot.model.VictUser;
+import com.github.georgi4511.victbot.model.*;
 import com.github.georgi4511.victbot.service.BookmarkService;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
@@ -167,13 +164,20 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
     }
 
     if (content.startsWith("!")) {
-      String alias = content.substring(1);
-      bookmarkService
-          .getByAlias(alias)
-          .ifPresent(
-              bookmark ->
-                  event.getChannel().asTextChannel().sendMessage(bookmark.getResponse()).queue());
+      trySendBookmark(event, content);
     }
+  }
+
+  private void trySendBookmark(@NotNull MessageReceivedEvent event, String aliasWithPrefix) {
+    String alias = aliasWithPrefix.substring(1);
+    Optional<Bookmark> optionalBookmark;
+    if (event.isFromGuild()) {
+      optionalBookmark = bookmarkService.getByAliasAndVictGuildId(alias, event.getGuild().getId());
+    } else {
+      optionalBookmark = bookmarkService.getByAliasAndVictUserId(alias, event.getAuthor().getId());
+    }
+    optionalBookmark.ifPresent(
+        bookmark -> event.getChannel().asTextChannel().sendMessage(bookmark.getResponse()).queue());
   }
 
   @Override

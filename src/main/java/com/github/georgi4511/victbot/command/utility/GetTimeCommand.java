@@ -26,7 +26,7 @@ public class GetTimeCommand extends AbstractVictCommand {
     event
         .reply(
             Instant.now()
-                .atZone(ZoneId.systemDefault())
+                .atZone(ZoneId.of("UTC"))
                 .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)))
         .queue();
   }

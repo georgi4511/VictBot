@@ -56,11 +56,20 @@ public class BookmarkService {
   }
 
   @Transactional(readOnly = true)
-  public Optional<Bookmark> getByAlias(String alias) {
-    return bookmarkRepository.findByAlias(alias);
+  public Optional<Bookmark> getByAliasAndVictGuildId(String alias, String victGuildId) {
+    return bookmarkRepository.findByAliasAndVictGuildId(alias, victGuildId);
+  }
+
+  @Transactional(readOnly = true)
+  public Optional<Bookmark> getByAliasAndVictUserId(String alias, String victUserId) {
+    return bookmarkRepository.findByAliasAndVictUserId(alias, victUserId);
   }
 
   public boolean removeByAliasAndVictUserId(String alias, String userId) {
     return bookmarkRepository.deleteByVictUserIdAndAlias(userId, alias) > 0;
+  }
+
+  public List<Bookmark> getByVictUserId(String victUserId) {
+    return bookmarkRepository.findByVictUserId(victUserId);
   }
 }
