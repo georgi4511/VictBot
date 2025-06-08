@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("!dev")
+@Profile({"local", "prod"})
 public class DiscordEventListener extends ListenerAdapter implements CommandInteractionHandler {
 
   private static final Logger log = LoggerFactory.getLogger(DiscordEventListener.class);
@@ -36,10 +36,10 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
 
   private final Map<User, ArrayList<CommandCooldownRecord>> commandCooldownMap;
 
-  @Value("${vict.twitter.fix:true}")
+  @Value("${vict.twitter.fix:false}")
   boolean fixTwitterFlag;
 
-  @Value("${vict.discord.guilds}")
+  @Value("${vict.discord.guilds:}")
   private List<String> guilds;
 
   DiscordEventListener(

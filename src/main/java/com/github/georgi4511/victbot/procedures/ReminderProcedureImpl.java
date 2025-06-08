@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-@Profile("!dev")
+@Profile({"local", "prod"})
 public class ReminderProcedureImpl implements ReminderProcedure {
 
   private static final Logger log = LoggerFactory.getLogger(ReminderProcedureImpl.class);

@@ -3,6 +3,7 @@ package com.github.georgi4511.victbot.service;
 import com.github.georgi4511.victbot.exception.GenerateImageException;
 import com.github.georgi4511.victbot.model.GenerateImageInput;
 import com.github.georgi4511.victbot.model.GenerateImageResponse;
+import java.util.Base64;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -12,16 +13,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
 
-import java.util.Base64;
-
 @Service
 public class AiGenerationService {
   private static final String GENERATE_ENDPOINT = "/sdapi/v1/txt2img";
-    private final ChatClient chatClient;
+  private final ChatClient chatClient;
   private final RestTemplate restTemplate;
 
   public AiGenerationService(
-      @Value("${vict.stable-diffusion.url}") String stableDiffusionUrl,
+      @Value("${vict.stable-diffusion.url:}") String stableDiffusionUrl,
       ChatClient.Builder builder,
       RestTemplateBuilder restTemplateBuilder) {
     this.chatClient = builder.build();

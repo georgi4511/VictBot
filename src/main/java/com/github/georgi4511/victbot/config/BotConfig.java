@@ -17,10 +17,10 @@ import org.springframework.core.env.MissingRequiredPropertiesException;
 
 @Configuration
 @RequiredArgsConstructor
-@Profile("!dev")
+@Profile({"local", "prod"})
 public class BotConfig {
 
-  private static final EnumSet<GatewayIntent> intents =
+  private static final EnumSet<GatewayIntent> GATEWAY_INTENTS =
       EnumSet.of(
           GatewayIntent.GUILD_MESSAGES,
           GatewayIntent.GUILD_VOICE_STATES,
@@ -29,7 +29,7 @@ public class BotConfig {
           GatewayIntent.SCHEDULED_EVENTS,
           GatewayIntent.GUILD_PRESENCES);
 
-  @Value("${vict.discord.token}")
+  @Value("${vict.discord.token:}")
   private String token;
 
   @Bean
@@ -40,7 +40,7 @@ public class BotConfig {
     }
 
     JDA jda =
-        JDABuilder.create(token, intents)
+        JDABuilder.create(token, GATEWAY_INTENTS)
             .setActivity(Activity.listening("Chilling...killing"))
             .addEventListeners(discordEventListener)
             .setStatus(OnlineStatus.DO_NOT_DISTURB)

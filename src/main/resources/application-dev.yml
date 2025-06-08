@@ -1,42 +1,5 @@
-spring:
-  datasource:
-    url: jdbc:h2:mem:db
-    username: ${DATABASE_USER}
-    password: ${DATABASE_PASS}
-    driverClassName: org.h2.Driver
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  ai:
-    ollama:
-      base-url: http://localhost:11434
-      chat:
-        options:
-          model: llama3.2
-          temperature: 0.7
-  sql:
-    init:
-      mode: always
-  jpa:
-    defer-datasource-initialization: true
-    generate-ddl: true
-    hibernate:
-      ddl-auto: create-drop
-    open-in-view: false
-  application:
-    name: VictBot
-springdoc:
-  swagger-ui:
-    path: /
-
-vict:
-  twitter:
-    fix: false
-  procedure:
-    logging:
-      cron: "0 0 * * * ?"
-    reminder:
-      cron: "0 * * * * ?"
-  stable-diffusion:
-    url: ${STABLE_DIFFUSION_URL}
+# Logging Config
+logging:
+  file:
+    path: logs/
+    name: logs/victBot.log

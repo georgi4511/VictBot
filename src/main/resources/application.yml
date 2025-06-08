@@ -1,8 +1,7 @@
+# Spring Config
 spring:
-  profiles:
-    active: local
   datasource:
-    url: jdbc:h2:file:./assets/database
+    url: jdbc:h2:mem:db
     username: ${DATABASE_USER}
     password: ${DATABASE_PASS}
     driverClassName: org.h2.Driver
@@ -23,28 +22,20 @@ spring:
     defer-datasource-initialization: true
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     open-in-view: false
-  sql:
-    init:
-      mode: never
   application:
     name: VictBot
 
+
+# Swagger Config
 springdoc:
   swagger-ui:
     path: /
 
+
+# Custom Config
 vict:
-  twitter:
-    fix: false
-  discord:
-    token: ${BOT_TOKEN}
-    guilds: ${BOT_GUILDS}
-  procedure:
-    logging:
-      cron: "0 0 * * * ?"
-    reminder:
-      cron: "0 * * * * ?"
+  # AI Dependencies
   stable-diffusion:
     url: ${STABLE_DIFFUSION_URL}
