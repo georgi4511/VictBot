@@ -3,6 +3,7 @@ package com.github.georgi4511.victbot.procedures;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 @NoArgsConstructor
 @Profile({"local", "prod"})
+@ConditionalOnProperty("vict.procedure.logging.cron")
 @Service
 public class LoggingProcedure {
 

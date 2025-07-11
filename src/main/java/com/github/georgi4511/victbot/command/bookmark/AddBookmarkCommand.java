@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.bookmark;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.service.BookmarkService;
 import java.util.Objects;
 import lombok.Data;
@@ -26,19 +26,18 @@ public class AddBookmarkCommand extends AbstractVictCommand {
   private final BookmarkService bookmarkService;
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-
-    String alias = Objects.requireNonNull(event.getOption(ALIAS)).getAsString();
-    String response = Objects.requireNonNull(event.getOption(RESPONSE)).getAsString();
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    String alias = Objects.requireNonNull(slashCommandInteractionEvent.getOption(ALIAS)).getAsString();
+    String response = Objects.requireNonNull(slashCommandInteractionEvent.getOption(RESPONSE)).getAsString();
 
     String guildId = null;
-    if (event.isFromGuild()) {
-      guildId = Objects.requireNonNull(event.getGuild()).getId();
+    if (slashCommandInteractionEvent.isFromGuild()) {
+      guildId = Objects.requireNonNull(slashCommandInteractionEvent.getGuild()).getId();
     }
-    String userId = Objects.requireNonNull(event.getUser()).getId();
+    String userId = Objects.requireNonNull(slashCommandInteractionEvent.getUser()).getId();
 
     bookmarkService.create(alias, response, guildId, userId);
 
-    event.reply("Bookmark created with alias: %s".formatted(alias)).queue();
+    slashCommandInteractionEvent.reply("Bookmark created with alias: %s".formatted(alias)).queue();
   }
 }

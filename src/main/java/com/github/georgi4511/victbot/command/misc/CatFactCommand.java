@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.misc;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.service.CatFactService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,8 +20,8 @@ public class CatFactCommand extends AbstractVictCommand {
   private final SlashCommandData data = Commands.slash("cat-fact", "receive random cat fact 🐈");
 
   @Override
-  public void callback(@NotNull SlashCommandInteractionEvent event) {
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
     String fact = catFactService.getRandomCatFact();
-    event.reply(fact).queue();
+    slashCommandInteractionEvent.reply(fact).queue();
   }
 }

@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.bookmark;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.model.Bookmark;
 import com.github.georgi4511.victbot.service.BookmarkService;
 import java.time.ZoneId;
@@ -34,11 +34,11 @@ public class ListBookmarkCommand extends AbstractVictCommand {
   private final BookmarkService bookmarkService;
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-    List<Bookmark> bookmarks = getBookmarks(event);
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    List<Bookmark> bookmarks = getBookmarks(slashCommandInteractionEvent);
 
     if (bookmarks.isEmpty()) {
-      event.reply("No bookmarks found").queue();
+      slashCommandInteractionEvent.reply("No bookmarks found").queue();
       return;
     }
 
@@ -56,7 +56,7 @@ public class ListBookmarkCommand extends AbstractVictCommand {
                             bookmark.getResponse()))
             .reduce("", String::concat);
 
-    event.reply(message).queue();
+    slashCommandInteractionEvent.reply(message).queue();
   }
 
   private List<Bookmark> getBookmarks(SlashCommandInteractionEvent event) {

@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,6 +19,7 @@ import org.springframework.core.env.MissingRequiredPropertiesException;
 @Configuration
 @RequiredArgsConstructor
 @Profile({"local", "prod"})
+@ConditionalOnProperty("vict.discord.token")
 public class BotConfig {
 
   private static final EnumSet<GatewayIntent> GATEWAY_INTENTS =

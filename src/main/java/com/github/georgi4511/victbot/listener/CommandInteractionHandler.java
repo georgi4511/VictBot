@@ -1,7 +1,7 @@
 package com.github.georgi4511.victbot.listener;
 
 import com.github.georgi4511.victbot.model.CommandCooldownRecord;
-import com.github.georgi4511.victbot.model.VictCommand;
+import com.github.georgi4511.victbot.command.VictCommand;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

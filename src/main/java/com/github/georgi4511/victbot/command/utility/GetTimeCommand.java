@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.utility;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -22,12 +22,13 @@ public class GetTimeCommand extends AbstractVictCommand {
   private Boolean devCommand = true;
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-    event
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    slashCommandInteractionEvent
         .reply(
             Instant.now()
                 .atZone(ZoneId.of("UTC"))
                 .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)))
         .queue();
   }
+
 }

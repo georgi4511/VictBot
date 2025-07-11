@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.ai;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.model.GenerateImageInput;
 import com.github.georgi4511.victbot.service.AiGenerationService;
 import java.util.List;
@@ -45,14 +45,14 @@ public class AiArtCommand extends AbstractVictCommand {
   private Boolean isDeferred = true;
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-    event.deferReply().queue();
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    slashCommandInteractionEvent.deferReply().queue();
 
-    GenerateImageInput imageInput = getGenerateImageInput(event.getOptions());
+    GenerateImageInput imageInput = getGenerateImageInput(slashCommandInteractionEvent.getOptions());
 
     byte[] image = aiGenerationService.generateImage(imageInput);
 
-    event.getHook().editOriginalAttachments(AttachedFile.fromData(image, "o.png")).queue();
+    slashCommandInteractionEvent.getHook().editOriginalAttachments(AttachedFile.fromData(image, "o.png")).queue();
   }
 
   private GenerateImageInput getGenerateImageInput(List<OptionMapping> options) {

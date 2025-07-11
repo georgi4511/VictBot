@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.impression;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,15 +23,15 @@ public class GoodBotImpressionCommand extends AbstractVictCommand {
   private SlashCommandData data = Commands.slash("good-bot", "When bot is good");
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-    Guild guild = event.getGuild();
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    Guild guild = slashCommandInteractionEvent.getGuild();
     if (guild == null) {
       throw new UnsupportedOperationException();
     }
 
     Long impressions = victGuildService.incrementGoodBotImpressions(guild.getId());
 
-    event
+    slashCommandInteractionEvent
         .reply(
             String.format(
                 "I have received %d good bot impressions. Thank you very much.", impressions))
