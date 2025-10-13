@@ -10,17 +10,18 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.MissingRequiredPropertiesException;
 
 @Configuration
 @RequiredArgsConstructor
-@Profile("!dev")
+@Profile({"local", "prod"})
+@ConditionalOnProperty("vict.discord.token")
 public class BotConfig {
 
-  private static final EnumSet<GatewayIntent> intents =
+  private static final EnumSet<GatewayIntent> GATEWAY_INTENTS =
       EnumSet.of(
           GatewayIntent.GUILD_MESSAGES,
           GatewayIntent.GUILD_VOICE_STATES,
@@ -29,26 +30,17 @@ public class BotConfig {
           GatewayIntent.SCHEDULED_EVENTS,
           GatewayIntent.GUILD_PRESENCES);
 
-  @Value("${vict.discord.token}")
-  private String token;
-
   @Bean
-  JDA jda(DiscordEventListener discordEventListener) throws InterruptedException {
-
-    if (token == null) {
-      throw new MissingRequiredPropertiesException();
-    }
-
+  JDA jda(DiscordEventListener discordEventListener, @Value("${vict.discord.token}") String token)
+      throws InterruptedException {
     JDA jda =
-        JDABuilder.create(token, intents)
+        JDABuilder.create(token, GATEWAY_INTENTS)
             .setActivity(Activity.listening("Chilling...killing"))
             .addEventListeners(discordEventListener)
             .setStatus(OnlineStatus.DO_NOT_DISTURB)
             .enableCache(CacheFlag.VOICE_STATE)
             .build();
 
-    jda.awaitReady();
-
-    return jda;
+    return jda.awaitReady();
   }
 }

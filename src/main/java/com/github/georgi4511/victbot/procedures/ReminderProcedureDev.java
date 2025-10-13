@@ -6,7 +6,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-@Profile("dev")
+@Profile({"default", "dev"})
 @Service
 @RequiredArgsConstructor
 public class ReminderProcedureDev implements ReminderProcedure {

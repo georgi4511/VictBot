@@ -1,4 +1,4 @@
-package com.github.georgi4511.victbot.procedures;
+package com.github.georgi4511.victbot.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +8,5 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableScheduling
 @EnableAsync
-@ConditionalOnProperty(name="scheduler.enabled", matchIfMissing = true)
-public class SchedulerConfig {
-}
+@ConditionalOnProperty(name = "scheduler.enabled", matchIfMissing = true)
+public class SchedulerConfig {}

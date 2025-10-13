@@ -1,5 +1,6 @@
 package com.github.georgi4511.victbot.listener;
 
+import com.github.georgi4511.victbot.command.VictCommand;
 import com.github.georgi4511.victbot.exception.CommandUnderCooldownException;
 import com.github.georgi4511.victbot.model.*;
 import com.github.georgi4511.victbot.service.BookmarkService;
@@ -7,6 +8,7 @@ import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
 import com.github.georgi4511.victbot.util.Util;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import net.dv8tion.jda.api.JDA;
@@ -25,7 +27,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("!dev")
+@Profile({"local", "prod"})
 public class DiscordEventListener extends ListenerAdapter implements CommandInteractionHandler {
 
   private static final Logger log = LoggerFactory.getLogger(DiscordEventListener.class);
@@ -34,19 +36,19 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
   private final VictUserService victUserService;
   private final BookmarkService bookmarkService;
 
+  private final boolean fixTwitterFlag;
+
+  private final List<String> guilds;
+
   private final Map<User, ArrayList<CommandCooldownRecord>> commandCooldownMap;
-
-  @Value("${vict.twitter.fix:true}")
-  boolean fixTwitterFlag;
-
-  @Value("${vict.discord.guilds}")
-  private List<String> guilds;
 
   DiscordEventListener(
       List<VictCommand> commandList,
       VictUserService victUserService,
       VictGuildService victGuildService,
-      BookmarkService bookmarkService) {
+      BookmarkService bookmarkService,
+      @Value("${vict.twitter.fix:false}") boolean fixTwitterFlag,
+      @Value("${vict.discord.guilds:}") List<String> guilds) {
 
     this.commandMap =
         commandList.stream()
@@ -55,6 +57,8 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
     this.victGuildService = victGuildService;
     this.bookmarkService = bookmarkService;
     this.commandCooldownMap = new HashMap<>();
+    this.fixTwitterFlag = fixTwitterFlag;
+    this.guilds = guilds;
   }
 
   @Override
@@ -97,7 +101,7 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
 
     validateCommandExecution(cooldownRecords, commandName, commandCooldown);
 
-    command.executeCallback(event);
+    command.callback(event);
 
     if (commandCooldown != 0) {
       CommandCooldownRecord cooldownRecord =
@@ -110,12 +114,15 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
   @Override
   public void validateCommandExecution(
       ArrayList<CommandCooldownRecord> cooldownRecords, String commandName, Long commandCooldown) {
-    if (cooldownRecords.isEmpty()) return;
-    if (commandCooldown == 0) return;
+    if (cooldownRecords.isEmpty() || commandCooldown == 0) {
+      return;
+    }
     Optional<CommandCooldownRecord> cooldownRecordOptional =
         cooldownRecords.stream().filter(li -> li.name().equals(commandName)).findFirst();
 
-    if (cooldownRecordOptional.isEmpty()) return;
+    if (cooldownRecordOptional.isEmpty()) {
+      return;
+    }
 
     CommandCooldownRecord cooldownRecord = cooldownRecordOptional.get();
     Instant created = cooldownRecord.created();
@@ -125,7 +132,7 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
       throw new CommandUnderCooldownException(
           String.format(
               "the %s command is under cooldown for another %s seconds.",
-              commandName, now.until(created).getSeconds()));
+              commandName, now.until(created, ChronoUnit.SECONDS)));
     }
     cooldownRecords.remove(cooldownRecord);
   }
@@ -196,7 +203,7 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
       jda.updateCommands()
           .addCommands(
               commands.stream()
-                  .filter(victCommand -> !victCommand.getDevCommand())
+                  .filter(victCommand -> !victCommand.isDevCommand())
                   .map(VictCommand::getData)
                   .toList())
           .queue();

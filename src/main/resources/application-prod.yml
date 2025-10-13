@@ -1,31 +1,34 @@
+# Spring Config
 spring:
   datasource:
-    url: jdbc:h2:file:/assets/database
-    username: ${DATABASE_USER}
-    password: ${DATABASE_PASS}
-    driverClassName: org.h2.Driver
-  ai:
-    ollama:
-      base-url: http://localhost:11434
-      chat:
-        options:
-          model: llama3.2
-          temperature: 0.7
-  application:
-    name: VictBot
+    url: jdbc:h2:file:./assets/database
+  jpa:
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      mode: never
+  h2:
+    console:
+      enabled: false
+
+# Swagger Config
 springdoc:
   swagger-ui:
-    path: /
+    enabled: false
+  api-docs:
+    enabled: false
+
+# Custom Config
 vict:
   twitter:
-    fix: false
+    fix: true
   discord:
     token: ${BOT_TOKEN}
-    guilds: ${BOT_GUILDS}
+#    guilds: ${BOT_GUILDS}
+  # Procedure Scheduling
   procedure:
     logging:
       cron: "0 0 * * * ?"
     reminder:
       cron: "0 * * * * ?"
-  stable-diffusion:
-    url: ${STABLE_DIFFUSION_URL}

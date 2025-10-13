@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Flux;
 
 @RestController
 @RequiredArgsConstructor
+@ConditionalOnProperty(value = "vict.stable-diffusion.url")
 @RequestMapping("ai")
 public class AiController {
   private final AiGenerationService aiGenerationService;

@@ -12,9 +12,11 @@ build/
 *.iws
 *.iml
 *.ipr
-out/
+out
 !**/src/main/**/out/
 !**/src/test/**/out/
+.run
+logs
 
 ### Eclipse ###
 .apt_generated

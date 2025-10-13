@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.5</version>
+        <version>3.5.0</version>
         <relativePath/>
     </parent>
     <groupId>com.github.georgi4511</groupId>
     <artifactId>VictBot</artifactId>
-    <version>0.2.0</version>
+    <version>0.4.0</version>
     <name>VictBot</name>
     <description>Discord bot written using Java</description>
     <url/>
@@ -27,7 +27,7 @@
         <url/>
     </scm>
     <properties>
-        <java.version>23</java.version>
+        <java.version>24</java.version>
         <spring-ai.version>1.0.0-M6</spring-ai.version>
         <native.maven.plugin.version>0.10.6</native.maven.plugin.version>
         <spotless.version>2.44.4</spotless.version>

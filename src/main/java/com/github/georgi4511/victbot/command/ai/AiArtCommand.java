@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.ai;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.model.GenerateImageInput;
 import com.github.georgi4511.victbot.service.AiGenerationService;
 import java.util.List;
@@ -15,11 +15,13 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.utils.AttachedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Component
+@ConditionalOnProperty(value = "vict.stable-diffusion.url")
 @RequiredArgsConstructor
 public class AiArtCommand extends AbstractVictCommand {
   public static final String PROMPT = "prompt";
@@ -45,14 +47,24 @@ public class AiArtCommand extends AbstractVictCommand {
   private Boolean isDeferred = true;
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-    event.deferReply().queue();
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    if (aiGenerationService == null) {
+      slashCommandInteractionEvent.reply("AI Image Generation is not enabled").queue();
+      return;
+    }
 
-    GenerateImageInput imageInput = getGenerateImageInput(event.getOptions());
+    slashCommandInteractionEvent.deferReply().queue();
+
+    GenerateImageInput imageInput =
+        getGenerateImageInput(slashCommandInteractionEvent.getOptions());
 
     byte[] image = aiGenerationService.generateImage(imageInput);
 
-    event.getHook().editOriginalAttachments(AttachedFile.fromData(image, "o.png")).queue();
+    slashCommandInteractionEvent
+        .getHook()
+        .editOriginalAttachments(AttachedFile.fromData(image, "o.png"))
+        .queue();
   }
 
   private GenerateImageInput getGenerateImageInput(List<OptionMapping> options) {
