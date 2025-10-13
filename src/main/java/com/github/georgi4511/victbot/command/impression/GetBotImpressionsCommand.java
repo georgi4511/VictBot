@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.impression;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.model.VictGuildImpressions;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import java.util.List;
@@ -30,19 +30,18 @@ public class GetBotImpressionsCommand extends AbstractVictCommand {
               OptionType.BOOLEAN, "global", "do the search globally or only for this server");
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
     boolean global = true;
-    OptionMapping globalOption = event.getOption("global");
+    OptionMapping globalOption = slashCommandInteractionEvent.getOption("global");
     if (null != globalOption) {
       global = globalOption.getAsBoolean();
     }
 
     if (global) {
-      returnGlobalImpressions(event);
+      returnGlobalImpressions(slashCommandInteractionEvent);
       return;
     }
-    returnGuildImpressions(event);
+    returnGuildImpressions(slashCommandInteractionEvent);
   }
 
   private void returnGuildImpressions(SlashCommandInteractionEvent event) {

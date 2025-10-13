@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.admin;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.Data;
@@ -31,23 +31,23 @@ public class ShootCommand extends AbstractVictCommand {
           .addOption(OptionType.INTEGER, TIME, "Time out time in seconds", true);
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-    User user = Objects.requireNonNull(event.getOption(USER)).getAsUser();
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    User user = Objects.requireNonNull(slashCommandInteractionEvent.getOption(USER)).getAsUser();
 
     if (user.isBot()) {
-      event.reply("I cannot time out a bot.").queue();
+      slashCommandInteractionEvent.reply("I cannot time out a bot.").queue();
       return;
     }
-    int time = Objects.requireNonNull(event.getOption(TIME)).getAsInt();
+    int time = Objects.requireNonNull(slashCommandInteractionEvent.getOption(TIME)).getAsInt();
 
     Member guildMember =
-        Objects.requireNonNull(event.getGuild())
+        Objects.requireNonNull(slashCommandInteractionEvent.getGuild())
             .findMembers(e -> e.getUser().equals(user))
             .get()
             .getFirst();
 
     guildMember.timeoutFor(time, TimeUnit.SECONDS).queue();
-    event
+    slashCommandInteractionEvent
         .reply(
             String.format(
                 "%s you just got shot for %s seconds have fun being timed out",

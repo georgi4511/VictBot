@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.utility;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -42,13 +42,12 @@ public class GetTimeCommand extends AbstractVictCommand {
   private Boolean devCommand = false;
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-
-    OptionMapping locationOption = event.getOption("location");
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    OptionMapping locationOption = slashCommandInteractionEvent.getOption("location");
 
     String location = locationOption == null ? "UTC" : locationOption.getAsString();
 
-    event
+      slashCommandInteractionEvent
         .reply(
             Instant.now()
                 .atZone(ZoneId.of(location))

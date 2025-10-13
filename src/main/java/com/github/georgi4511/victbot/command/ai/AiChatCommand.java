@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.ai;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import java.util.List;
 import java.util.Objects;
 import lombok.Data;
@@ -30,23 +30,23 @@ public class AiChatCommand extends AbstractVictCommand {
   private Boolean isDeferred = true;
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-    event.deferReply().queue();
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    slashCommandInteractionEvent.deferReply().queue();
 
-    String prompt = Objects.requireNonNull(event.getOption("prompt")).getAsString();
+    String prompt = Objects.requireNonNull(slashCommandInteractionEvent.getOption("prompt")).getAsString();
     UserMessage message = new UserMessage(prompt);
     String res = ollamaChatModel.call(message);
 
     if (res.length() <= 2000) {
-      event.getHook().editOriginal(res).queue();
+      slashCommandInteractionEvent.getHook().editOriginal(res).queue();
       return;
     }
 
     List<String> strings = List.of(res.split("", 2000));
 
     for (String string : strings) {
-      event.getHook().sendMessage(string).queue();
+      slashCommandInteractionEvent.getHook().sendMessage(string).queue();
     }
-    event.getHook().deleteOriginal().queue();
+    slashCommandInteractionEvent.getHook().deleteOriginal().queue();
   }
 }

@@ -1,4 +1,4 @@
-package com.github.georgi4511.victbot.model;
+package com.github.georgi4511.victbot.command;
 
 import java.util.Objects;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -34,14 +34,16 @@ public abstract class AbstractVictCommand implements VictCommand {
     return getData().getName();
   }
 
+  protected abstract void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent);
+
   @Override
-  public void executeCallback(SlashCommandInteractionEvent event) {
+  public void callback(SlashCommandInteractionEvent event) {
     try {
       logCommandExecution(event);
 
-      callback(event);
+      handleSlashCommandInteraction(event);
     } catch (Exception e) {
-      if (Boolean.TRUE.equals(getIsDeferred())) {
+      if (Boolean.TRUE.equals(isDeferred())) {
         event.getHook().editOriginal(FAIL_TO_COMPLETE_MESSAGE).queue();
       }
       log.error("Command to execute: {}", e.getMessage(), e);
@@ -58,12 +60,12 @@ public abstract class AbstractVictCommand implements VictCommand {
   }
 
   @Override
-  public Boolean getIsDeferred() {
+  public Boolean isDeferred() {
     return false;
   }
 
   @Override
-  public Boolean getDevCommand() {
+  public Boolean isDevCommand() {
     return false;
   }
 }

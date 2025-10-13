@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.ai;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.model.GenerateImageInput;
 import com.github.georgi4511.victbot.service.AiGenerationService;
 import java.util.List;
@@ -32,6 +32,7 @@ public class AiArtCommand extends AbstractVictCommand {
   public static final String WIDTH = "width";
   public static final String HEIGHT = "height";
   private static final Logger log = LoggerFactory.getLogger(AiArtCommand.class);
+
   private final AiGenerationService aiGenerationService;
   private final SlashCommandData data =
       Commands.slash("ai-art", "create ai image using stable diffusion")
@@ -42,22 +43,23 @@ public class AiArtCommand extends AbstractVictCommand {
           .addOption(OptionType.INTEGER, CFG_SCALE, "cfg-scale for image generation")
           .addOption(OptionType.INTEGER, WIDTH, "width for image generation")
           .addOption(OptionType.INTEGER, HEIGHT, "height for image generation");
+
   private Boolean isDeferred = true;
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
     if (aiGenerationService == null) {
-      event.reply("AI Image Generation is not enabled").queue();
+        slashCommandInteractionEvent.reply("AI Image Generation is not enabled").queue();
       return;
     }
 
-    event.deferReply().queue();
+    slashCommandInteractionEvent.deferReply().queue();
 
-    GenerateImageInput imageInput = getGenerateImageInput(event.getOptions());
+    GenerateImageInput imageInput = getGenerateImageInput(slashCommandInteractionEvent.getOptions());
 
     byte[] image = aiGenerationService.generateImage(imageInput);
 
-    event.getHook().editOriginalAttachments(AttachedFile.fromData(image, "o.png")).queue();
+    slashCommandInteractionEvent.getHook().editOriginalAttachments(AttachedFile.fromData(image, "o.png")).queue();
   }
 
   private GenerateImageInput getGenerateImageInput(List<OptionMapping> options) {

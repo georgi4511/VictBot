@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.reminder;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.model.Reminder;
 import com.github.georgi4511.victbot.service.ReminderService;
 import java.util.List;
@@ -28,9 +28,9 @@ public class RemoveReminderCommand extends AbstractVictCommand {
   private final ReminderService reminderService;
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-    OptionMapping messageOption = event.getOption(MESSAGE);
-    String victUserId = Objects.requireNonNull(event.getUser()).getId();
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    OptionMapping messageOption = slashCommandInteractionEvent.getOption(MESSAGE);
+    String victUserId = Objects.requireNonNull(slashCommandInteractionEvent.getUser()).getId();
 
     List<Reminder> reminders;
     if (messageOption != null) {
@@ -41,12 +41,12 @@ public class RemoveReminderCommand extends AbstractVictCommand {
     }
 
     if (reminders.isEmpty()) {
-      event.reply("No reminders found, aborting").queue();
+      slashCommandInteractionEvent.reply("No reminders found, aborting").queue();
       return;
     }
 
     reminderService.deleteAll(reminders);
 
-    event.reply("Reminders deleted").queue();
+    slashCommandInteractionEvent.reply("Reminders deleted").queue();
   }
 }

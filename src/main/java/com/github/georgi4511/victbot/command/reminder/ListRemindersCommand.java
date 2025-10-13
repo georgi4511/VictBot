@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.reminder;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.model.Reminder;
 import com.github.georgi4511.victbot.service.ReminderService;
 import java.time.ZoneId;
@@ -42,14 +42,14 @@ public class ListRemindersCommand extends AbstractVictCommand {
               false);
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
-    List<Reminder> reminders = getReminders(event);
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    List<Reminder> reminders = getReminders(slashCommandInteractionEvent);
     if (reminders.isEmpty()) {
-      event.reply("There are no currently existing reminders, how about you add one?").queue();
+      slashCommandInteractionEvent.reply("There are no currently existing reminders, how about you add one?").queue();
       return;
     }
 
-    boolean showMessages = Objects.requireNonNull(event.getOption(SHOW_MESSAGE)).getAsBoolean();
+    boolean showMessages = Objects.requireNonNull(slashCommandInteractionEvent.getOption(SHOW_MESSAGE)).getAsBoolean();
 
     String message =
         reminders.stream()
@@ -69,7 +69,7 @@ public class ListRemindersCommand extends AbstractVictCommand {
                 })
             .reduce(String.format("Currently existing reminders:%n"), String::concat);
 
-    event.reply(message).queue();
+    slashCommandInteractionEvent.reply(message).queue();
   }
 
   private List<Reminder> getReminders(SlashCommandInteractionEvent event) {

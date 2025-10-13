@@ -1,6 +1,6 @@
 package com.github.georgi4511.victbot.command.reminder;
 
-import com.github.georgi4511.victbot.model.AbstractVictCommand;
+import com.github.georgi4511.victbot.command.AbstractVictCommand;
 import com.github.georgi4511.victbot.service.ReminderService;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -65,12 +65,12 @@ public class AddReminderCommand extends AbstractVictCommand {
   private final ReminderService reminderService;
 
   @Override
-  public void callback(SlashCommandInteractionEvent event) {
+  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
     String message = "";
     boolean personal = false;
     int time = 1;
     String chronoUnitS = MINUTES;
-    List<OptionMapping> options = event.getOptions();
+    List<OptionMapping> options = slashCommandInteractionEvent.getOptions();
 
     for (OptionMapping option : options) {
       switch (option.getName()) {
@@ -82,16 +82,16 @@ public class AddReminderCommand extends AbstractVictCommand {
       }
     }
 
-    String channelId = event.getChannelId();
+    String channelId = slashCommandInteractionEvent.getChannelId();
 
-    Guild guild = event.getGuild();
+    Guild guild = slashCommandInteractionEvent.getGuild();
     String guildId = guild == null ? null : guild.getId();
-    String userId = event.getUser().getId();
+    String userId = slashCommandInteractionEvent.getUser().getId();
 
     Instant targetTime = Instant.now().plus(time, ChronoUnit.valueOf(chronoUnitS.toUpperCase()));
     reminderService.create(message, personal, targetTime, channelId, guildId, userId);
 
-    event
+    slashCommandInteractionEvent
         .reply(
             String.format(
                 "Set reminder for: %s",

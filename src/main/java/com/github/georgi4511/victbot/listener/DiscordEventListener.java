@@ -1,5 +1,6 @@
 package com.github.georgi4511.victbot.listener;
 
+import com.github.georgi4511.victbot.command.VictCommand;
 import com.github.georgi4511.victbot.exception.CommandUnderCooldownException;
 import com.github.georgi4511.victbot.model.*;
 import com.github.georgi4511.victbot.service.BookmarkService;
@@ -100,7 +101,7 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
 
     validateCommandExecution(cooldownRecords, commandName, commandCooldown);
 
-    command.executeCallback(event);
+    command.callback(event);
 
     if (commandCooldown != 0) {
       CommandCooldownRecord cooldownRecord =
@@ -113,12 +114,15 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
   @Override
   public void validateCommandExecution(
       ArrayList<CommandCooldownRecord> cooldownRecords, String commandName, Long commandCooldown) {
-    if (cooldownRecords.isEmpty()) return;
-    if (commandCooldown == 0) return;
+    if (cooldownRecords.isEmpty() || commandCooldown == 0) {
+      return;
+    }
     Optional<CommandCooldownRecord> cooldownRecordOptional =
         cooldownRecords.stream().filter(li -> li.name().equals(commandName)).findFirst();
 
-    if (cooldownRecordOptional.isEmpty()) return;
+    if (cooldownRecordOptional.isEmpty()) {
+      return;
+    }
 
     CommandCooldownRecord cooldownRecord = cooldownRecordOptional.get();
     Instant created = cooldownRecord.created();
@@ -199,7 +203,7 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
       jda.updateCommands()
           .addCommands(
               commands.stream()
-                  .filter(victCommand -> !victCommand.getDevCommand())
+                  .filter(victCommand -> !victCommand.isDevCommand())
                   .map(VictCommand::getData)
                   .toList())
           .queue();

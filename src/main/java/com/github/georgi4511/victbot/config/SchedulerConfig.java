@@ -1,4 +1,4 @@
-package com.github.georgi4511.victbot.procedures;
+package com.github.georgi4511.victbot.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
