@@ -23,7 +23,8 @@ public class BadBotImpressionCommand extends AbstractVictCommand {
   private SlashCommandData data = Commands.slash("bad-bot", "When bot is bad");
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     Guild guild = slashCommandInteractionEvent.getGuild();
     if (guild == null) {
       throw new UnsupportedOperationException();

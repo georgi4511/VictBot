@@ -26,8 +26,10 @@ public class RemoveBookmarkCommand extends AbstractVictCommand {
   private final BookmarkService bookmarkService;
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
-    String alias = Objects.requireNonNull(slashCommandInteractionEvent.getOption(ALIAS)).getAsString();
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    String alias =
+        Objects.requireNonNull(slashCommandInteractionEvent.getOption(ALIAS)).getAsString();
     String victUserId = Objects.requireNonNull(slashCommandInteractionEvent.getUser()).getId();
 
     Optional<Bookmark> optionalBookmark =
@@ -37,13 +39,16 @@ public class RemoveBookmarkCommand extends AbstractVictCommand {
       slashCommandInteractionEvent
           .reply(
               String.format(
-                  "Bookmark does not exist for user %s", slashCommandInteractionEvent.getUser().getEffectiveName()))
+                  "Bookmark does not exist for user %s",
+                  slashCommandInteractionEvent.getUser().getEffectiveName()))
           .queue();
       return;
     }
 
     boolean result = bookmarkService.removeByAliasAndVictUserId(alias, victUserId);
 
-    slashCommandInteractionEvent.reply(result ? "Bookmark removed" : "Failed to remove bookmark").queue();
+    slashCommandInteractionEvent
+        .reply(result ? "Bookmark removed" : "Failed to remove bookmark")
+        .queue();
   }
 }

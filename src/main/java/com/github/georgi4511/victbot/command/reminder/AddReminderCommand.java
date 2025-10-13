@@ -65,7 +65,8 @@ public class AddReminderCommand extends AbstractVictCommand {
   private final ReminderService reminderService;
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     String message = "";
     boolean personal = false;
     int time = 1;

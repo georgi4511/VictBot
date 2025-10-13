@@ -34,7 +34,8 @@ public class ListBookmarkCommand extends AbstractVictCommand {
   private final BookmarkService bookmarkService;
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     List<Bookmark> bookmarks = getBookmarks(slashCommandInteractionEvent);
 
     if (bookmarks.isEmpty()) {

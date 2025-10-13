@@ -28,7 +28,8 @@ public class RemoveReminderCommand extends AbstractVictCommand {
   private final ReminderService reminderService;
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     OptionMapping messageOption = slashCommandInteractionEvent.getOption(MESSAGE);
     String victUserId = Objects.requireNonNull(slashCommandInteractionEvent.getUser()).getId();
 

@@ -47,19 +47,24 @@ public class AiArtCommand extends AbstractVictCommand {
   private Boolean isDeferred = true;
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     if (aiGenerationService == null) {
-        slashCommandInteractionEvent.reply("AI Image Generation is not enabled").queue();
+      slashCommandInteractionEvent.reply("AI Image Generation is not enabled").queue();
       return;
     }
 
     slashCommandInteractionEvent.deferReply().queue();
 
-    GenerateImageInput imageInput = getGenerateImageInput(slashCommandInteractionEvent.getOptions());
+    GenerateImageInput imageInput =
+        getGenerateImageInput(slashCommandInteractionEvent.getOptions());
 
     byte[] image = aiGenerationService.generateImage(imageInput);
 
-    slashCommandInteractionEvent.getHook().editOriginalAttachments(AttachedFile.fromData(image, "o.png")).queue();
+    slashCommandInteractionEvent
+        .getHook()
+        .editOriginalAttachments(AttachedFile.fromData(image, "o.png"))
+        .queue();
   }
 
   private GenerateImageInput getGenerateImageInput(List<OptionMapping> options) {

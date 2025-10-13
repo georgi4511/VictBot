@@ -31,7 +31,8 @@ public class ShootCommand extends AbstractVictCommand {
           .addOption(OptionType.INTEGER, TIME, "Time out time in seconds", true);
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     User user = Objects.requireNonNull(slashCommandInteractionEvent.getOption(USER)).getAsUser();
 
     if (user.isBot()) {

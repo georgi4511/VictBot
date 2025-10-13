@@ -40,7 +40,7 @@ class AddReminderCommandTest {
 
     AddReminderCommand addReminderCommand = new AddReminderCommand(reminderServiceMock);
 
-    addReminderCommand.callback(eventMock);
+    addReminderCommand.handleSlashCommandInteraction(eventMock);
 
     String value = entityCaptor.getValue();
     assertEquals(

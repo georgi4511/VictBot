@@ -34,7 +34,8 @@ public abstract class AbstractVictCommand implements VictCommand {
     return getData().getName();
   }
 
-  protected abstract void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent);
+  protected abstract void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent);
 
   @Override
   public void callback(SlashCommandInteractionEvent event) {

@@ -30,10 +30,12 @@ public class AiChatCommand extends AbstractVictCommand {
   private Boolean isDeferred = true;
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     slashCommandInteractionEvent.deferReply().queue();
 
-    String prompt = Objects.requireNonNull(slashCommandInteractionEvent.getOption("prompt")).getAsString();
+    String prompt =
+        Objects.requireNonNull(slashCommandInteractionEvent.getOption("prompt")).getAsString();
     UserMessage message = new UserMessage(prompt);
     String res = ollamaChatModel.call(message);
 

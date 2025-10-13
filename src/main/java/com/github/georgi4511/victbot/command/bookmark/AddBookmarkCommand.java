@@ -26,9 +26,12 @@ public class AddBookmarkCommand extends AbstractVictCommand {
   private final BookmarkService bookmarkService;
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
-    String alias = Objects.requireNonNull(slashCommandInteractionEvent.getOption(ALIAS)).getAsString();
-    String response = Objects.requireNonNull(slashCommandInteractionEvent.getOption(RESPONSE)).getAsString();
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
+    String alias =
+        Objects.requireNonNull(slashCommandInteractionEvent.getOption(ALIAS)).getAsString();
+    String response =
+        Objects.requireNonNull(slashCommandInteractionEvent.getOption(RESPONSE)).getAsString();
 
     String guildId = null;
     if (slashCommandInteractionEvent.isFromGuild()) {

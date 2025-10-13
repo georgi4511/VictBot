@@ -29,10 +29,7 @@ public class GetTimeCommand extends AbstractVictCommand {
               false)
           .addChoices(
               ZoneId.SHORT_IDS.values().stream()
-                  .map(
-                      zoneId ->
-                          new Command.Choice(
-                              zoneId, zoneId))
+                  .map(zoneId -> new Command.Choice(zoneId, zoneId))
                   .toList()
                   .subList(0, 23))
           .addChoice("UTC", "UTC");
@@ -42,12 +39,13 @@ public class GetTimeCommand extends AbstractVictCommand {
   private Boolean devCommand = false;
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     OptionMapping locationOption = slashCommandInteractionEvent.getOption("location");
 
     String location = locationOption == null ? "UTC" : locationOption.getAsString();
 
-      slashCommandInteractionEvent
+    slashCommandInteractionEvent
         .reply(
             Instant.now()
                 .atZone(ZoneId.of(location))

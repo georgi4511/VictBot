@@ -42,14 +42,18 @@ public class ListRemindersCommand extends AbstractVictCommand {
               false);
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     List<Reminder> reminders = getReminders(slashCommandInteractionEvent);
     if (reminders.isEmpty()) {
-      slashCommandInteractionEvent.reply("There are no currently existing reminders, how about you add one?").queue();
+      slashCommandInteractionEvent
+          .reply("There are no currently existing reminders, how about you add one?")
+          .queue();
       return;
     }
 
-    boolean showMessages = Objects.requireNonNull(slashCommandInteractionEvent.getOption(SHOW_MESSAGE)).getAsBoolean();
+    boolean showMessages =
+        Objects.requireNonNull(slashCommandInteractionEvent.getOption(SHOW_MESSAGE)).getAsBoolean();
 
     String message =
         reminders.stream()

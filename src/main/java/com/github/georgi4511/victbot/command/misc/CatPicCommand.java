@@ -19,7 +19,8 @@ public class CatPicCommand extends AbstractVictCommand {
   private final SlashCommandData data = Commands.slash("cat", "receive random cat");
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     String catPicture = catPicService.getRandomCatPicture();
     slashCommandInteractionEvent.reply(catPicture).queue();
   }

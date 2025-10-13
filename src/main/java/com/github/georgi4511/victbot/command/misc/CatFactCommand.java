@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @EqualsAndHashCode(callSuper = true)
@@ -20,7 +19,8 @@ public class CatFactCommand extends AbstractVictCommand {
   private final SlashCommandData data = Commands.slash("cat-fact", "receive random cat fact 🐈");
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     String fact = catFactService.getRandomCatFact();
     slashCommandInteractionEvent.reply(fact).queue();
   }

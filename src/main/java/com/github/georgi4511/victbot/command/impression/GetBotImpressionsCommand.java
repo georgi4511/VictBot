@@ -30,7 +30,8 @@ public class GetBotImpressionsCommand extends AbstractVictCommand {
               OptionType.BOOLEAN, "global", "do the search globally or only for this server");
 
   @Override
-  protected void handleSlashCommandInteraction(SlashCommandInteractionEvent slashCommandInteractionEvent) {
+  protected void handleSlashCommandInteraction(
+      SlashCommandInteractionEvent slashCommandInteractionEvent) {
     boolean global = true;
     OptionMapping globalOption = slashCommandInteractionEvent.getOption("global");
     if (null != globalOption) {
