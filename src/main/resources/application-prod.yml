@@ -25,7 +25,7 @@ vict:
     fix: true
   discord:
     token: ${BOT_TOKEN}
-    guilds: ${BOT_GUILDS}
+#    guilds: ${BOT_GUILDS}
   # Procedure Scheduling
   procedure:
     logging:

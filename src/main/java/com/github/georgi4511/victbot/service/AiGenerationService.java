@@ -3,6 +3,7 @@ package com.github.georgi4511.victbot.service;
 import com.github.georgi4511.victbot.exception.GenerateImageException;
 import com.github.georgi4511.victbot.model.GenerateImageInput;
 import com.github.georgi4511.victbot.model.GenerateImageResponse;
+import java.util.Base64;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -12,8 +13,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
-
-import java.util.Base64;
 
 @Service
 @ConditionalOnProperty(value = "vict.stable-diffusion.url")

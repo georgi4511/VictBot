@@ -7,6 +7,7 @@ import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
 import com.github.georgi4511.victbot.util.Util;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import net.dv8tion.jda.api.JDA;
@@ -34,19 +35,19 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
   private final VictUserService victUserService;
   private final BookmarkService bookmarkService;
 
+  private final boolean fixTwitterFlag;
+
+  private final List<String> guilds;
+
   private final Map<User, ArrayList<CommandCooldownRecord>> commandCooldownMap;
-
-  @Value("${vict.twitter.fix:false}")
-  boolean fixTwitterFlag;
-
-  @Value("${vict.discord.guilds:}")
-  private List<String> guilds;
 
   DiscordEventListener(
       List<VictCommand> commandList,
       VictUserService victUserService,
       VictGuildService victGuildService,
-      BookmarkService bookmarkService) {
+      BookmarkService bookmarkService,
+      @Value("${vict.twitter.fix:false}") boolean fixTwitterFlag,
+      @Value("${vict.discord.guilds:}") List<String> guilds) {
 
     this.commandMap =
         commandList.stream()
@@ -55,6 +56,8 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
     this.victGuildService = victGuildService;
     this.bookmarkService = bookmarkService;
     this.commandCooldownMap = new HashMap<>();
+    this.fixTwitterFlag = fixTwitterFlag;
+    this.guilds = guilds;
   }
 
   @Override
@@ -125,7 +128,7 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
       throw new CommandUnderCooldownException(
           String.format(
               "the %s command is under cooldown for another %s seconds.",
-              commandName, now.until(created).getSeconds()));
+              commandName, now.until(created, ChronoUnit.SECONDS)));
     }
     cooldownRecords.remove(cooldownRecord);
   }
