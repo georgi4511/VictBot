@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Component
-@ConditionalOnProperty(value = "vict.stable-diffusion.url")
+@ConditionalOnProperty(value = "vict.stable-diffusion.active",havingValue = "true")
 @RequiredArgsConstructor
 public class AiArtCommand extends AbstractVictCommand {
   public static final String PROMPT = "prompt";

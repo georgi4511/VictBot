@@ -17,7 +17,7 @@ import reactor.core.publisher.Flux;
 
 @RestController
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "vict.stable-diffusion.url")
+@ConditionalOnProperty(value = "vict.stable-diffusion.active",havingValue = "true")
 @RequestMapping("ai")
 public class AiController {
   private final AiGenerationService aiGenerationService;

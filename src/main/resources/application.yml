@@ -39,3 +39,4 @@ vict:
   # AI Dependencies
   stable-diffusion:
     url: ${STABLE_DIFFUSION_URL}
+    active: false
