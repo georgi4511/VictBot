@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
 
 @Service
-@ConditionalOnProperty(value = "vict.stable-diffusion.url")
+@ConditionalOnProperty(value = "vict.stable-diffusion.active",havingValue = "true")
 public class AiGenerationService {
   private static final String GENERATE_ENDPOINT = "/sdapi/v1/txt2img";
   private final ChatClient chatClient;
