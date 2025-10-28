@@ -14,12 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Component
 @RequiredArgsConstructor
+@ConditionalOnProperty(value = "vict.stable-diffusion.active", havingValue = "true")
 public class AiChatCommand extends AbstractVictCommand {
   private static final Logger log = LoggerFactory.getLogger(AiChatCommand.class);
   private final OllamaChatModel ollamaChatModel;
