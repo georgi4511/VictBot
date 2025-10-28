@@ -6,7 +6,6 @@ import com.github.georgi4511.victbot.model.*;
 import com.github.georgi4511.victbot.service.BookmarkService;
 import com.github.georgi4511.victbot.service.VictGuildService;
 import com.github.georgi4511.victbot.service.VictUserService;
-import com.github.georgi4511.victbot.util.Util;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -162,16 +161,34 @@ public class DiscordEventListener extends ListenerAdapter implements CommandInte
 
   @Override
   public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-    if (event.getAuthor().isBot()) return;
-
-    String content = event.getMessage().getContentRaw();
-    if (fixTwitterFlag) {
-      Util.fixTwitter(event, content);
+    if (event.getAuthor().isBot()) {
       return;
     }
 
-    if (content.startsWith("!")) {
+    String content = event.getMessage().getContentRaw();
+    if (fixTwitterFlag) {
+      fixTwitter(event, content);
+
+    } else if (content.startsWith("!")) {
       trySendBookmark(event, content);
+    }
+  }
+
+  private static void fixTwitter(@NotNull MessageReceivedEvent event, @NotNull String content) {
+    boolean startsWithX = content.startsWith("https://x.com/");
+    boolean startsWithTwitter = content.startsWith("https://twitter.com/");
+
+    if (startsWithX || startsWithTwitter) {
+      String fixedContent =
+          String.format(
+              "%s sent this:%n%s",
+              event.getAuthor().getEffectiveName(),
+              content.replaceFirst(
+                  startsWithX ? "https://x.com/" : "https://twitter.com/",
+                  "https://vxtwitter.com/"));
+
+      event.getMessage().delete().queue();
+      event.getChannel().sendMessage(fixedContent).queue();
     }
   }
 

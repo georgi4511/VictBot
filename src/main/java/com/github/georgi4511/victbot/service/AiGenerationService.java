@@ -4,37 +4,30 @@ import com.github.georgi4511.victbot.exception.GenerateImageException;
 import com.github.georgi4511.victbot.model.GenerateImageInput;
 import com.github.georgi4511.victbot.model.GenerateImageResponse;
 import java.util.Base64;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import reactor.core.publisher.Flux;
 
 @Service
-@ConditionalOnProperty(value = "vict.stable-diffusion.active",havingValue = "true")
+@ConditionalOnProperty(value = "vict.stable-diffusion.active", havingValue = "true")
 public class AiGenerationService {
   private static final String GENERATE_ENDPOINT = "/sdapi/v1/txt2img";
-  private final ChatClient chatClient;
+  private final OllamaApi ollamaApi;
   private final RestTemplate restTemplate;
 
   public AiGenerationService(
       @Value("${vict.stable-diffusion.url:}") String stableDiffusionUrl,
-      ChatClient.Builder builder,
+      OllamaApi.Builder builder,
       RestTemplateBuilder restTemplateBuilder) {
-    this.chatClient = builder.build();
+    this.ollamaApi = builder.build();
     this.restTemplate = restTemplateBuilder.rootUri(stableDiffusionUrl).build();
   }
 
   public String call(String message) {
-    return chatClient.prompt().user(message).call().content();
-  }
-
-  public Flux<ChatResponse> stream(Prompt prompt) {
-    return chatClient.prompt(prompt).stream().chatResponse();
+    return ollamaApi.chat(OllamaApi.ChatRequest.builder(message).build()).message().content();
   }
 
   public byte[] generateImage(GenerateImageInput input) throws GenerateImageException {

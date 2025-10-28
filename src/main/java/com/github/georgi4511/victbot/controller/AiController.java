@@ -4,20 +4,16 @@ import com.github.georgi4511.victbot.model.GenerateImageInput;
 import com.github.georgi4511.victbot.service.AiGenerationService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 
 @RestController
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "vict.stable-diffusion.active",havingValue = "true")
+@ConditionalOnProperty(value = "vict.stable-diffusion.active", havingValue = "true")
 @RequestMapping("ai")
 public class AiController {
   private final AiGenerationService aiGenerationService;
@@ -26,13 +22,6 @@ public class AiController {
   public Map<String, String> generate(
       @RequestParam(defaultValue = "Tell me a joke") String message) {
     return Map.of("generation", aiGenerationService.call(message));
-  }
-
-  @GetMapping("/generate/stream")
-  public Flux<ChatResponse> generateWithStream(
-      @RequestParam(defaultValue = "Tell me a joke") String message) {
-    Prompt prompt = new Prompt(new UserMessage(message));
-    return aiGenerationService.stream(prompt);
   }
 
   @PostMapping("/generate/image")

@@ -1,24 +1,19 @@
 package com.github.georgi4511.victbot.service;
 
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.ollama.api.OllamaApi;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
 @Service
+@ConditionalOnProperty(value = "vict.stable-diffusion.active", havingValue = "true")
 public class VictAIService {
-  private final ChatClient chatClient;
+  private final OllamaApi ollamaApi;
 
-  public VictAIService(ChatClient.Builder builder) {
-    this.chatClient = builder.build();
+  public VictAIService(OllamaApi.Builder builder) {
+    this.ollamaApi = builder.build();
   }
 
   public String call(String message) {
-    return chatClient.prompt().user(message).call().content();
-  }
-
-  public Flux<ChatResponse> stream(Prompt prompt) {
-    return chatClient.prompt(prompt).stream().chatResponse();
+    return ollamaApi.chat(OllamaApi.ChatRequest.builder(message).build()).message().content();
   }
 }
